@@ -167,6 +167,10 @@ h2{font-size:1.2rem} h3{font-size:1rem} p{margin:0}
 .parent{text-align:left;font-size:.9rem;line-height:1.6}
 .parent h3{font-family:var(--body-font);font-weight:800;font-size:.95rem;margin-top:6px}
 .parent ul{margin:0;padding-left:1.2em}
+.holes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;max-width:300px}
+.hole{aspect-ratio:1;border-radius:18px;border:2px solid var(--rule);background:var(--chip);font-size:2.6rem;line-height:1;padding:0;display:flex;align-items:center;justify-content:center;user-select:none;-webkit-user-select:none}
+.hole.hit{background:var(--good);border-color:var(--good)}
+.hole.oops{background:var(--kick);border-color:var(--kick)}
 .pads{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;max-width:280px}
 .pad{aspect-ratio:1.25;border-radius:20px;border:4px solid transparent;opacity:.45;transition:opacity .1s,transform .1s}
 .pad.lit{opacity:1;transform:scale(1.06);border-color:var(--ink)}
@@ -536,7 +540,7 @@ function viewBattle(g){
   </section>
   ${powerPanel(g,b)}
   <section class="panel"><h2>バトルの しかた</h2><p class="muted">5つの ミニゲームで こうげき! ちからが たかいほど ダメージが おおきいよ。コインで そうびを かうと もっと つよくなる。</p>
-    <ul class="unl"><li><span>🧠 まほうの ちから</span><span>あたまクイズ</span></li><li><span>💨 すばやさ</span><span>れんだ ダッシュ</span></li><li><span>⚔️ こうげき力</span><span>ぴったり こうげき</span></li><li><span>🛡️ しゅび力</span><span>いまだ! ガード</span></li><li><span>❤️ ゆうきの ちから</span><span>おぼえて タップ</span></li></ul><p class="muted">あたまクイズは もじ・ことばの おと・かず・とけい。レベルが あがると たしざんも でるよ。</p></section>
+    <ul class="unl"><li><span>🧠 まほうの ちから</span><span>あたまクイズ</span></li><li><span>💨 すばやさ</span><span>すばやく タッチ</span></li><li><span>⚔️ こうげき力</span><span>ぴったり こうげき</span></li><li><span>🛡️ しゅび力</span><span>いまだ! ガード</span></li><li><span>❤️ ゆうきの ちから</span><span>おぼえて タップ</span></li></ul><p class="muted">あたまクイズは もじ・ことばの おと・かず・とけい。レベルが あがると たしざんも でるよ。</p></section>
   <section class="panel"><div class="row2"><h2>モンスターずかん</h2><span class="muted">${Math.min(st.stage,FOES.length)} / ${FOES.length}</span></div>
     <div class="zukan">${FOES.map((x,i)=>`<div class="${i<st.stage?"got":""}" title="${i<st.stage?x[1]:"?"}">${i<st.stage?x[0]:"?"}</div>`).join("")}</div></section>`;
 }
@@ -680,13 +684,20 @@ async function gameMemory(A,lv){
   pads.forEach(b=>{b.disabled=true;b.onclick=null;}); A.querySelector("#mt").innerHTML=`<b>${ok===len?"ぜんぶ おぼえた!":ok?ok+"こ できた!":"おしい!"}</b>`; await wait(900);
   return clamp(ok/len,.2,1);
 }
-async function gameDash(A){
-  A.innerHTML=`<p><b>5びょうで たくさん タップ!</b></p><button type="button" class="tap" id="tp">スタート</button><div class="count" id="ct">0</div>`;
-  const b=A.querySelector("#tp"), c=A.querySelector("#ct"); let n=0;
-  await new Promise(r=>{b.onclick=r;}); b.textContent="タップ!"; b.onclick=null;
-  b.onpointerdown=e=>{e.preventDefault();n++;c.textContent=n;};
-  await wait(5000); b.onpointerdown=null; b.disabled=true; b.textContent="おわり!"; await wait(700);
-  return clamp(n/28,0,1);
+// すばやさ: the monster pops up in one of nine squares; touch it before it hides. A friend sometimes pops up instead and must be left alone.
+async function gameDash(A,lv,foe){
+  const stay=lv>=15?750:lv>=8?900:1100, order=shuffle([1,1,1,1,1,1,1,1,0,0]), foes=order.filter(Boolean).length; let hits=0, slips=0;
+  A.innerHTML=`<p><b>${foe} を すばやく タッチ!</b></p><p class="muted">🐶 は なかまだから さわらないでね</p><div class="holes">${[0,1,2,3,4,5,6,7,8].map(i=>`<button type="button" class="hole" data-h="${i}" aria-label="ます ${i+1}"></button>`).join("")}</div><div class="count" id="ct">0 / ${foes}</div>`;
+  const hs=[...A.querySelectorAll(".hole")], ct=A.querySelector("#ct"); await wait(900); let last=-1;
+  for(const isFoe of order){
+    let at; do{at=rint(0,8);}while(at===last); last=at; const h=hs[at];
+    h.textContent=isFoe?foe:"🐶"; h.dataset.on=isFoe?"foe":"pal";
+    await new Promise(res=>{const tm=setTimeout(res,isFoe?stay:stay*.8);
+      h.onpointerdown=e=>{e.preventDefault(); h.onpointerdown=null; clearTimeout(tm); if(isFoe){hits++;h.classList.add("hit");}else{slips++;h.classList.add("oops");} ct.textContent=`${hits} / ${foes}`; setTimeout(res,180);};});
+    h.onpointerdown=null; h.textContent=""; h.className="hole"; delete h.dataset.on; await wait(220+Math.random()*260);
+  }
+  ct.textContent=`${hits} / ${foes}${slips?" (なかまに "+slips+"かい)":""}`; await wait(900);
+  return clamp((hits-slips)/foes,.1,1);
 }
 async function gamePunch(A){
   A.innerHTML=`<p><b>まんなかの あかで とめろ!</b></p><div class="gauge"><i id="gi" style="left:0%"></i></div><button type="button" class="tap" id="tp">${worn("sword")?"きる!":"パンチ!"}</button>`;
@@ -717,7 +728,7 @@ async function battle(){
   for(let i=0;i<GAMES.length&&hp>0;i++){
     const key=GAMES[i][0], s=[key,GAMES[i][3],GAMES[i][2]];
     A.innerHTML=`<p class="muted">こうげき ${i+1} / ${GAMES.length}</p><div class="glyph">${s[2]}</div><div class="big">${s[1]} で こうげき!</div>`; await wait(1300);
-    const score=await GAMES[i][1](A,g.lv), d=dmgOf(b[key],score); hp=Math.max(0,hp-d);
+    const score=await GAMES[i][1](A,g.lv,f.e), d=dmgOf(b[key],score); hp=Math.max(0,hp-d);
     $("#fhp").style.width=(hp/f.hp*100)+"%"; $("#fhpt").textContent=`たいりょく ${hp} / ${f.hp}`;
     const em=$("#fem"); em.classList.remove("shake"); void em.offsetWidth; em.classList.add("shake");
     A.innerHTML=`<div class="big">${d} ダメージ!</div><p class="muted">${score>=.85?"すごい こうげき!":score>=.5?"いい こうげき!":"つぎは もっと いける!"}</p>`; await wait(1400);
