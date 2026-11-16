@@ -179,6 +179,12 @@ h2{font-size:1.2rem} h3{font-size:1rem} p{margin:0}
 .seg button{border:2px solid var(--rule);background:var(--chip);border-radius:14px;padding:8px 0 6px;font-weight:800;display:flex;flex-direction:column;align-items:center;line-height:1.2}
 .seg button .e{font-size:1.6rem}
 .seg button[aria-pressed="true"]{border-color:var(--good);background:var(--soft);color:var(--good)}
+.looks{display:flex;flex-direction:column;gap:10px;text-align:left}
+.looks .lr{display:flex;flex-direction:column;gap:4px}
+.sws{display:flex;flex-wrap:wrap;gap:8px}
+.sw{width:44px;height:44px;border-radius:50%;border:3px solid var(--rule);padding:0}
+.sw.tx{width:auto;border-radius:999px;padding:0 14px;background:var(--chip);font-weight:800;font-size:.9rem}
+.sw[aria-pressed="true"]{border-color:var(--ink);box-shadow:0 0 0 3px var(--accent)}
 .act.mis{border-color:var(--accent)}
 .act.mis::before{content:"ミッション";position:absolute;top:6px;left:8px;font-size:.66rem;font-weight:800;background:var(--accent);color:var(--accent-ink);border-radius:999px;padding:0 8px}
 .mission{border:2px solid var(--accent)}
@@ -322,6 +328,11 @@ const SLOTS_DAY=[
 const slotNow=()=>{const h=new Date().getHours();return h>=4&&h<11?"a":h>=11&&h<17?"h":"y";};
 function usualToday(){const d=new Date(), out=new Set(); for(let i=1;i<=4;i++){d.setDate(d.getDate()-7);(st.days[dkey(d)]||[]).forEach(id=>out.add(id));} return out;}
 const XP_ACT=10, XP_WIN=20, BONUS_AT=5; // a day's first record gives one ticket, the fifth thing done that day gives one more
+// Looks the child can change in せってい.
+const HAIRS=[["#2a1c14","こげちゃ"],["#15131a","くろ"],["#8a5a2b","ちゃいろ"],["#e0b040","きんいろ"],["#c8402a","あか"],["#2f6fe4","あお"]];
+const SKINS=[["#ffd2a6","#e8a878","あかるい"],["#f1b98a","#cf9164","ふつう"],["#c98a5c","#a36b40","こい"]];
+const STYLES=["ふつう","ツンツン","ながい","みじかい"];
+const SHIRTS=[["#19c37d","#0f8a57","みどり"],["#2f7bff","#1c55c0","あお"],["#e8501f","#b53d0c","オレンジ"],["#f2b705","#b98600","きいろ"],["#e86aa6","#b8437c","ピンク"],["#8a5be0","#6238b3","むらさき"]];
 const RANKS=[[1,"たまご ヒーロー"],[3,"ちびっこ ヒーロー"],[6,"げんき ヒーロー"],[10,"つよつよ ヒーロー"],[15,"スーパー ヒーロー"],[22,"でんせつの ヒーロー"],[30,"ゆうしゃ"],[40,"だいゆうしゃ"],[50,"うちゅう一の ヒーロー"]];
 const UNLOCKS=[[2,"あかい はちまき"],[4,"ヒーローの マント"],[6,"あおい ふく"],[8,"パワーの オーラ"],[11,"きんの ふく"],[14,"おうさまの かんむり"],[17,"ほのおの オーラ"],[20,"ひかる あおい め"],[25,"きんの マント"],[30,"てんしの つばさ"],[35,"いなずまの オーラ"],[40,"にじいろの オーラ"],[50,"でんせつの ほし"]];
 const FOES=[["🦠","バイキンだま"],["👻","ねむねむ おばけ"],["🐛","いもむしん"],["🦀","かにチョッキン"],["🦇","こうもりん"],["🐍","にょろへび"],["🐺","オオカミだん"],["🐙","たこにゅうどう"],["🦖","ガオザウルス"],["🤖","ロボキング"],["🐉","ドラゴン"],["👾","うちゅう まおう"]];
@@ -344,6 +355,8 @@ const LS="power-note-v1";
 let st={name:"",days:{},used:0,stage:0,bonus:0,equip:{},won:0,bought:null,stamps:{},mission:null,moods:{},badges:[],miss:{},mcount:0};
 try{const d=JSON.parse(localStorage.getItem(LS)||"null");if(d&&typeof d==="object"){st=Object.assign(st,d);if(!st.days||typeof st.days!=="object")st.days={};if(!st.equip||typeof st.equip!=="object")st.equip={};if(!st.stamps||typeof st.stamps!=="object")st.stamps={};if(!st.moods||typeof st.moods!=="object")st.moods={};if(!st.miss||typeof st.miss!=="object")st.miss={};if(!Array.isArray(st.badges))st.badges=[];}}catch(e){}
 if(!Array.isArray(st.bought)){st.bought=[];for(let i=0;i<Math.min(st.stage||0,12);i++)st.bought.push(i);}
+function look(){const l=st.look&&typeof st.look==="object"?st.look:{}, ok=(v,a)=>Number.isInteger(v)&&v>=0&&v<a.length;
+  return {hair:ok(l.hair,HAIRS)?l.hair:0,style:ok(l.style,STYLES)?l.style:0,skin:ok(l.skin,SKINS)?l.skin:0,shirt:ok(l.shirt,SHIRTS)?l.shirt:null};}
 const save=()=>{try{localStorage.setItem(LS,JSON.stringify(st));}catch(e){}};
 const pad=n=>String(n).padStart(2,"0");
 const dkey=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
@@ -381,10 +394,11 @@ const rankOf=lv=>RANKS.filter(r=>lv>=r[0]).pop()[1];
 /* ---------- pixel hero: 16 x 20 grid, gear changes with the level ---------- */
 function heroSVG(lv){
   const sw=worn("sword"), sh=worn("shield"), ar=worn("armor");
-  const shirt=ar?ar.c:lv>=11?"#f2b705":lv>=6?"#2f7bff":"#19c37d", shade=ar?ar.c2:lv>=11?"#b98600":lv>=6?"#1c55c0":"#0f8a57";
+  const L=look(), own=L.shirt===null?null:SHIRTS[L.shirt];
+  const shirt=ar?ar.c:own?own[0]:lv>=11?"#f2b705":lv>=6?"#2f7bff":"#19c37d", shade=ar?ar.c2:own?own[1]:lv>=11?"#b98600":lv>=6?"#1c55c0":"#0f8a57";
   const sword=sw?`<rect x="2" y="4" width="1" height="8" fill="${sw.c}"/><rect x="3" y="5" width="1" height="7" fill="${sw.c2}"/><rect x="1" y="12" width="4" height="1" fill="#ffd34f"/><rect x="2" y="13" width="2" height="1" fill="#7d5226"/>`:"";
   const shield=sh?`<rect x="11" y="11" width="5" height="4" fill="${sh.c2}"/><rect x="12" y="15" width="3" height="1" fill="${sh.c2}"/><rect x="12" y="12" width="3" height="3" fill="${sh.c}"/><rect x="13" y="12" width="1" height="3" fill="#ffffff" opacity=".7"/>`:"";
-  const PAL={h:"#2a1c14",s:"#ffd2a6",S:"#e8a878",e:lv>=20?"#1f8fff":"#141a2e",m:"#c2543a",j:shirt,J:shade,n:"#26304f",b:"#e8501f",k:"#e22b2b",g:"#ffd34f",w:"#ffffff"};
+  const PAL={h:HAIRS[L.hair][0],s:SKINS[L.skin][0],S:SKINS[L.skin][1],e:lv>=20?"#1f8fff":"#141a2e",m:"#c2543a",j:shirt,J:shade,n:"#26304f",b:"#e8501f",k:"#e22b2b",g:"#ffd34f",w:"#ffffff"};
   const R=[
     lv>=14?".....g.gg.g.....":"................",
     lv>=14?".....gggggg.....":".....hhhhhh.....",
@@ -406,6 +420,10 @@ function heroSVG(lv){
     ".....ss..ss.....",
     "....bbb..bbb....",
     "................"];
+  const put=(y,xs)=>xs.forEach(x=>{if(R[y][x]===".")R[y]=R[y].slice(0,x)+"h"+R[y].slice(x+1);});
+  if(L.style===1&&lv<14){R[0]="....h..hh..h....";R[1]="....hhhhhhhh....";}
+  if(L.style===2){for(let y=5;y<=8;y++)put(y,[2,13]); put(9,[2,3,12,13]); put(10,[2,3,4,11,12,13]);}
+  if(L.style===3&&lv<14)R[1]="................";
   let px="";
   R.forEach((row,y)=>{let x=0;while(x<16){const c=row[x];if(c==="."){x++;continue;}let w=1;while(x+w<16&&row[x+w]===c)w++;px+=`<rect x="${x}" y="${y}" width="${w}" height="1" fill="${PAL[c]}"/>`;x+=w;}});
   const ac=lv>=35?"#5ab8ff":lv>=17?"#ff6a2b":lv>=11?"#ffd34f":"#19c37d";
@@ -567,8 +585,17 @@ function saveRecord(){
 }
 
 function openSettings(){
-  sheet(`<h2>せってい</h2><p class="muted">おうちの ひとと いっしょに つかってね</p>
+  const L=look(), g=calc(), sw=(k,i,bg,name,on)=>`<button type="button" class="sw" data-look="${k}:${i}" aria-pressed="${on}" aria-label="${name}" title="${name}" style="background:${bg}"></button>`;
+  sheet(`<h2>せってい</h2>
     <label class="field"><span class="label">ヒーローの なまえ</span><input id="nameIn" maxlength="12" value="${esc(st.name)}" placeholder="なまえ"></label>
+    <div class="looks"><span class="label">みためを かえる</span>
+      <div style="max-width:120px;margin:0 auto;width:100%;background:#12302a;border-radius:16px;padding:6px">${heroSVG(g.lv)}</div>
+      <div class="lr"><span class="muted">かみがた</span><div class="sws">${STYLES.map((n,i)=>`<button type="button" class="sw tx" data-look="style:${i}" aria-pressed="${L.style===i}">${n}</button>`).join("")}</div></div>
+      <div class="lr"><span class="muted">かみの いろ</span><div class="sws">${HAIRS.map((x,i)=>sw("hair",i,x[0],x[1],L.hair===i)).join("")}</div></div>
+      <div class="lr"><span class="muted">はだの いろ</span><div class="sws">${SKINS.map((x,i)=>sw("skin",i,x[0],x[2],L.skin===i)).join("")}</div></div>
+      <div class="lr"><span class="muted">ふくの いろ</span><div class="sws"><button type="button" class="sw tx" data-look="shirt:-1" aria-pressed="${L.shirt===null}">おまかせ</button>${SHIRTS.map((x,i)=>sw("shirt",i,x[0],x[2],L.shirt===i)).join("")}</div>
+        <span class="muted">「おまかせ」は レベルで いろが かわるよ。よろいを つけて いる ときは よろいの いろに なるよ。</span></div>
+    </div>
     <button class="ghost" type="button" id="parentOpen">おうちの ひとへ (1しゅうかんの まとめ)</button>
     <button class="ghost" type="button" id="undoToday">きょうの きろくを やりなおす</button>
     <button class="ghost" type="button" id="resetAll">ぜんぶ けして さいしょから</button>
@@ -727,9 +754,12 @@ document.addEventListener("click",e=>{
   if(t.id==="fight")return battle();
   if(t.id==="gearBtn")return openSettings();
   if(t.dataset.close!==undefined){closeOv(); if(t.dataset.close)go(t.dataset.close); return;}
+  if(t.dataset.look){const kv=t.dataset.look.split(":"), k=kv[0], v=+kv[1]; if(!["hair","style","skin","shirt"].includes(k))return;
+    const L=look(); L[k]=v<0?null:v; st.look=L; const ni=$("#nameIn"); if(ni)st.name=(ni.value||"").trim().slice(0,12); save();
+    const sh=document.querySelector(".sheet"), y=sh?sh.scrollTop:0; render(); openSettings(); const s2=document.querySelector(".sheet"); if(s2)s2.scrollTop=y; return;}
   if(t.id==="setOk"){st.name=($("#nameIn").value||"").trim().slice(0,12); save(); closeOv(); return render();}
   if(t.id==="undoToday"){if(t.dataset.sure){delete st.days[today()]; delete st.stamps[today()]; delete st.moods[today()]; save(); closeOv(); render();}else{t.dataset.sure="1";t.textContent="もういちど おすと きょうの ぶんを けします";} return;}
-  if(t.id==="resetAll"){if(t.dataset.sure){st={name:st.name,days:{},used:0,stage:0,bonus:0,equip:{},won:0,bought:[],stamps:{},mission:null,moods:{},badges:[],miss:{},mcount:0}; save(); closeOv(); render();}else{t.dataset.sure="1";t.textContent="もういちど おすと ぜんぶ きえます";} return;}
+  if(t.id==="resetAll"){if(t.dataset.sure){st={name:st.name,look:st.look,days:{},used:0,stage:0,bonus:0,equip:{},won:0,bought:[],stamps:{},mission:null,moods:{},badges:[],miss:{},mcount:0}; save(); closeOv(); render();}else{t.dataset.sure="1";t.textContent="もういちど おすと ぜんぶ きえます";} return;}
 });
 render();
 })();
