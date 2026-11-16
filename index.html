@@ -138,6 +138,7 @@ h2{font-size:1.2rem} h3{font-size:1rem} p{margin:0}
 .zukan{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .zukan div{aspect-ratio:1;border-radius:14px;background:var(--chip);display:flex;align-items:center;justify-content:center;font-size:1.9rem;color:var(--muted);font-family:var(--display)}
 .zukan .got{background:var(--soft)}
+.px{height:1.15em;width:auto;image-rendering:pixelated;vertical-align:-.2em;pointer-events:none}
 .overlay{position:fixed;inset:0;background:rgba(6,10,20,.72);display:flex;align-items:center;justify-content:center;padding:16px;padding-top:calc(16px + env(safe-area-inset-top,0px));padding-bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:20}
 .sheet{background:var(--paper);border-radius:22px;padding:18px;width:100%;max-width:460px;max-height:100%;overflow:auto;display:flex;flex-direction:column;gap:14px;text-align:center}
 .big{font-family:var(--display);font-size:1.5rem;line-height:1.3}
@@ -340,7 +341,8 @@ const EYES=["ふつう","ぱっちり","にこにこ","きりっ"], MOUTHS=["に
 const SHIRTS=[["#19c37d","#0f8a57","みどり"],["#2f7bff","#1c55c0","あお"],["#e8501f","#b53d0c","オレンジ"],["#f2b705","#b98600","きいろ"],["#e86aa6","#b8437c","ピンク"],["#8a5be0","#6238b3","むらさき"]];
 const RANKS=[[1,"たまご ヒーロー"],[3,"ちびっこ ヒーロー"],[6,"げんき ヒーロー"],[10,"つよつよ ヒーロー"],[15,"スーパー ヒーロー"],[22,"でんせつの ヒーロー"],[30,"ゆうしゃ"],[40,"だいゆうしゃ"],[50,"うちゅう一の ヒーロー"]];
 const UNLOCKS=[[2,"あかい はちまき"],[4,"ヒーローの マント"],[6,"あおい ふく"],[8,"パワーの オーラ"],[11,"きんの ふく"],[14,"おうさまの かんむり"],[17,"ほのおの オーラ"],[20,"ひかる あおい め"],[25,"きんの マント"],[30,"てんしの つばさ"],[35,"いなずまの オーラ"],[40,"にじいろの オーラ"],[50,"でんせつの ほし"]];
-const FOES=[["🦠","バイキンだま"],["👻","ねむねむ おばけ"],["🐛","いもむしん"],["🦀","かにチョッキン"],["🦇","こうもりん"],["🐍","にょろへび"],["🐺","オオカミだん"],["🐙","たこにゅうどう"],["🦖","ガオザウルス"],["🤖","ロボキング"],["🐉","ドラゴン"],["👾","うちゅう まおう"]];
+const PX=d=>`<img class="px" alt="" src="data:image/png;base64,${d}">`;
+const FOES=[[PX("iVBORw0KGgoAAAANSUhEUgAAACcAAAAjCAYAAAAXMhMjAAABi0lEQVR4nO2Yy3GDQAyGV56U4cEXKMJF5OZmoABoJn2kCHyBSR/KSR4htLvaB0Nm4v/k9YD2Q88FQET3V3U5GyCkN1yuqsIBQNUE/qhhhKCacX79RkQotltarQCAzTjv/l+HrhgwG84HxbUOnXMu34tJcDynYmBcBOlcGqgZjucV19K3cJueJiOpnjTByRAuffsybgWTkBbAYLVq3uJgubJWtbfP+cJIuk1PtHpt6VuQD0V2Q73RG1ZfKHPCyG3I+0MhVuEsbaKmfICnzdaf76/oNTs4LQdqFIEmDqjtq3ru8jlt1lqerUO3aa6aLNdo+wXhrKqRl6HwbuDItdf7I2qUg0nv0LoZZ9MD0H4ytFWOTM04bwBrVboXjtxt8WIqkKVSnTPknNXQETIVRA1AakcptnYTgs9UzZA1zFI+qOv94T1K7XIOEYFXrTQq1yHYmJf4vdr4Mg3+I/KOwJIHPwd0bluJJaDcU5ZTcfQkLBtjSQ+TzTp2Gs5+wcnVIS84Z+j/fCuprTdcrn4BowT6ATwzGE4AAAAASUVORK5CYII="),"ぷるぷる スライム"],["👻","ねむねむ おばけ"],["🐛","いもむしん"],["🦀","かにチョッキン"],["🦇","こうもりん"],["🐍","にょろへび"],["🐺","オオカミだん"],["🐙","たこにゅうどう"],["🦖","ガオザウルス"],["🤖","ロボキング"],["🐉","ドラゴン"],["👾","うちゅう まおう"]];
 const foeOf=n=>{const f=FOES[n%FOES.length], lap=Math.floor(n/FOES.length);return {e:f[0],n:(lap?"スーパー".repeat(Math.min(lap,2))+" ":"")+f[1],hp:Math.round(28*Math.pow(1.35,n))};};
 // Gear is bought with coins (earned by records and battles), in any order. けん adds こうげき力, たて adds しゅび力, よろい adds しゅび力 and すばやさ.
 const GEAR=[
@@ -723,7 +725,7 @@ async function gameDash(A,lv,foe){
   const hs=[...A.querySelectorAll(".hole")], ct=A.querySelector("#ct"); await wait(900); let last=-1;
   for(const isFoe of order){
     let at; do{at=rint(0,8);}while(at===last); last=at; const h=hs[at];
-    h.textContent=isFoe?foe:"🐶"; h.dataset.on=isFoe?"foe":"pal";
+    h.innerHTML=isFoe?foe:"🐶"; h.dataset.on=isFoe?"foe":"pal";
     await new Promise(res=>{const tm=setTimeout(res,isFoe?stay:stay*.8);
       h.onpointerdown=e=>{e.preventDefault(); h.onpointerdown=null; clearTimeout(tm); if(isFoe){hits++;h.classList.add("hit");}else{slips++;h.classList.add("oops");} ct.textContent=`${hits} / ${foes}`; setTimeout(res,180);};});
     h.onpointerdown=null; h.textContent=""; h.className="hole"; delete h.dataset.on; await wait(220+Math.random()*260);
