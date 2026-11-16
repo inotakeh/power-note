@@ -139,6 +139,7 @@ h2{font-size:1.2rem} h3{font-size:1rem} p{margin:0}
 .zukan{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .zukan div{aspect-ratio:1;border-radius:14px;background:var(--chip);display:flex;align-items:center;justify-content:center;font-size:1.9rem;color:var(--muted);font-family:var(--display)}
 .zukan .got{background:var(--soft)}
+.px0{image-rendering:pixelated;object-fit:contain}
 .px{height:1.15em;width:auto;image-rendering:pixelated;vertical-align:-.2em;pointer-events:none}
 .overlay{position:fixed;inset:0;background:rgba(6,10,20,.72);display:flex;align-items:center;justify-content:center;padding:16px;padding-top:calc(16px + env(safe-area-inset-top,0px));padding-bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:20}
 .sheet{background:var(--paper);border-radius:22px;padding:18px;width:100%;max-width:460px;max-height:100%;overflow:auto;display:flex;flex-direction:column;gap:14px;text-align:center}
@@ -353,7 +354,8 @@ const GEAR=[
   {k:"sword",n:"でんせつの けん",atk:30,c:"#ffd34f",c2:"#c28a00"},{k:"shield",n:"でんせつの たて",def:30,c:"#ffd34f",c2:"#c28a00"},{k:"armor",n:"でんせつの よろい",def:24,spd:24,c:"#ffd34f",c2:"#c28a00"}];
 const PRICES=[30,90,200,450], priceOf=i=>PRICES[Math.floor(i/3)];
 const COIN_ACT=3, COIN_LOSE=5, coinWin=n=>20+10*Math.min(n,30);
-const coinSVG=`<svg class="coin" viewBox="0 0 10 10" shape-rendering="crispEdges" aria-hidden="true"><path d="M3 0h4v1h2v2h1v4H9v2H7v1H3V9H1V7H0V3h1V1h2z" fill="#c28a00"/><path d="M3 1h4v1h1v1h1v4H8v1H7v1H3V8H2V7H1V3h1V2h1z" fill="#ffd34f"/><path d="M4 3h2v4H4z" fill="#c28a00"/></svg>`;
+const coinSVG=`<img class="coin px0" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAA90lEQVR4nK2UMQ7CMAxF/SNOwNwNOAoXYOnYkY3DsDEyViAuwFGArXMlxM5nqByc4EAH/tTGP8/fkRKQFE8A3AJJeOuTEuB5Pwz/j6Nbz4GwiQDQAq6ncwKZr5Zvb9UmsAhSiAfIpUALC78gs2aXJBGR6GFXx1GDZxij3BtsmlyzZvcxTi5NBREhuzrpYAFeA+udr5aCqk1HU93261EQKxdkYWMgX0HemZTOKQGVTNfT2U2ifq0FkkDVFiHet9Vi0wtJBGu0qbyNuualn4gMFxAALzLASt3zRpomgjxYSdrEQkSy2y/yfiYu26kLWmz62DjZ96+H7QX6kK7scjsCBgAAAABJRU5ErkJggg==">`;
+const DOG=PX("iVBORw0KGgoAAAANSUhEUgAAABIAAAAUCAYAAACAl21KAAABPUlEQVR4nI1UQWrDMBDcNX5FevVFxBT8ippCXuNTXpCTXlMwdqAv6MEXgyk45FDoI3LI9lBGSNuV0z2J2dVoVjsSiwhZwcxmQkTYwsvcZt86qpsqKZ6nNamJSQMRM4tvXdikSYB5dTDICkumRfIoV2g13bBkSRCo8a0LrRa6JcTL6e1fGMiS1sbPy0M1udqE6Hy9EdSNx0NQASXAfOvofL0lRKWIcM4z8WYrcFciwiUWSDKzeMpPZ55W6obljzHZcjYU6iHECvSeUgOY4ut3QR/vX0lued5Tv7sHI+LA0JqOuqmop5Vo95TgPd1/W468Nh4PxMxiEoFsK/SACp2M72WeVnONGt+6gJtvDb6pmyr4CAq1uzFBk0iH9YRikkTRVlsWpsnDZcfj1J9aNyw0NlX4jyw/bRoyLs79jIgfP5G0kd2oeKIAAAAASUVORK5CYII="), TICKET=`<img class="coin px0" alt="" style="width:1.8em" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAMCAYAAABiDJ37AAAA+ElEQVR4nK2ToU7DUBiFz2lKFQ/QTI1XwBGeAYMrk9hNVCF4iJqK2ZuF1IyZPkMz0QSBQk72ATYzcxDsJ7vL7QqET/25N/fLOX9TSgIAkPwa/ogkAkBsov3LPfbrNyQ3178S2RvzRCY7Ja86XDy8Mq+6s2ff4oMjlkSSCkmdW6isG+5mV3rajFDWDZ1bBFeTTFaQxKhPVmQp2uUc7fuHJ2uXcxRZGkxIUpEkJpNVcD9FlsI9Pw7KvITB2wN51Xmysm6C+zsm7qtsTO9uZWltDjFY2ZJYxbzqvPmUwY9yLCuy1JvPJSQAAcB2Ou5r8yMuyw0AgP/9630C1cCcJYJxRqUAAAAASUVORK5CYII=">`;
 const SLOTS=[["sword","けん"],["shield","たて"],["armor","よろい"]];
 const BSTATS=[["atk","こうげき力","⚔️","arm","うで"],["def","しゅび力","🛡️","body","からだ"],["spd","すばやさ","💨","leg","あし"]];
 const dmgOf=(stat,score)=>Math.max(1,Math.round((8+stat*.6)*(.4+.6*score)));
@@ -411,69 +413,31 @@ function earnBadges(){const g=calc(), fresh=BADGES.filter(b=>!st.badges.includes
   fresh.forEach(b=>st.badges.push(b[0])); save(); return fresh.map(b=>`<div class="lvup" style="font-size:1rem">バッジ ゲット! ${b[1]} ${b[2]}</div>`).join("");}
 const rankOf=lv=>RANKS.filter(r=>lv>=r[0]).pop()[1];
 
-/* ---------- pixel hero: 24 x 36 grid (16-wide head). Face and hair come from せってい, gear from the level and the shop ---------- */
+/* ---------- pixel hero: 37 x 58 grid. Base sprites (one per hairstyle) are recoloured by letter; face, level items and gear are stamped on top ---------- */
+const HEROPX=[[7,"///.......kkkkkkkkk/.....kkHHHHHHHHHk/....kHHHHHHHHHHHHkk/...kHHHHHHHHHHHHHHHk/..kHHHHHHHHHHHHHHHHHk/..kHHHHHHHHHHHHHHHHHk/.kHHHHHHHHHHHHHHHHHHHk/.kHHHHHHHHHHHHHHHHHHHk/kHHHHHkHHhHHHkHHHHHHHhk/khhHhkhHhkHHkcHhkkHHHhk/khhhkchhkhhkcskksskhhhk/khhkcskkskksssssssckhhk/khhksssssssssssssssckhk/.khksssssssssssssssskk/kskksssssssssssssssskkk/ksckssssssssssssssssksk/ksskssssssssssssssssksk/.kskssssssssssssssssksk/..kksssssssssssssssskk/...ksssssssssssssssck/...kcsssssssssssssck/....kkcsssssssssckk/......kcsssssssck/.......kkccccckk/......kkkssssskkk/....kkjjjkssskjjjkk/...kJjjjjjkkkjjjjjJk/...kjjjjjjjjjjjjjjjk/..kjjJjjjjjjjjjjjJjjk/..kjjkJjjjjjjjjjJkjjk/..kkjkJjjjjjjjjjJkjkk/..kskkJjjjjjjjjjJkksk/..ksckJjjjjjjjjjJkcsk/.kssckJjjjjjjjjjJkcssk/.kssckJjjjjjjjjjJkcssk/.ksskkJjjjjjjjjjJkkssk/kssskkJjjjjjjjjjJkksssk/ksssckJJjjjjjjjJJkcsssk/ksskkkkkkkkkkkkkkkkkssk/.kkk.kNNnnnnnnnNNk.kkk/.....kNnnnnnnnnnNk/.....kNnnnNkNnnnNk/.....kNnnnk.knnnNk/.....kNnnnk.knnnNk/.....kNnnnk.knnnNk/.....kNnnnk.knnnNk/.....kNnnnk.knnnNk/....kkkkkkk.kkkkkkk/....kooooOk.kOooook/...koooooOk.kOoooook/...kkkkkkk...kkkkkkk"],[6,"/.............k/.......kk...kHk....k/.......kHk.kHHk...kk/......kHHHkkHHHk.kHk/......kHHHHkHHHkkHHHk/.kkk.khHHHHHHHHhhHHHkkk/.kHHkhhHHHHHHHHHHHHHhHk/..kHHHHHHHHHHHHHHHHHHHk/...kHHHHHHHHHHhHHHHHHhHkkk/.kkhHHHHHkHHHHhhHHHHHHHHk/kHHHHHHhhkkHHHkkHHHhhHhk/.kHHHHkhkskHHkcskHhkhHHhk/.khhhksksskHkcssskkskHhhk/.khhhksssssksssssssskhhhk/..khkcssssssssssssssckhk/..khksssssssssssssssskhk/.kskksssssssssssssssskksk/.kscksssssssssssssssskcsk/.kssksssssssssssssssskssk/..kskssssssssssssssssksk/...kksssssssssssssssskk/....kcssssssssssssssck/....kssssssssssssssck/.....kkcsssssssssckk/.......kcsssssssck/........kkccccckk/.......kkkssssskkk/.....kkjjjkssskjjjkk/....kJjjjjjkkkjjjjjJk/....kjjjjjjjjjjjjjjjk/...kjjJjjjjjjjjjjjJjjk/...kjjkJjjjjjjjjjJkjjk/...kkjkJjjjjjjjjjJkjkk/...kskkJjjjjjjjjjJkksk/...ksckJjjjjjjjjjJkcsk/..kssckJjjjjjjjjjJkcssk/..kssckJjjjjjjjjjJkcssk/..ksskkJjjjjjjjjjJkkssk/.kssskkJjjjjjjjjjJkksssk/.ksssckJJjjjjjjjJJkcsssk/.ksskkkkkkkkkkkkkkkkkssk/..kkk.kNNnnnnnnnNNk.kkk/......kNnnnnnnnnnNk/......kNnnnNkNnnnNk/......kNnnnk.knnnNk/......kNnnnk.knnnNk/......kNnnnk.knnnNk/......kNnnnk.knnnNk/......kNnnnk.knnnNk/.....kkkkkkk.kkkkkkk/.....kooooOk.kOooook/....koooooOk.kOoooook/....kkkkkkk...kkkkkkk"],[5,"///.........kkkkkkkkk/.......kkHHHHHHHHHkk/.....kkhHHHHHHHHHHHhkk/.....kHHHHHHHHHHHHHHHHk/...kkHHHHHHHHHHHHHHHHHhk/...kHHHHHHHHHHHkHHHHHHHk/..kHHHHHHHHHHHHkHHHHHHHHk/..kHHHHHHHHHHHhkhHHHHHHHk/..kHHHHHHHHHHhkckHHHHHHHk/.kHHHHHHHHHHkkcsckHHHHHHHk/.kHHHHHHHHkkcssssckHHHHHHk/.kHHHHHkkkccssssssckkHHHHk/.kHHkkkcccssssssssscckkHHk/.kHkhksssssssssssssssckkHk/.kkskksssssssssssssssskckk/.kkscksssssssssssssssskckk/.kkssksssssssssssssssskskk/.kHksksssssssssssssssskskk/.kHHkksssssssssssssssskkHk/.kHHhkcssssssssssssssckhHk/.kHhhkcsssssssssssssckhhHk/kHHhhhkkcsssssssssckkhhhHHk/kHHhhhhhkcsssssssckhhhhhHHk/kHHhhhhhhkkccccckkhhhhhhHHk/.khHhhhhkkkssssskkkhhhhhHHk/.kkhhhkkjjjkssskjjjkkhhhkk/...kkkJjjjjjkkkjjjjjJkkkk/.....kjjjjjjjjjjjjjjjk/....kjjJjjjjjjjjjjjJjjk/....kjjkJjjjjjjjjjJkjjk/....kkjkJjjjjjjjjjJkjkk/....kskkJjjjjjjjjjJkksk/....ksckJjjjjjjjjjJkcsk/...kssckJjjjjjjjjjJkcssk/...kssckJjjjjjjjjjJkcssk/...ksskkJjjjjjjjjjJkkssk/..kssskkJjjjjjjjjjJkksssk/..ksssckJJjjjjjjjJJkcsssk/..ksskkkkkkkkkkkkkkkkkssk/...kkk.kNNnnnnnnnNNk.kkk/.......kNnnnnnnnnnNk/.......kNnnnNkNnnnNk/.......kNnnnk.knnnNk/.......kNnnnk.knnnNk/.......kNnnnk.knnnNk/.......kNnnnk.knnnNk/.......kNnnnk.knnnNk/......kkkkkkk.kkkkkkk/......kooooOk.kOooook/.....koooooOk.kOoooook/.....kkkkkkk...kkkkkkk"],[6,"////........kkkkkkkkk/......kkHHHHHHHHHkk/....kkHHHHHHHHHHHHhk/...kHHHHHHHHHHHHHHHHk/..khHHHHHHHHHHHHHHHHHk/..kHHHHHHHHHHHHHHHHHHk/.kHHHHsssHHHHHHHsssHHHk/.kkHHsssssssssssssssHHk/.kHHHsssssssssssssssHHk/.kHHssssssssssssssssHHk/.kHHssssssssssssssssHHk/.kHHssssssssssssssssHHk/.kHHsssssssssssssssssHk/kkkksssssssssssssssskksk/kkcksssssssssssssssskcsk/kksksssssssssssssssskssk/.kskssssssssssssssssksk/..kksssssssssssssssskk/...kcsssssssssssssssk/....kcsssssssssssssck/.....kkcsssssssssckk/.......kcsssssssck/........kkccccckk/.......kkkssssskkk/.....kkjjjkssskjjjkk/....kJjjjjjkkkjjjjjJk/....kjjjjjjjjjjjjjjjk/...kjjJjjjjjjjjjjjJjjk/...kjjkJjjjjjjjjjJkjjk/...kkjkJjjjjjjjjjJkjkk/...kskkJjjjjjjjjjJkksk/...ksckJjjjjjjjjjJkcsk/..kssckJjjjjjjjjjJkcssk/..kssckJjjjjjjjjjJkcssk/..ksskkJjjjjjjjjjJkkssk/.kssskkJjjjjjjjjjJkksssk/.ksssckJJjjjjjjjJJkcsssk/.ksskkkkkkkkkkkkkkkkkssk/..kkk.kNNnnnnnnnNNk.kkk/......kNnnnnnnnnnNk/......kNnnnNkNnnnNk/......kNnnnk.knnnNk/......kNnnnk.knnnNk/......kNnnnk.knnnNk/......kNnnnk.knnnNk/......kNnnnk.knnnNk/.....kkkkkkk.kkkkkkk/.....kooooOk.kOooook/....koooooOk.kOoooook/....kkkkkkk...kkkkkkk"],[7,"///........kkkkkkkk/......kkHHHHHHHHkk/....kkHHHHHHHHHHHHkk/...kHHHHHHHHHHHHHHHHk/..kHHHHHHHHHHHHHHHHHHk/..kHHHHHHHHHHHHHHHHHHk/.kHHHHHHHHHHHHHHHHHHHHk/.kHHhHHhHHHHhHHhHHHhHHk/kHHHhHkHHHHHkHHHkHHhHHhk/kHHkHHkHHHHHkHHHkHHHkHHk/kHhkHHkHHHHHkHHHkHHHkHHk/khhkkkckkkkkckkkckkkkhhk/khhkcccccccccccccccckhhk/.khksssssssssssssssskhk/kskksssssssssssssssskksk/kscksssssssssssssssskcsk/kssksssssssssssssssskssk/.kskssssssssssssssssksk/..kksssssssssssssssskk/...ksssssssssssssssck/...kssssssssssssssck/.....kcsssssssssckk/......kcsssssssck/.......kkccccckk/......kkkssssskkk/....kkjjjkssskjjjkk/...kJjjjjjkkkjjjjjJk/...kjjjjjjjjjjjjjjjk/..kjjJjjjjjjjjjjjJjjk/..kjjkJjjjjjjjjjJkjjk/..kkjkJjjjjjjjjjJkjkk/..kskkJjjjjjjjjjJkksk/..ksckJjjjjjjjjjJkcsk/.kssckJjjjjjjjjjJkcssk/.kssckJjjjjjjjjjJkcssk/.ksskkJjjjjjjjjjJkkssk/kssskkJjjjjjjjjjJkksssk/ksssckJJjjjjjjjJJkcsssk/ksskkkkkkkkkkkkkkkkkssk/.kkk.kNNnnnnnnnNNk.kkk/.....kNnnnnnnnnnNk/.....kNnnnNkNnnnNk/.....kNnnnk.knnnNk/.....kNnnnk.knnnNk/.....kNnnnk.knnnNk/.....kNnnnk.knnnNk/.....kNnnnk.knnnNk/....kkkkkkk.kkkkkkk/....kooooOk.kOooook/...koooooOk.kOoooook/...kkkkkkk...kkkkkkk"]];
 function heroSVG(lv){
   const sw=worn("sword"), sh=worn("shield"), ar=worn("armor"), L=look(), own=L.shirt===null?null:SHIRTS[L.shirt];
   const shirt=ar?ar.c:own?own[0]:lv>=11?"#f2b705":lv>=6?"#2f7bff":"#19c37d", shade=ar?ar.c2:own?own[1]:lv>=11?"#b98600":lv>=6?"#1c55c0":"#0f8a57";
-  const PAL={H:HAIRS[L.hair][0],s:SKINS[L.skin][0],S:SKINS[L.skin][1],e:lv>=20?"#1f8fff":"#141a2e",w:"#ffffff",m:"#c2543a",M:"#7a2430",c:"#ff9aa2",
-    j:shirt,J:shade,n:"#26304f",N:"#1a2138",x:"#ffffff",o:"#e8501f",O:"#8f2f0c",k:"#e22b2b",g:"#ffd34f",r:"#e22b2b"};
-  const W=24, HT=36, HX=4, HY=3, G=[]; for(let y=0;y<HT;y++)G.push(new Array(W).fill("."));
+  const dark=h=>"#"+[1,3,5].map(i=>Math.round(parseInt(h.slice(i,i+2),16)*.68).toString(16).padStart(2,"0")).join("");
+  const PAL={k:"#0c0c14",H:HAIRS[L.hair][0],h:dark(HAIRS[L.hair][0]),s:SKINS[L.skin][0],c:SKINS[L.skin][1],e:lv>=20?"#1f8fff":"#0c0c14",w:"#ffffff",M:"#c2543a",b:"#ff9aa2",
+    j:shirt,J:shade,n:"#26304f",N:"#1a2138",o:"#e8501f",O:"#8f2f0c",r:"#e22b2b",R:"#a81c1c",g:"#ffd34f",G:"#c28a00"};
+  const W=37, HT=58, OY=4, G=[]; for(let y=0;y<HT;y++)G.push(new Array(W).fill("."));
   const set=(x,y,c)=>{if(x>=0&&x<W&&y>=0&&y<HT)G[y][x]=c;};
   const stamp=(rows,x0,y0)=>rows.forEach((row,j)=>{for(let i=0;i<row.length;i++)if(row[i]!==".")set(x0+i,y0+j,row[i]);});
-  // body (rows 18 to 35)
-  stamp([
-    ".........ssssSS.........",
-    "......jjjjjjjjjjjJ......",
-    ".....jjjjjjjjjjjjjJ.....",
-    "....jjjjjjjwwjjjjjJJ....",
-    "....jjjjjjwwwwjjjjJJ....",
-    "....ssjjjjjwwjjjjJss....",
-    "....ssjjjjjjjjjjjJss....",
-    "....SS.jjjjjjjjjJ.SS....",
-    ".......jjjjjjjjjJ.......",
-    ".......nnnnnnnnnN.......",
-    ".......nnnnnnnnnN.......",
-    ".......nnnn..nnnN.......",
-    ".......sssS..sssS.......",
-    ".......sssS..sssS.......",
-    ".......xxxx..xxxx.......",
-    "......ooooo..ooooo......",
-    "......OOOOO..OOOOO......"],0,18);
-  // head
-  const HEAD=[
-    "....HHHHHHHH....",
-    "..HHHHHHHHHHHH..",
-    ".HHHHHHHHHHHHHH.",
-    ".HHHHHHHHHHHHHH.",
-    ".HHHHssHHHssHHH.",
-    ".HHssssssssssHH.",
-    ".HssssssssssssH.",
-    ".ssssssssssssss.",
-    "ssssssssssssssss",
-    "ssssssssssssssss",
-    ".ssssssssssssSS.",
-    ".ssssssssssssSS.",
-    "..ssssssssssSS..",
-    "...ssssssssSS...",
-    "....sssssSSS...."];
-  if(L.style===3){HEAD[0]="................";HEAD[1]="...HHHHHHHHHH...";HEAD[3]=".HHHssssssssHHH.";HEAD[4]=".HHssssssssssHH.";HEAD[5]=".HssssssssssssH.";}
-  if(L.style===4){HEAD[4]=".HHHHHHHHHHHHHH.";HEAD[5]=".HHHHHHHHHHHHHH.";HEAD[6]=".HHsHsHssHsHsHH.";}
-  stamp(HEAD,HX,HY);
-  if(L.style===1&&lv<14)stamp(["..H..H..HH..H..H",".HHHHHHHHHHHHHH."],HX,HY-2);
-  if(L.style===2){for(let y=4;y<=15;y++){set(HX,HY+y,"H");set(HX+1,HY+y,"H");set(HX+14,HY+y,"H");set(HX+15,HY+y,"H");} for(let y=12;y<=15;y++){set(HX+2,HY+y,"H");set(HX+13,HY+y,"H");}}
-  // face
-  const eye=[["we","ee","ee"],["wee","eee","eee"],[".e.","e.e"],["we","ee","ee"]][L.eyes], wide=eye[0].length===3;
-  stamp(eye,HX+(wide?3:4),HY+7); stamp(eye,HX+10,HY+7);
-  if(L.eyes===3&&L.style!==4){[[3,5],[4,6],[5,6],[12,5],[11,6],[10,6]].forEach(q=>set(HX+q[0],HY+q[1],"H"));}
-  stamp([["m..m",".mm."],["mmmm","mMMm",".mm."],[".mm."]][L.mouth],HX+6,HY+11);
-  if(L.cheek){[[2,10],[3,10],[12,10],[13,10]].forEach(q=>set(HX+q[0],HY+q[1],"c"));}
+  const base=HEROPX[L.style]||HEROPX[0]; stamp(base[1].split("/"),base[0],OY);
+  // face (eyes sit on rows 21 to 23, the mouth on rows 26 to 28, centred on column 18)
+  const eye=[["ee","ee","ee"],["wee","eee","eee"],[".e.","e.e"],["ee","ee","ee"]][L.eyes], wide=eye[0].length===3;
+  stamp(eye,wide?12:13,21); stamp(eye,22,21);
+  if(L.eyes===3){stamp(["kk.",".kk"],12,18); stamp([".kk","kk."],22,18);}
+  stamp([["k...k",".kkk."],["kkkkk",".MMM.",".kkk."],[".....",".kkk."]][L.mouth],16,26);
+  if(L.cheek){stamp(["bb"],11,24); stamp(["bb"],24,24);}
   // things earned by level
-  if(lv>=2){for(let x=1;x<=14;x++)set(HX+x,HY+4,"k"); set(HX+15,HY+4,"k"); set(HX+15,HY+5,"k"); set(HX+16,HY+6,"k");}
-  if(lv>=14)stamp(["g.g..gg..g.g","gggggggggggg","ggrggggggrgg"],HX+2,HY-2);
+  if(lv>=2){for(let y=16;y<=17;y++)for(let x=0;x<W;x++)if("Hhsc".includes(G[y][x]))G[y][x]=y===16?"r":"R";}
+  if(lv>=14)stamp(["g..g..g..g..g","gg.gg.g.gg.gg","ggggggggggggg","GGrGGGrGGGrGG"],12,3);
   let px="";
   G.forEach((row,y)=>{let x=0;while(x<W){const c=row[x];if(c==="."){x++;continue;}let w=1;while(x+w<W&&row[x+w]===c)w++;px+=`<rect x="${x}" y="${y}" width="${w}" height="1" fill="${PAL[c]}"/>`;x+=w;}});
-  const sword=sw?`<rect x="2" y="7" width="1" height="16" fill="${sw.c}"/><rect x="3" y="8" width="1" height="15" fill="${sw.c2}"/><rect x="0" y="23" width="6" height="1" fill="#ffd34f"/><rect x="2" y="24" width="2" height="2" fill="#7d5226"/>`:"";
-  const shield=sh?`<path d="M16 20h7v6h-1v2h-1v1h-3v-1h-1v-2h-1z" fill="${sh.c2}"/><path d="M17 21h5v5h-1v2h-3v-2h-1z" fill="${sh.c}"/><path d="M19 21h1v6h-1zM17 23h5v1h-5z" fill="#ffffff" opacity=".7"/>`:"";
+  const gimg=(x,box)=>{const d=GEARPX[GEAR.indexOf(x)];return d?`<image href="data:image/png;base64,${d}" x="${box[0]}" y="${box[1]}" width="${box[2]}" height="${box[3]}" preserveAspectRatio="xMidYMax meet" style="image-rendering:pixelated"/>`:"";};
+  const sword=sw?gimg(sw,[0,19,11,28]):"", shield=sh?gimg(sh,[22,33,15,15]):"";
   const ac=lv>=35?"#5ab8ff":lv>=17?"#ff6a2b":lv>=11?"#ffd34f":"#19c37d";
   const ring=(c,rx,ry,o)=>`<ellipse cx="12" cy="19" rx="${rx}" ry="${ry}" fill="${c}" opacity="${o}"/>`;
   const aura=lv>=40?ring("#ff5a5a",11.9,17.6,.3)+ring("#ffd34f",10.8,16.4,.3)+ring("#41c9a0",9.7,15.2,.3)+ring("#5ab8ff",8.6,14,.3)+ring("#b98bff",7.5,12.8,.3)
@@ -481,8 +445,8 @@ function heroSVG(lv){
   const bolts=lv>=35&&lv<40?`<path d="M1 2h2v2h2v2H3v2H1V6h-1V4h1zM21 1h2v2h1v2h-1v2h-2V5h-2V3h2z" fill="#ffe86b"/>`:"";
   const wings=lv>=30?`<path d="M1 15h2v2h2v2h2v7H5v-2H3v-2H1v-2H0v-3h1zM23 15h-2v2h-2v2h-2v7h2v-2h2v-2h2v-2h1v-3h-1z" fill="#ffffff"/><path d="M2 18h2v2h2v4H5v-2H3v-2H2zM22 18h-2v2h-2v4h1v-2h2v-2h1z" fill="#cfe0ff"/>`:"";
   const stars=lv>=50?`<path d="M1 1h1v1H1zM21 0h1v1h-1zM0 29h1v1H0zM23 31h1v1h-1zM4 0h1v1H4zM19 34h1v1h-1zM2 10h1v1H2zM22 11h1v1h-1z" fill="#fff6b0"/>`:"";
-  const cape=lv>=4?`<path d="M6 19h12l4 14H2z" fill="${lv>=25?"#f2b705":"#c21f3a"}"/>`:"";
-  return `<svg viewBox="0 0 ${W} ${HT}" role="img" aria-label="ヒーロー" shape-rendering="crispEdges">${aura}${bolts}${stars}${wings}<ellipse cx="12" cy="35.3" rx="7.5" ry=".7" fill="#000" opacity=".35"/>${cape}${px}${sword}${shield}</svg>`;
+  const cape=lv>=4?`<path d="M7 20h10l4 14H3z" fill="${lv>=25?"#f2b705":"#c21f3a"}"/>`:"";
+  return `<svg viewBox="0 0 ${W} ${HT}" role="img" aria-label="ヒーロー" shape-rendering="crispEdges"><g transform="translate(.5 4) scale(1.5)">${aura}${bolts}${stars}${wings}<ellipse cx="12" cy="35.3" rx="7.5" ry=".7" fill="#000" opacity=".35"/>${cape}</g>${px}${sword}${shield}</svg>`;
 }
 
 /* ---------- screens ---------- */
@@ -494,7 +458,7 @@ function renderCard(g){
   $("#xptext").innerHTML=`つぎの レベルまで あと ${g.need-g.left}`+(nx?`<br>Lv.${nx[0]} で <b>${nx[1]}</b>`:"");
   const dot=$("#tkdot"); dot.hidden=!g.tickets; dot.textContent=g.tickets;
 }
-const ticketBox=(g,btn)=>`<div class="ticket"><div><span class="label">バトルチケット</span><b>× ${g.tickets}</b></div>${btn}</div>`;
+const ticketBox=(g,btn)=>`<div class="ticket"><div><span class="label">${TICKET} バトルチケット</span><b>× ${g.tickets}</b></div>${btn}</div>`;
 const ups=a=>Object.keys(a.s).map(k=>`${SNAME[k]} +${a.s[k]}`).join(" ");
 
 function missionPanel(){const m=mission(), a=ACT[m.id];
@@ -734,11 +698,11 @@ async function gameMemory(A,lv){
 // すばやさ: the monster pops up in one of nine squares; touch it before it hides. A friend sometimes pops up instead and must be left alone.
 async function gameDash(A,lv,foe){
   const stay=lv>=15?750:lv>=8?900:1100, order=shuffle([1,1,1,1,1,1,1,1,0,0]), foes=order.filter(Boolean).length; let hits=0, slips=0;
-  A.innerHTML=`<p><b>${foe} を すばやく タッチ!</b></p><p class="muted">🐶 は なかまだから さわらないでね</p><div class="holes">${[0,1,2,3,4,5,6,7,8].map(i=>`<button type="button" class="hole" data-h="${i}" aria-label="ます ${i+1}"></button>`).join("")}</div><div class="count" id="ct">0 / ${foes}</div>`;
+  A.innerHTML=`<p><b>${foe} を すばやく タッチ!</b></p><p class="muted">${DOG} は なかまだから さわらないでね</p><div class="holes">${[0,1,2,3,4,5,6,7,8].map(i=>`<button type="button" class="hole" data-h="${i}" aria-label="ます ${i+1}"></button>`).join("")}</div><div class="count" id="ct">0 / ${foes}</div>`;
   const hs=[...A.querySelectorAll(".hole")], ct=A.querySelector("#ct"); await wait(900); let last=-1;
   for(const isFoe of order){
     let at; do{at=rint(0,8);}while(at===last); last=at; const h=hs[at];
-    h.innerHTML=isFoe?foe:"🐶"; h.dataset.on=isFoe?"foe":"pal";
+    h.innerHTML=isFoe?foe:DOG; h.dataset.on=isFoe?"foe":"pal";
     await new Promise(res=>{const tm=setTimeout(res,isFoe?stay:stay*.8);
       h.onpointerdown=e=>{e.preventDefault(); h.onpointerdown=null; clearTimeout(tm); if(isFoe){hits++;h.classList.add("hit");}else{slips++;h.classList.add("oops");} ct.textContent=`${hits} / ${foes}`; setTimeout(res,180);};});
     h.onpointerdown=null; h.textContent=""; h.className="hole"; delete h.dataset.on; await wait(220+Math.random()*260);
