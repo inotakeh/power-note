@@ -167,6 +167,14 @@ h2{font-size:1.2rem} h3{font-size:1rem} p{margin:0}
 .parent{text-align:left;font-size:.9rem;line-height:1.6}
 .parent h3{font-family:var(--body-font);font-weight:800;font-size:.95rem;margin-top:6px}
 .parent ul{margin:0;padding-left:1.2em}
+.pads{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;max-width:280px}
+.pad{aspect-ratio:1.25;border-radius:20px;border:4px solid transparent;opacity:.45;transition:opacity .1s,transform .1s}
+.pad.lit{opacity:1;transform:scale(1.06);border-color:var(--ink)}
+.pad:not(:disabled){opacity:.8}
+.pad:not(:disabled):active{opacity:1;transform:scale(.96)}
+.picks{display:flex;flex-direction:column;gap:8px}
+.picks button{display:flex;gap:12px;align-items:center;text-align:left;border:2px solid var(--rule);background:var(--chip);border-radius:14px;padding:8px 12px;font-weight:800;min-height:56px}
+.picks button .e{font-size:1.8rem;line-height:1;font-family:var(--display);width:2.2rem;text-align:center;flex:none}
 .act.mis{border-color:var(--accent)}
 .act.mis::before{content:"ミッション";position:absolute;top:6px;left:8px;font-size:.66rem;font-weight:800;background:var(--accent);color:var(--accent-ink);border-radius:999px;padding:0 8px}
 .mission{border:2px solid var(--accent)}
@@ -255,14 +263,14 @@ const GROUPS=[
     {id:"soccer",e:"⚽",t:"サッカーを した",s:{leg:2,body:1}},
     {id:"taisou",e:"🤸",t:"たいそうを した",s:{arm:2,body:1}},
     {id:"pool",e:"🏊",t:"プールで およいだ",s:{arm:2,leg:1}},
-    {id:"tetsudai",e:"🧺",t:"おてつだいを した",s:{arm:2}},
+    {id:"tetsudai",e:"🧺",t:"おてつだいを した",kind:1,s:{arm:2}},
     {id:"okita",e:"⏰",t:"じぶんで おきた",s:{brain:1,body:1}},
     {id:"fuku",e:"👕",t:"じぶんで ふくを きた",sub:"おふろの あと",s:{arm:1,brain:1}},
     {id:"neru",e:"🌙",t:"はやく ねた",s:{body:2}}]],
   ["こころ",[
-    {id:"aisatsu",e:"👋",t:"あいさつを した",s:{heart:2}},
-    {id:"arigato",e:"💐",t:"「ありがとう」を いえた",s:{heart:2}},
-    {id:"katazuke",e:"🧸",t:"かたづけを した",s:{heart:1,arm:1}},
+    {id:"aisatsu",e:"👋",t:"あいさつを した",kind:1,s:{heart:2}},
+    {id:"arigato",e:"💐",t:"「ありがとう」を いえた",kind:1,s:{heart:2}},
+    {id:"katazuke",e:"🧸",t:"かたづけを した",kind:1,s:{heart:1,arm:1}},
     {id:"gaman",e:"🌱",t:"がまん できた",s:{heart:2}},
     {id:"kirikae",e:"🌈",t:"ないても きりかえた",s:{heart:2}},
     {id:"chosen",e:"🧗",t:"むずかしい ことに ちょうせんした",s:{heart:2,brain:1}}]],
@@ -273,6 +281,7 @@ const GROUPS=[
     {id:"namae",e:"✏️",t:"じぶんの なまえを かいた",s:{brain:2}},
     {id:"tokei",e:"🕒",t:"とけいを よんだ",s:{brain:2}}]]
 ];
+// Things done for other people (kind:1) grow the hero but pay no coins: paying for kindness made small children less kind in Ulber, Hamann & Tomasello (2016).
 // きょうの ミッション is drawn from things that can be done on any day, whenever the app is first opened.
 const MISSIONS=["yoru","protein","yasai","hira","kata","hon","soto","tetsudai","fuku","neru","aisatsu","arigato","katazuke","gaman","hamigaki","tearai","junbi","namae","tokei"];
 const MISSION_COIN=10, STAMP_COIN=10, STAMP_XP=10;
@@ -329,18 +338,19 @@ const pad=n=>String(n).padStart(2,"0");
 const dkey=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
 const today=()=>dkey(new Date());
 const doneToday=()=>(st.days[today()]||[]).filter(id=>ACT[id]);
-function mission(){const t=today(); if(!st.mission||st.mission.day!==t||!ACT[st.mission.id]){const done=doneToday(), pool=MISSIONS.filter(id=>ACT[id]&&!done.includes(id)&&!(st.mission&&st.mission.id===id));
-  st.mission={day:t,id:(pool.length?pool:MISSIONS)[Math.floor(Math.random()*(pool.length?pool:MISSIONS).length)],done:false}; save();} return st.mission;}
+function mission(){const t=today(), m=st.mission;
+  if(!m||m.day!==t||(m.id&&!ACT[m.id])||(!m.id&&!(Array.isArray(m.opts)&&m.opts.length))){const done=doneToday(), pool=MISSIONS.filter(id=>ACT[id]&&!done.includes(id)&&!(m&&m.id===id));
+    st.mission={day:t,opts:shuffle(pool.length>=3?pool:MISSIONS).slice(0,3),id:null,done:false}; save();} return st.mission;}
 
 function calc(){
-  const s={brain:0,leg:0,arm:0,body:0,heart:0}; let xp=st.bonus||0, earned=0, n=0, stamps=0;
+  const s={brain:0,leg:0,arm:0,body:0,heart:0}; let xp=st.bonus||0, earned=0, n=0, nc=0, stamps=0;
   for(const k in st.days){const ids=(st.days[k]||[]).filter(id=>ACT[id]); if(!ids.length)continue;
-    ids.forEach(id=>{for(const p in ACT[id].s)s[p]+=ACT[id].s[p];}); xp+=ids.length*XP_ACT; n+=ids.length; if(st.stamps[k]){stamps++;xp+=STAMP_XP;} earned+=1+(ids.length>=BONUS_AT?1:0);}
+    ids.forEach(id=>{for(const p in ACT[id].s)s[p]+=ACT[id].s[p];}); xp+=ids.length*XP_ACT; n+=ids.length; nc+=ids.filter(id=>!ACT[id].kind).length; if(st.stamps[k]){stamps++;xp+=STAMP_XP;} earned+=1+(ids.length>=BONUS_AT?1:0);}
   for(const k in st.moods)if(MOOD[st.moods[k]])s.heart+=1; // naming a feeling counts, whichever feeling it is
   let lv=1, need=40, left=xp; while(left>=need){left-=need;lv++;need=30+lv*10;}
   let streak=0; const d=new Date(); if(!(st.days[dkey(d)]||[]).length)d.setDate(d.getDate()-1);
   while((st.days[dkey(d)]||[]).length){streak++;d.setDate(d.getDate()-1);}
-  return {s,xp,lv,left,need,coins:Math.max(0,n*COIN_ACT+stamps*STAMP_COIN+(st.won||0)-st.bought.reduce((a,i)=>a+(GEAR[i]?priceOf(i):0),0)),tickets:Math.max(0,earned-(st.used||0)),streak,n,power:s.brain+s.leg+s.arm+s.body+s.heart};
+  return {s,xp,lv,left,need,coins:Math.max(0,nc*COIN_ACT+stamps*STAMP_COIN+(st.won||0)-st.bought.reduce((a,i)=>a+(GEAR[i]?priceOf(i):0),0)),tickets:Math.max(0,earned-(st.used||0)),streak,n,power:s.brain+s.leg+s.arm+s.body+s.heart};
 }
 const owned=i=>st.bought.includes(i);
 const worn=k=>{const i=(st.equip||{})[k];return Number.isInteger(i)&&GEAR[i]&&GEAR[i].k===k&&owned(i)?GEAR[i]:null;};
@@ -411,9 +421,12 @@ const ticketBox=(g,btn)=>`<div class="ticket"><div><span class="label">バトル
 const ups=a=>Object.keys(a.s).map(k=>`${SNAME[k]} +${a.s[k]}`).join(" ");
 
 function missionPanel(){const m=mission(), a=ACT[m.id];
+  if(!a)return `<section class="panel mission"><div class="row2"><h2>きょうの ミッションを えらぼう</h2><span class="muted">${coinSVG} +${MISSION_COIN}コイン</span></div>
+    <div class="picks">${m.opts.filter(id=>ACT[id]).map(id=>`<button type="button" data-mis="${id}"><span class="e" aria-hidden="true">${ACT[id].e}</span><span>${ACT[id].t}</span></button>`).join("")}</div>
+    <p class="muted">じぶんで きめた ことを やってみよう。</p></section>`;
   return `<section class="panel mission"><div class="row2"><h2>きょうの ミッション</h2><span class="muted">${coinSVG} +${MISSION_COIN}コイン</span></div>
     <div class="m"><span class="e" aria-hidden="true">${a.e}</span><span><b>${a.t}</b>${a.sub?`<br><span class="muted">${a.sub}</span>`:""}</span></div>
-    ${m.done?`<p><b style="color:var(--good)">ミッション クリア! すごい!</b></p>`:`<button class="ghost" data-go="rec" type="button">できたら きろくしよう</button>`}</section>`;}
+    ${m.done?`<p><b style="color:var(--good)">ミッション クリア! じぶんで きめて できたね!</b></p>`:`<button class="ghost" data-go="rec" type="button">できたら きろくしよう</button>`}</section>`;}
 function moodPanel(){const m=MOOD[st.moods[today()]];
   return m?`<section class="panel"><div class="row2"><h2>きょうの きもち</h2><span class="muted">こころ +1</span></div><div class="stamped"><span class="e" aria-hidden="true">${m[1]}</span><span>${m[2]} きもち なんだね。おしえてくれて ありがとう。</span></div></section>`
     :`<section class="panel"><div class="row2"><h2>きょうの きもちは?</h2><span class="muted">こころ +1</span></div><div class="moods">${MOODS.map(x=>`<button type="button" data-mood="${x[0]}">${x[1]}<span>${x[2]}</span></button>`).join("")}</div><p class="muted">どの きもちでも だいじょうぶ。</p></section>`;}
@@ -450,7 +463,7 @@ function viewHome(g){
 }
 function viewRec(g){
   const done=new Set(doneToday()), left=Object.keys(ACT).filter(id=>!done.has(id)).length;
-  [...picked].forEach(id=>{if(done.has(id))picked.delete(id);}); const m=mission(), mis=m.done?"":m.id;
+  [...picked].forEach(id=>{if(done.has(id))picked.delete(id);}); const m=mission(), mis=m.done||!m.id?"":m.id;
   return `<section class="panel"><h2>きょう できたことを えらぼう</h2>
     <p class="muted">できたことを タップして、したの「きろくする!」を おしてね。5こ できたら チケットが もう 1まい!</p></section>
   ${GROUPS.map(gr=>`<section class="panel"><h3>${gr[0]}</h3><div class="acts">${gr[1].map(a=>done.has(a.id)
@@ -466,14 +479,14 @@ const purse=g=>`<div class="purse"><span class="label">もっている コイン
 function viewGear(g){
   const b=bstats(g);
   return `${purse(g)}
-  <section class="panel"><p><b>コインで そうびを かおう!</b></p><p class="muted">きろく 1こで ${COIN_ACT}コイン。バトルに かつと たくさん もらえるよ。</p></section>
+  <section class="panel"><p><b>コインで そうびを かおう!</b></p><p class="muted">きろく 1こで ${COIN_ACT}コイン。バトルに かつと たくさん もらえるよ。(だれかの ために した ことは、コインの かわりに こころが そだつよ)</p></section>
   ${SLOTS.map(sl=>`<section class="panel"><div class="row2"><h2>${sl[1]}</h2><span class="muted">${worn(sl[0])?worn(sl[0]).n:"なにも つけていない"}</span></div><div class="gears">${GEAR.map((x,i)=>x.k!==sl[0]?"":owned(i)
     ?`<button type="button" class="gi" data-equip="${i}" aria-pressed="${worn(sl[0])===x}">${gearIcon(x)}<span><span class="t">${x.n}</span><br><span class="up">${gearUp(x)}</span></span><span class="tag">${worn(sl[0])===x?"そうび中":"つける"}</span></button>`
     :`<button type="button" class="gi shop" data-buy="${i}" ${g.coins>=priceOf(i)?"":"disabled"}>${gearIcon(x)}<span><span class="t">${x.n}</span><br><span class="up">${gearUp(x)}${g.coins>=priceOf(i)?"":` ・ あと ${priceOf(i)-g.coins}コイン`}</span></span><span class="tag">${coinSVG} ${priceOf(i)}${g.coins>=priceOf(i)?" かう":""}</span></button>`).join("")}</div></section>`).join("")}
   ${powerPanel(g,b)}`;
 }
 function viewBattle(g){
-  const b=bstats(g), f=foeOf(st.stage), mine=["brain","spd","atk","def"].reduce((a,k)=>a+dmgOf(b[k],1),0)+dmgOf(b.heart,.6), prize=coinWin(st.stage);
+  const b=bstats(g), f=foeOf(st.stage), mine=["brain","spd","atk","def"].reduce((a,k)=>a+dmgOf(b[k],1),0)+dmgOf(b.heart,1), prize=coinWin(st.stage);
   const tip=mine>=f.hp*1.15?"いまの つよさなら かてそう!":mine>=f.hp*.85?"いい しょうぶ! ミニゲームを がんばろう":"つよい あいて! きろくして つよくなろう";
   return `<section class="panel"><h2>つぎの あいて</h2>
     <div class="foe"><div class="em" aria-hidden="true">${f.e}</div><div><div class="big">${f.n}</div><div class="muted">たいりょく ${f.hp} ・ ${st.stage+1}ばんめ</div></div></div>
@@ -483,8 +496,8 @@ function viewBattle(g){
     ${g.tickets?`<button class="primary" id="fight" type="button">バトル スタート!</button>`:`<button class="primary" data-go="rec" type="button">きろくして チケットを もらう</button>`}
   </section>
   ${powerPanel(g,b)}
-  <section class="panel"><h2>バトルの しかた</h2><p class="muted">4つの ミニゲームで こうげき! ちからが たかいほど ダメージが おおきいよ。コインで そうびを かうと もっと つよくなる。</p>
-    <ul class="unl"><li><span>🧠 まほうの ちから</span><span>あたまクイズ</span></li><li><span>💨 すばやさ</span><span>れんだ ダッシュ</span></li><li><span>⚔️ こうげき力</span><span>ぴったり こうげき</span></li><li><span>🛡️ しゅび力</span><span>いまだ! ガード</span></li><li><span>❤️ ゆうきの ちから</span><span>さいごの いちげき</span></li></ul><p class="muted">あたまクイズは もじ・かず・とけい。レベルが あがると たしざんも でるよ。</p></section>
+  <section class="panel"><h2>バトルの しかた</h2><p class="muted">5つの ミニゲームで こうげき! ちからが たかいほど ダメージが おおきいよ。コインで そうびを かうと もっと つよくなる。</p>
+    <ul class="unl"><li><span>🧠 まほうの ちから</span><span>あたまクイズ</span></li><li><span>💨 すばやさ</span><span>れんだ ダッシュ</span></li><li><span>⚔️ こうげき力</span><span>ぴったり こうげき</span></li><li><span>🛡️ しゅび力</span><span>いまだ! ガード</span></li><li><span>❤️ ゆうきの ちから</span><span>おぼえて タップ</span></li></ul><p class="muted">あたまクイズは もじ・ことばの おと・かず・とけい。レベルが あがると たしざんも でるよ。</p></section>
   <section class="panel"><div class="row2"><h2>モンスターずかん</h2><span class="muted">${Math.min(st.stage,FOES.length)} / ${FOES.length}</span></div>
     <div class="zukan">${FOES.map((x,i)=>`<div class="${i<st.stage?"got":""}" title="${i<st.stage?x[1]:"?"}">${i<st.stage?x[0]:"?"}</div>`).join("")}</div></section>`;
 }
@@ -514,7 +527,7 @@ const closeOv=()=>{ov.innerHTML="";};
 function saveRecord(){
   if(!picked.size)return; const before=calc(), k=today(), had=(st.days[k]||[]).length;
   const add=[...picked].filter(id=>ACT[id]&&!(st.days[k]||[]).includes(id));
-  const m=mission(), cleared=!m.done&&add.includes(m.id); if(cleared){m.done=true; st.won=(st.won||0)+MISSION_COIN; st.mcount=(st.mcount||0)+1;}
+  const m=mission(), cleared=!!m.id&&!m.done&&add.includes(m.id); if(cleared){m.done=true; st.won=(st.won||0)+MISSION_COIN; st.mcount=(st.mcount||0)+1;}
   st.days[k]=(st.days[k]||[]).concat(add); picked.clear(); save();
   const after=calc(), tk=after.tickets-before.tickets, gain={}, bd=earnBadges();
   add.forEach(id=>{for(const p in ACT[id].s)gain[p]=(gain[p]||0)+ACT[id].s[p];});
@@ -526,7 +539,8 @@ function saveRecord(){
     <div style="max-width:150px;margin:0 auto;width:100%">${heroSVG(after.lv)}</div>
     <ul class="unl">${STATS.filter(s=>gain[s[0]]).map(s=>`<li class="got"><span>${s[2]} ${s[1]}</span><span>+${gain[s[0]]}</span></li>`).join("")}</ul>
     ${cleared?`<div class="lvup" style="font-size:1.1rem">ミッション クリア! +${MISSION_COIN}コイン</div>`:""}
-    <div><b>${coinSVG} +${add.length*COIN_ACT+(cleared?MISSION_COIN:0)}コイン</b> <span class="muted">(いま ${after.coins}コイン)</span></div>
+    ${add.some(id=>ACT[id].kind)?`<div><b style="color:var(--heart)">だれかの ために できたね。やさしい こころが そだったよ。</b></div>`:""}
+    <div><b>${coinSVG} +${add.filter(id=>!ACT[id].kind).length*COIN_ACT+(cleared?MISSION_COIN:0)}コイン</b> <span class="muted">(いま ${after.coins}コイン)</span></div>
     ${tk>0?`<div><b>バトルチケット +${tk}</b> <span class="muted">(いま ${after.tickets}まい)</span></div>`:(had+add.length<BONUS_AT?`<div class="muted">あと ${BONUS_AT-had-add.length}こ できたら チケットが もう 1まい</div>`:"")}
     <div class="row" style="justify-content:center">${after.tickets?`<button class="ghost" type="button" data-close="battle">バトルに いく</button>`:""}<button class="primary" type="button" data-close="" style="flex:1;width:auto">やったね!</button></div>`);
 }
@@ -550,7 +564,8 @@ function openParent(){
     <h3>この7日間</h3><ul><li>記録した日: ${days}日 / 7日</li>${GROUPS.map((gr,j)=>`<li>${gr[0]}: ${per[j]}日</li>`).join("")}<li>きもち(古い順): ${moods}</li></ul>
     ${not.length?`<h3>この7日間まだ記録がない項目</h3><ul>${not.map(id=>`<li>${ACT[id].t}</li>`).join("")}</ul>`:""}
     ${weak.length?`<h3>クイズで まちがえた文字</h3><p>${weak.join("、")}</p>`:""}
-    <h3>声かけのヒント</h3><ul><li>結果より「やろうとしたこと」「続けたこと」を言葉にしてほめると、挑戦する気持ちが育ちます。</li><li>「かなしい」「おこった」を選んだ日は、理由を聞いて受け止めるだけで十分です。気持ちを言葉にできること自体が成長です。</li><li>記録が少ない日があっても責めずに、できた1つを一緒に喜ぶと長く続きます。</li></ul></div>
+    <h3>声かけのヒント</h3><ul><li>結果より「やろうとしたこと」「続けたこと」を言葉にしてほめると、挑戦する気持ちが育ちます。</li><li>「かなしい」「おこった」を選んだ日は、理由を聞いて受け止めるだけで十分です。気持ちを言葉にできること自体が成長です。</li><li>記録が少ない日があっても責めずに、できた1つを一緒に喜ぶと長く続きます。</li></ul>
+    <h3>参考にした研究</h3><ul><li>数が順に並ぶ遊びは、就学前の数の理解を伸ばす (Siegler &amp; Ramani, 2008)。→ かずの ならびクイズ</li><li>ごほうびの「物」は、ほめ言葉とちがい、分け合う行動を減らした (Ulber, Hamann &amp; Tomasello, 2016)。→ だれかのための行動にはコインを付けていません</li><li>自分で選べると意欲が高まりやすい (Patall, Cooper &amp; Robinson, 2008)。→ ミッションは3つから本人が選びます</li><li>覚える・待つ遊びは、気持ちや行動をコントロールする力の練習になる (Diamond &amp; Lee, 2011)。→ おぼえて タップ、いまだ! ガード</li><li>努力や工夫をほめられた子は、難しいことに挑戦しやすい (Gunderson et al., 2013)。→ スタンプの言葉</li></ul></div>
     <button class="primary" type="button" data-close="">とじる</button>`);}
 let stampAns=0;
 function openStamp(msg){const x=rint(6,9), y=rint(6,9); stampAns=x*y;
@@ -563,9 +578,10 @@ function pickStamp(){const ids=doneToday();
     <div class="stamps">${STAMPS.map(x=>`<button type="button" data-stamp="${x[0]}">${x[0]}<span>${x[1]}</span></button>`).join("")}</div>
     <button class="ghost" type="button" data-close="">やめる</button>`);}
 
-/* ---------- battle: four mini games, then a last hit from こころ ---------- */
+/* ---------- battle: five mini games, one for each battle power ---------- */
 let fighting=false;
 const HIRA="あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん", KATA="アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン";
+const WORDS=[["🍎","りんご"],["🐶","いぬ"],["🐱","ねこ"],["🚗","くるま"],["🌙","つき"],["☂️","かさ"],["🐟","さかな"],["👂","みみ"],["✋","て"],["🦁","らいおん"],["🐵","さる"],["🍙","おにぎり"],["🐮","うし"],["⭐","ほし"],["🍉","すいか"],["🍓","いちご"],["⌚","とけい"],["✂️","はさみ"],["📕","ほん"],["🐸","かえる"],["🐢","かめ"],["🍊","みかん"],["🥕","にんじん"],["🍅","とまと"],["🐻","くま"],["🐰","うさぎ"],["🦒","きりん"],["🐍","へび"],["🐙","たこ"],["✈️","ひこうき"],["⛄","ゆきだるま"],["🌈","にじ"],["🍄","きのこ"],["👟","くつ"],["🪑","いす"],["🦊","きつね"],["🐭","ねずみ"],["🍋","れもん"],["🏠","いえ"]];
 const pick=a=>a[Math.floor(Math.random()*a.length)], rint=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
 const near=(n,lo,hi)=>shuffle([n-3,n-2,n-1,n+1,n+2,n+3].filter(x=>x>=lo&&x<=hi)).slice(0,2);
 function clockSVG(h,half){const ha=(h%12+(half?.5:0))*30, ma=half?180:0, pt=(deg,r)=>{const t=(deg-90)*Math.PI/180;return (50+r*Math.cos(t)).toFixed(1)+" "+(50+r*Math.sin(t)).toFixed(1);};
@@ -573,7 +589,7 @@ function clockSVG(h,half){const ha=(h%12+(half?.5:0))*30, ma=half?180:0, pt=(deg
   return `<svg class="clock" viewBox="0 0 100 100" role="img" aria-label="とけい"><circle cx="50" cy="50" r="47" fill="var(--chip)" stroke="currentColor" stroke-width="3"/>${ticks}<path d="M50 50L${pt(ha,22)}" stroke="currentColor" stroke-width="5" stroke-linecap="round"/><path d="M50 50L${pt(ma,31)}" stroke="var(--kick)" stroke-width="3" stroke-linecap="round"/><circle cx="50" cy="50" r="3" fill="currentColor"/></svg>`;}
 // One question: what is shown, what is asked, the three answers (the first is the right one) and whether the answers are words.
 function question(lv){
-  const kinds=["kana","kana","count","clock"]; if(lv>=5)kinds.push("add","add"); if(lv>=12)kinds.push("sub");
+  const kinds=["kana","kana","count","clock","seq","head"]; if(lv>=5)kinds.push("add","add"); if(lv>=12)kinds.push("sub");
   const k=pick(kinds);
   if(k==="kana"){const toKata=Math.random()<.5, from=toKata?HIRA:KATA, to=toKata?KATA:HIRA, weak=Object.keys(st.miss).filter(x=>+x<HIRA.length), i=weak.length&&Math.random()<.5?+pick(weak):rint(0,HIRA.length-1); // letters that were missed come back more often
     return {kana:i,note:`「${HIRA[i]}」と「${KATA[i]}」は おなじ よみかた`,show:`<div class="glyph">${from[i]}</div>`,ask:"おなじ よみかたは どれ?",opts:[to[i]].concat(shuffle([...Array(HIRA.length).keys()].filter(x=>x!==i)).slice(0,2).map(x=>to[x]))};}
@@ -581,6 +597,10 @@ function question(lv){
     return {show:`<div class="items">${pick(["🍎","⭐","⚽","🐟","🍙"]).repeat(n)}</div>`,ask:"いくつ ある?",opts:[n].concat(near(n,1,15))};}
   if(k==="clock"){const h=rint(1,12), half=lv>=12&&Math.random()<.5, nm=x=>x+"じ"+(half?"はん":"");
     return {show:clockSVG(h,half),ask:"なんじ かな?",txt:1,opts:[nm(h)].concat(shuffle([1,2,3,4,5,6,7,8,9,10,11,12].filter(x=>x!==h)).slice(0,2).map(nm))};}
+  if(k==="seq"){const x=rint(1,lv>=5?16:6), hole=rint(0,3), ans=x+hole;
+    return {show:`<div class="sum">${[0,1,2,3].map(j=>j===hole?"□":x+j).join(" ")}</div>`,ask:"□ に はいる かずは?",opts:[ans].concat(near(ans,0,20))};}
+  if(k==="head"){const w=pick(WORDS), c=w[1][0];
+    return {always:1,note:`「${w[1]}」の さいしょの おとは「${c}」`,show:`<div class="glyph">${w[0]}</div>`,ask:"さいしょの おとは どれ?",opts:[c].concat(shuffle(HIRA.split("").filter(x=>x!==c)).slice(0,2))};}
   if(k==="add"){const top=lv>=12?20:10, x=rint(1,top-1), y=rint(1,top-x);
     return {show:`<div class="sum">${x} + ${y}</div>`,ask:"こたえは どれ?",opts:[x+y].concat(near(x+y,0,20))};}
   const x=rint(2,10), y=rint(1,x-1);
@@ -594,11 +614,23 @@ async function gameQuiz(A,lv){
     const hit=await new Promise(res=>{A.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>res(b));});
     const right=opts[+hit.dataset.o].ok; if(right)ok++;
     if(Q.kana!==undefined){const c=st.miss[Q.kana]||0; if(right){if(c>1)st.miss[Q.kana]=c-1;else delete st.miss[Q.kana];}else st.miss[Q.kana]=Math.min(3,c+1); save();}
-    if(!right&&Q.note)A.insertAdjacentHTML("beforeend",`<p><b>${Q.note}</b></p>`);
+    if(Q.note&&(!right||Q.always))A.insertAdjacentHTML("beforeend",`<p><b>${Q.note}</b></p>`);
     A.querySelectorAll("[data-o]").forEach(b=>{b.disabled=true;if(opts[+b.dataset.o].ok)b.classList.add("ok");else if(b===hit)b.classList.add("ng");});
-    await wait(right?700:2200);
+    await wait(right&&!Q.always?700:right?1500:2200);
   }
   return ok/3;
+}
+async function gameMemory(A,lv){
+  const len=lv>=15?5:lv>=8?4:3, cols=["var(--brain)","var(--leg)","var(--arm)","var(--body)"], seq=[]; for(let i=0;i<len;i++)seq.push(rint(0,3));
+  A.innerHTML=`<p id="mt"><b>ひかる じゅんばんを おぼえてね</b></p><div class="pads">${cols.map((c,i)=>`<button type="button" class="pad" data-p="${i}" style="background:${c}" aria-label="${["むらさき","あお","オレンジ","みどり"][i]}" disabled></button>`).join("")}</div>`;
+  const pads=[...A.querySelectorAll(".pad")]; await wait(900);
+  for(const i of seq){pads[i].classList.add("lit"); await wait(620); pads[i].classList.remove("lit"); await wait(260);}
+  A.querySelector("#mt").innerHTML="<b>おなじ じゅんばんで タップ!</b>"; pads.forEach(b=>b.disabled=false);
+  let ok=0;
+  for(const want of seq){const hit=await new Promise(res=>{pads.forEach(b=>b.onclick=()=>res(+b.dataset.p));});
+    pads[hit].classList.add("lit"); setTimeout(()=>pads[hit].classList.remove("lit"),200); if(hit!==want)break; ok++;}
+  pads.forEach(b=>{b.disabled=true;b.onclick=null;}); A.querySelector("#mt").innerHTML=`<b>${ok===len?"ぜんぶ おぼえた!":ok?ok+"こ できた!":"おしい!"}</b>`; await wait(900);
+  return clamp(ok/len,.2,1);
 }
 async function gameDash(A){
   A.innerHTML=`<p><b>5びょうで たくさん タップ!</b></p><button type="button" class="tap" id="tp">スタート</button><div class="count" id="ct">0</div>`;
@@ -633,19 +665,15 @@ async function battle(){
   const g=calc(); if(fighting||g.tickets<1)return; fighting=true; st.used=(st.used||0)+1; save();
   const f=foeOf(st.stage); let hp=f.hp;
   sheet(`<div class="foe" style="text-align:left"><div class="em" id="fem" aria-hidden="true">${f.e}</div><div style="flex:1;min-width:0"><b>${f.n}</b><div class="hp"><i id="fhp" style="width:100%"></i></div><div class="muted" id="fhpt">たいりょく ${hp} / ${f.hp}</div></div></div><div class="arena" id="arena"></div>`);
-  const b=bstats(g), A=$("#arena"), GAMES=[["brain",gameQuiz,"🧠","まほう"],["spd",gameDash,"💨","すばやさ"],["atk",gamePunch,"⚔️",worn("sword")?worn("sword").n:"パンチ"],["def",gameGuard,"🛡️",worn("shield")?worn("shield").n:"ガード"]];
+  const b=bstats(g), A=$("#arena"), GAMES=[["brain",gameQuiz,"🧠","まほう"],["spd",gameDash,"💨","すばやさ"],["atk",gamePunch,"⚔️",worn("sword")?worn("sword").n:"パンチ"],["def",gameGuard,"🛡️",worn("shield")?worn("shield").n:"ガード"],["heart",gameMemory,"❤️","ゆうき"]];
   for(let i=0;i<GAMES.length&&hp>0;i++){
     const key=GAMES[i][0], s=[key,GAMES[i][3],GAMES[i][2]];
-    A.innerHTML=`<p class="muted">こうげき ${i+1} / 4</p><div class="glyph">${s[2]}</div><div class="big">${s[1]} で こうげき!</div>`; await wait(1300);
+    A.innerHTML=`<p class="muted">こうげき ${i+1} / ${GAMES.length}</p><div class="glyph">${s[2]}</div><div class="big">${s[1]} で こうげき!</div>`; await wait(1300);
     const score=await GAMES[i][1](A,g.lv), d=dmgOf(b[key],score); hp=Math.max(0,hp-d);
     $("#fhp").style.width=(hp/f.hp*100)+"%"; $("#fhpt").textContent=`たいりょく ${hp} / ${f.hp}`;
     const em=$("#fem"); em.classList.remove("shake"); void em.offsetWidth; em.classList.add("shake");
     A.innerHTML=`<div class="big">${d} ダメージ!</div><p class="muted">${score>=.85?"すごい こうげき!":score>=.5?"いい こうげき!":"つぎは もっと いける!"}</p>`; await wait(1400);
   }
-  if(hp>0){A.innerHTML=`<p class="muted">さいごの ちから</p><div class="glyph">❤️</div><div class="big">ゆうきの いちげき!</div>`; await wait(1400);
-    const d=dmgOf(b.heart,.6); hp=Math.max(0,hp-d); $("#fhp").style.width=(hp/f.hp*100)+"%"; $("#fhpt").textContent=`たいりょく ${hp} / ${f.hp}`;
-    const em=$("#fem"); em.classList.remove("shake"); void em.offsetWidth; em.classList.add("shake");
-    A.innerHTML=`<div class="big">${d} ダメージ!</div><p class="muted">こころが つよいほど おおきく なるよ</p>`; await wait(1400);}
   const win=hp<=0, before=calc();
   const prize=win?coinWin(st.stage):COIN_LOSE; st.won=(st.won||0)+prize;
   if(win){st.stage++; st.bonus=(st.bonus||0)+XP_WIN;} save(); const after=calc(), bd=earnBadges(); fighting=false; render();
@@ -665,6 +693,8 @@ document.addEventListener("click",e=>{
     const bd=earnBadges(); render(); sheet(`<div class="big">「${x.n}」を かった!</div>${bd}<div style="max-width:150px;margin:0 auto;width:100%">${heroSVG(g.lv)}</div><ul class="unl"><li class="got"><span>${x.n}</span><span>${gearUp(x)}</span></li></ul><button class="primary" type="button" data-close="">そうび した!</button>`); return;}
   if(t.dataset.mood){if(!MOOD[t.dataset.mood])return; st.moods[today()]=t.dataset.mood; save(); const bd=earnBadges(), y=window.scrollY; render(); window.scrollTo(0,y);
     if(bd)sheet(`${bd}<button class="primary" type="button" data-close="">やったー!</button>`); return;}
+  if(t.dataset.mis){const m=mission(), id=t.dataset.mis; if(m.id||!ACT[id]||!m.opts.includes(id))return; m.id=id;
+    if(doneToday().includes(id)){m.done=true; st.won=(st.won||0)+MISSION_COIN; st.mcount=(st.mcount||0)+1;} save(); const y=window.scrollY; render(); window.scrollTo(0,y); return;}
   if(t.id==="parentOpen")return openParent();
   if(t.id==="stampOpen")return openStamp();
   if(t.id==="stampCheck"){if(+($("#stampIn").value||"").trim()===stampAns)pickStamp();else openStamp("こたえが ちがいます。もういちど どうぞ。"); return;}
