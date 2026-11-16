@@ -335,7 +335,8 @@ const XP_ACT=10, XP_WIN=20, BONUS_AT=5; // a day's first record gives one ticket
 // Looks the child can change in せってい.
 const HAIRS=[["#2a1c14","こげちゃ"],["#15131a","くろ"],["#8a5a2b","ちゃいろ"],["#e0b040","きんいろ"],["#c8402a","あか"],["#2f6fe4","あお"]];
 const SKINS=[["#ffd2a6","#e8a878","あかるい"],["#f1b98a","#cf9164","ふつう"],["#c98a5c","#a36b40","こい"]];
-const STYLES=["ふつう","ツンツン","ながい","みじかい"];
+const STYLES=["ふつう","ツンツン","ながい","みじかい","ぱっつん"];
+const EYES=["ふつう","ぱっちり","にこにこ","きりっ"], MOUTHS=["にっこり","わらう","むん"], CHEEKS=["なし","あり"];
 const SHIRTS=[["#19c37d","#0f8a57","みどり"],["#2f7bff","#1c55c0","あお"],["#e8501f","#b53d0c","オレンジ"],["#f2b705","#b98600","きいろ"],["#e86aa6","#b8437c","ピンク"],["#8a5be0","#6238b3","むらさき"]];
 const RANKS=[[1,"たまご ヒーロー"],[3,"ちびっこ ヒーロー"],[6,"げんき ヒーロー"],[10,"つよつよ ヒーロー"],[15,"スーパー ヒーロー"],[22,"でんせつの ヒーロー"],[30,"ゆうしゃ"],[40,"だいゆうしゃ"],[50,"うちゅう一の ヒーロー"]];
 const UNLOCKS=[[2,"あかい はちまき"],[4,"ヒーローの マント"],[6,"あおい ふく"],[8,"パワーの オーラ"],[11,"きんの ふく"],[14,"おうさまの かんむり"],[17,"ほのおの オーラ"],[20,"ひかる あおい め"],[25,"きんの マント"],[30,"てんしの つばさ"],[35,"いなずまの オーラ"],[40,"にじいろの オーラ"],[50,"でんせつの ほし"]];
@@ -360,7 +361,7 @@ let st={name:"",days:{},used:0,stage:0,bonus:0,equip:{},won:0,bought:null,stamps
 try{const d=JSON.parse(localStorage.getItem(LS)||"null");if(d&&typeof d==="object"){st=Object.assign(st,d);if(!st.days||typeof st.days!=="object")st.days={};if(!st.equip||typeof st.equip!=="object")st.equip={};if(!st.stamps||typeof st.stamps!=="object")st.stamps={};if(!st.moods||typeof st.moods!=="object")st.moods={};if(!st.miss||typeof st.miss!=="object")st.miss={};if(!Array.isArray(st.badges))st.badges=[];}}catch(e){}
 if(!Array.isArray(st.bought)){st.bought=[];for(let i=0;i<Math.min(st.stage||0,12);i++)st.bought.push(i);}
 function look(){const l=st.look&&typeof st.look==="object"?st.look:{}, ok=(v,a)=>Number.isInteger(v)&&v>=0&&v<a.length;
-  return {hair:ok(l.hair,HAIRS)?l.hair:0,style:ok(l.style,STYLES)?l.style:0,skin:ok(l.skin,SKINS)?l.skin:0,shirt:ok(l.shirt,SHIRTS)?l.shirt:null};}
+  return {hair:ok(l.hair,HAIRS)?l.hair:0,style:ok(l.style,STYLES)?l.style:0,skin:ok(l.skin,SKINS)?l.skin:0,shirt:ok(l.shirt,SHIRTS)?l.shirt:null,eyes:ok(l.eyes,EYES)?l.eyes:0,mouth:ok(l.mouth,MOUTHS)?l.mouth:0,cheek:ok(l.cheek,CHEEKS)?l.cheek:0};}
 const save=()=>{try{localStorage.setItem(LS,JSON.stringify(st));}catch(e){}};
 const pad=n=>String(n).padStart(2,"0");
 const dkey=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
@@ -395,50 +396,78 @@ function earnBadges(){const g=calc(), fresh=BADGES.filter(b=>!st.badges.includes
   fresh.forEach(b=>st.badges.push(b[0])); save(); return fresh.map(b=>`<div class="lvup" style="font-size:1rem">バッジ ゲット! ${b[1]} ${b[2]}</div>`).join("");}
 const rankOf=lv=>RANKS.filter(r=>lv>=r[0]).pop()[1];
 
-/* ---------- pixel hero: 16 x 20 grid, gear changes with the level ---------- */
+/* ---------- pixel hero: 24 x 36 grid (16-wide head). Face and hair come from せってい, gear from the level and the shop ---------- */
 function heroSVG(lv){
-  const sw=worn("sword"), sh=worn("shield"), ar=worn("armor");
-  const L=look(), own=L.shirt===null?null:SHIRTS[L.shirt];
+  const sw=worn("sword"), sh=worn("shield"), ar=worn("armor"), L=look(), own=L.shirt===null?null:SHIRTS[L.shirt];
   const shirt=ar?ar.c:own?own[0]:lv>=11?"#f2b705":lv>=6?"#2f7bff":"#19c37d", shade=ar?ar.c2:own?own[1]:lv>=11?"#b98600":lv>=6?"#1c55c0":"#0f8a57";
-  const sword=sw?`<rect x="2" y="4" width="1" height="8" fill="${sw.c}"/><rect x="3" y="5" width="1" height="7" fill="${sw.c2}"/><rect x="1" y="12" width="4" height="1" fill="#ffd34f"/><rect x="2" y="13" width="2" height="1" fill="#7d5226"/>`:"";
-  const shield=sh?`<rect x="11" y="11" width="5" height="4" fill="${sh.c2}"/><rect x="12" y="15" width="3" height="1" fill="${sh.c2}"/><rect x="12" y="12" width="3" height="3" fill="${sh.c}"/><rect x="13" y="12" width="1" height="3" fill="#ffffff" opacity=".7"/>`:"";
-  const PAL={h:HAIRS[L.hair][0],s:SKINS[L.skin][0],S:SKINS[L.skin][1],e:lv>=20?"#1f8fff":"#141a2e",m:"#c2543a",j:shirt,J:shade,n:"#26304f",b:"#e8501f",k:"#e22b2b",g:"#ffd34f",w:"#ffffff"};
-  const R=[
-    lv>=14?".....g.gg.g.....":"................",
-    lv>=14?".....gggggg.....":".....hhhhhh.....",
-    "....hhhhhhhh....",
-    "...hhhhhhhhhh...",
-    lv>=2?"..kkkkkkkkkkkk..":"...hhsssssshh...",
-    "...hssssssssh...",
-    "...sswesswess...",
-    "...sseesseess...",
-    "...sssssssssS...",
-    "....ssmmmmsS....",
-    ".....ssssSS.....",
-    "....jjjjjjjJ....",
-    "..ssjjjwwjjJss..",
-    "..ssjjjwwjjJss..",
-    "..SS.jjjjjJ.SS..",
-    ".....nnnnnn.....",
-    ".....nn..nn.....",
-    ".....ss..ss.....",
-    "....bbb..bbb....",
-    "................"];
-  const put=(y,xs)=>xs.forEach(x=>{if(R[y][x]===".")R[y]=R[y].slice(0,x)+"h"+R[y].slice(x+1);});
-  if(L.style===1&&lv<14){R[0]="....h..hh..h....";R[1]="....hhhhhhhh....";}
-  if(L.style===2){for(let y=5;y<=8;y++)put(y,[2,13]); put(9,[2,3,12,13]); put(10,[2,3,4,11,12,13]);}
-  if(L.style===3&&lv<14)R[1]="................";
+  const PAL={H:HAIRS[L.hair][0],s:SKINS[L.skin][0],S:SKINS[L.skin][1],e:lv>=20?"#1f8fff":"#141a2e",w:"#ffffff",m:"#c2543a",M:"#7a2430",c:"#ff9aa2",
+    j:shirt,J:shade,n:"#26304f",N:"#1a2138",x:"#ffffff",o:"#e8501f",O:"#8f2f0c",k:"#e22b2b",g:"#ffd34f",r:"#e22b2b"};
+  const W=24, HT=36, HX=4, HY=3, G=[]; for(let y=0;y<HT;y++)G.push(new Array(W).fill("."));
+  const set=(x,y,c)=>{if(x>=0&&x<W&&y>=0&&y<HT)G[y][x]=c;};
+  const stamp=(rows,x0,y0)=>rows.forEach((row,j)=>{for(let i=0;i<row.length;i++)if(row[i]!==".")set(x0+i,y0+j,row[i]);});
+  // body (rows 18 to 35)
+  stamp([
+    ".........ssssSS.........",
+    "......jjjjjjjjjjjJ......",
+    ".....jjjjjjjjjjjjjJ.....",
+    "....jjjjjjjwwjjjjjJJ....",
+    "....jjjjjjwwwwjjjjJJ....",
+    "....ssjjjjjwwjjjjJss....",
+    "....ssjjjjjjjjjjjJss....",
+    "....SS.jjjjjjjjjJ.SS....",
+    ".......jjjjjjjjjJ.......",
+    ".......nnnnnnnnnN.......",
+    ".......nnnnnnnnnN.......",
+    ".......nnnn..nnnN.......",
+    ".......sssS..sssS.......",
+    ".......sssS..sssS.......",
+    ".......xxxx..xxxx.......",
+    "......ooooo..ooooo......",
+    "......OOOOO..OOOOO......"],0,18);
+  // head
+  const HEAD=[
+    "....HHHHHHHH....",
+    "..HHHHHHHHHHHH..",
+    ".HHHHHHHHHHHHHH.",
+    ".HHHHHHHHHHHHHH.",
+    ".HHHHssHHHssHHH.",
+    ".HHssssssssssHH.",
+    ".HssssssssssssH.",
+    ".ssssssssssssss.",
+    "ssssssssssssssss",
+    "ssssssssssssssss",
+    ".ssssssssssssSS.",
+    ".ssssssssssssSS.",
+    "..ssssssssssSS..",
+    "...ssssssssSS...",
+    "....sssssSSS...."];
+  if(L.style===3){HEAD[0]="................";HEAD[1]="...HHHHHHHHHH...";HEAD[3]=".HHHssssssssHHH.";HEAD[4]=".HHssssssssssHH.";HEAD[5]=".HssssssssssssH.";}
+  if(L.style===4){HEAD[4]=".HHHHHHHHHHHHHH.";HEAD[5]=".HHHHHHHHHHHHHH.";HEAD[6]=".HHsHsHssHsHsHH.";}
+  stamp(HEAD,HX,HY);
+  if(L.style===1&&lv<14)stamp(["..H..H..HH..H..H",".HHHHHHHHHHHHHH."],HX,HY-2);
+  if(L.style===2){for(let y=4;y<=15;y++){set(HX,HY+y,"H");set(HX+1,HY+y,"H");set(HX+14,HY+y,"H");set(HX+15,HY+y,"H");} for(let y=12;y<=15;y++){set(HX+2,HY+y,"H");set(HX+13,HY+y,"H");}}
+  // face
+  const eye=[["we","ee","ee"],["wee","eee","eee"],[".e.","e.e"],["we","ee","ee"]][L.eyes], wide=eye[0].length===3;
+  stamp(eye,HX+(wide?3:4),HY+7); stamp(eye,HX+10,HY+7);
+  if(L.eyes===3&&L.style!==4){[[3,5],[4,6],[5,6],[12,5],[11,6],[10,6]].forEach(q=>set(HX+q[0],HY+q[1],"H"));}
+  stamp([["m..m",".mm."],["mmmm","mMMm",".mm."],[".mm."]][L.mouth],HX+6,HY+11);
+  if(L.cheek){[[2,10],[3,10],[12,10],[13,10]].forEach(q=>set(HX+q[0],HY+q[1],"c"));}
+  // things earned by level
+  if(lv>=2){for(let x=1;x<=14;x++)set(HX+x,HY+4,"k"); set(HX+15,HY+4,"k"); set(HX+15,HY+5,"k"); set(HX+16,HY+6,"k");}
+  if(lv>=14)stamp(["g.g..gg..g.g","gggggggggggg","ggrggggggrgg"],HX+2,HY-2);
   let px="";
-  R.forEach((row,y)=>{let x=0;while(x<16){const c=row[x];if(c==="."){x++;continue;}let w=1;while(x+w<16&&row[x+w]===c)w++;px+=`<rect x="${x}" y="${y}" width="${w}" height="1" fill="${PAL[c]}"/>`;x+=w;}});
+  G.forEach((row,y)=>{let x=0;while(x<W){const c=row[x];if(c==="."){x++;continue;}let w=1;while(x+w<W&&row[x+w]===c)w++;px+=`<rect x="${x}" y="${y}" width="${w}" height="1" fill="${PAL[c]}"/>`;x+=w;}});
+  const sword=sw?`<rect x="2" y="7" width="1" height="16" fill="${sw.c}"/><rect x="3" y="8" width="1" height="15" fill="${sw.c2}"/><rect x="0" y="23" width="6" height="1" fill="#ffd34f"/><rect x="2" y="24" width="2" height="2" fill="#7d5226"/>`:"";
+  const shield=sh?`<path d="M16 20h7v6h-1v2h-1v1h-3v-1h-1v-2h-1z" fill="${sh.c2}"/><path d="M17 21h5v5h-1v2h-3v-2h-1z" fill="${sh.c}"/><path d="M19 21h1v6h-1zM17 23h5v1h-5z" fill="#ffffff" opacity=".7"/>`:"";
   const ac=lv>=35?"#5ab8ff":lv>=17?"#ff6a2b":lv>=11?"#ffd34f":"#19c37d";
-  const ring=(c,rx,ry,o)=>`<ellipse cx="8" cy="10.5" rx="${rx}" ry="${ry}" fill="${c}" opacity="${o}"/>`;
-  const aura=lv>=40?ring("#ff5a5a",7.9,9.8,.3)+ring("#ffd34f",7.2,9.1,.3)+ring("#41c9a0",6.5,8.4,.3)+ring("#5ab8ff",5.8,7.7,.3)+ring("#b98bff",5.1,7,.3)
-    :lv>=8?ring(ac,7.6,9.6,.3)+ring("#ffffff",6.2,8.2,.12):"";
-  const bolts=lv>=35&&lv<40?`<path d="M1 2h1v1h1v1H2v1H1V4H0V3h1zM14 1h1v1h1v1h-1v1h-1V3h-1V2h1z" fill="#ffe86b"/>`:"";
-  const wings=lv>=30?`<path d="M0 8h1v1h1v1h1v1h1v4H3v-1H2v-1H1v-1H0zM16 8h-1v1h-1v1h-1v1h-1v4h1v-1h1v-1h1v-1h1z" fill="#ffffff"/><path d="M1 10h1v1h1v2H2v-1H1zM15 10h-1v1h-1v2h1v-1h1z" fill="#cfe0ff"/>`:"";
-  const stars=lv>=50?`<path d="M1 1h1v1H1zM14 0h1v1h-1zM0 16h1v1H0zM15 17h1v1h-1zM3 0h1v1H3zM12 18h1v1h-1z" fill="#fff6b0"/>`:"";
-  const cape=lv>=4?`<path d="M4 11h8l2 7H2z" fill="${lv>=25?"#f2b705":"#c21f3a"}"/>`:"";
-  return `<svg viewBox="0 0 16 20" role="img" aria-label="ヒーロー" shape-rendering="crispEdges">${aura}${bolts}${stars}${wings}<ellipse cx="8" cy="19.2" rx="5" ry=".6" fill="#000" opacity=".35"/>${cape}${px}${sword}${shield}</svg>`;
+  const ring=(c,rx,ry,o)=>`<ellipse cx="12" cy="19" rx="${rx}" ry="${ry}" fill="${c}" opacity="${o}"/>`;
+  const aura=lv>=40?ring("#ff5a5a",11.9,17.6,.3)+ring("#ffd34f",10.8,16.4,.3)+ring("#41c9a0",9.7,15.2,.3)+ring("#5ab8ff",8.6,14,.3)+ring("#b98bff",7.5,12.8,.3)
+    :lv>=8?ring(ac,11.5,17.3,.3)+ring("#ffffff",9.4,14.8,.12):"";
+  const bolts=lv>=35&&lv<40?`<path d="M1 2h2v2h2v2H3v2H1V6h-1V4h1zM21 1h2v2h1v2h-1v2h-2V5h-2V3h2z" fill="#ffe86b"/>`:"";
+  const wings=lv>=30?`<path d="M1 15h2v2h2v2h2v7H5v-2H3v-2H1v-2H0v-3h1zM23 15h-2v2h-2v2h-2v7h2v-2h2v-2h2v-2h1v-3h-1z" fill="#ffffff"/><path d="M2 18h2v2h2v4H5v-2H3v-2H2zM22 18h-2v2h-2v4h1v-2h2v-2h1z" fill="#cfe0ff"/>`:"";
+  const stars=lv>=50?`<path d="M1 1h1v1H1zM21 0h1v1h-1zM0 29h1v1H0zM23 31h1v1h-1zM4 0h1v1H4zM19 34h1v1h-1zM2 10h1v1H2zM22 11h1v1h-1z" fill="#fff6b0"/>`:"";
+  const cape=lv>=4?`<path d="M6 19h12l4 14H2z" fill="${lv>=25?"#f2b705":"#c21f3a"}"/>`:"";
+  return `<svg viewBox="0 0 ${W} ${HT}" role="img" aria-label="ヒーロー" shape-rendering="crispEdges">${aura}${bolts}${stars}${wings}<ellipse cx="12" cy="35.3" rx="7.5" ry=".7" fill="#000" opacity=".35"/>${cape}${px}${sword}${shield}</svg>`;
 }
 
 /* ---------- screens ---------- */
@@ -593,8 +622,11 @@ function openSettings(){
   sheet(`<h2>せってい</h2>
     <label class="field"><span class="label">ヒーローの なまえ</span><input id="nameIn" maxlength="12" value="${esc(st.name)}" placeholder="なまえ"></label>
     <div class="looks"><span class="label">みためを かえる</span>
-      <div style="max-width:120px;margin:0 auto;width:100%;background:#12302a;border-radius:16px;padding:6px">${heroSVG(g.lv)}</div>
+      <div style="max-width:150px;margin:0 auto;width:100%;background:#12302a;border-radius:16px;padding:6px;position:sticky;top:-18px;z-index:1">${heroSVG(g.lv)}</div>
       <div class="lr"><span class="muted">かみがた</span><div class="sws">${STYLES.map((n,i)=>`<button type="button" class="sw tx" data-look="style:${i}" aria-pressed="${L.style===i}">${n}</button>`).join("")}</div></div>
+      <div class="lr"><span class="muted">め</span><div class="sws">${EYES.map((n,i)=>`<button type="button" class="sw tx" data-look="eyes:${i}" aria-pressed="${L.eyes===i}">${n}</button>`).join("")}</div></div>
+      <div class="lr"><span class="muted">くち</span><div class="sws">${MOUTHS.map((n,i)=>`<button type="button" class="sw tx" data-look="mouth:${i}" aria-pressed="${L.mouth===i}">${n}</button>`).join("")}</div></div>
+      <div class="lr"><span class="muted">ほっぺ</span><div class="sws">${CHEEKS.map((n,i)=>`<button type="button" class="sw tx" data-look="cheek:${i}" aria-pressed="${L.cheek===i}">${n}</button>`).join("")}</div></div>
       <div class="lr"><span class="muted">かみの いろ</span><div class="sws">${HAIRS.map((x,i)=>sw("hair",i,x[0],x[1],L.hair===i)).join("")}</div></div>
       <div class="lr"><span class="muted">はだの いろ</span><div class="sws">${SKINS.map((x,i)=>sw("skin",i,x[0],x[2],L.skin===i)).join("")}</div></div>
       <div class="lr"><span class="muted">ふくの いろ</span><div class="sws"><button type="button" class="sw tx" data-look="shirt:-1" aria-pressed="${L.shirt===null}">おまかせ</button>${SHIRTS.map((x,i)=>sw("shirt",i,x[0],x[2],L.shirt===i)).join("")}</div>
@@ -765,7 +797,7 @@ document.addEventListener("click",e=>{
   if(t.id==="fight")return battle();
   if(t.id==="gearBtn")return openSettings();
   if(t.dataset.close!==undefined){closeOv(); if(t.dataset.close)go(t.dataset.close); return;}
-  if(t.dataset.look){const kv=t.dataset.look.split(":"), k=kv[0], v=+kv[1]; if(!["hair","style","skin","shirt"].includes(k))return;
+  if(t.dataset.look){const kv=t.dataset.look.split(":"), k=kv[0], v=+kv[1]; if(!["hair","style","skin","shirt","eyes","mouth","cheek"].includes(k))return;
     const L=look(); L[k]=v<0?null:v; st.look=L; const ni=$("#nameIn"); if(ni)st.name=(ni.value||"").trim().slice(0,12); save();
     const sh=document.querySelector(".sheet"), y=sh?sh.scrollTop:0; render(); openSettings(); const s2=document.querySelector(".sheet"); if(s2)s2.scrollTop=y; return;}
   if(t.id==="setOk"){st.name=($("#nameIn").value||"").trim().slice(0,12); save(); closeOv(); return render();}
