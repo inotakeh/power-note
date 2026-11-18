@@ -334,7 +334,7 @@ const SLOTS_DAY=[
   {k:"y",e:"🌙",n:"よる",core:["yoru","protein","yasai","tetsudai","katazuke","fuku","junbi","neru"],more:["hon","gaman","kirikae"]}];
 const slotNow=()=>{const h=new Date().getHours();return h>=4&&h<11?"a":h>=11&&h<17?"h":"y";};
 function usualToday(){const d=new Date(), out=new Set(); for(let i=1;i<=4;i++){d.setDate(d.getDate()-7);(st.days[dkey(d)]||[]).forEach(id=>out.add(id));} return out;}
-const XP_ACT=10, XP_WIN=20, TICKET_AT=[1,3,5,8]; // tickets come at the 1st, 3rd, 5th and 8th thing recorded in a day, plus one per cleared mission and per parent stamp
+const XP_ACT=10, XP_WIN=20, TICKET_AT=[1,3,5,8], LUCKY=1/3; // a win hands the ticket back one time in three // tickets come at the 1st, 3rd, 5th and 8th thing recorded in a day, plus one per cleared mission and per parent stamp
 const nextTicket=n=>TICKET_AT.find(t=>t>n);
 // Looks the child can change in せってい.
 const HAIRS=[["#2a1c14","こげちゃ"],["#15131a","くろ"],["#8a5a2b","ちゃいろ"],["#e0b040","きんいろ"],["#c8402a","あか"],["#2f6fe4","あお"]];
@@ -546,7 +546,7 @@ function viewBattle(g){
     <p><b>かつと ${coinSVG} ${prize}コイン!</b></p>
     ${ticketBox(g,`<span class="muted">きろくすると もらえる</span>`)}
     ${g.tickets?`<button class="primary" id="fight" type="button">バトル スタート!</button>`:`<button class="primary" data-go="rec" type="button">きろくして チケットを もらう</button>`}
-    <p class="muted" style="margin:.6em 0 0">チケットは きろく 1こ・3こ・5こ・8こめ、ミッション クリア、おうちの ひとの スタンプで もらえるよ。</p>
+    <p class="muted" style="margin:.6em 0 0">チケットは きろく 1こ・3こ・5こ・8こめ、ミッション クリア、おうちの ひとの スタンプで もらえるよ。バトルに かつと、ときどき チケットが もどってくるよ。</p>
   </section>
   ${powerPanel(g,b)}
   <section class="panel"><h2>バトルの しかた</h2><p class="muted">5つの ミニゲームで こうげき! ちからが たかいほど ダメージが おおきいよ。コインで そうびを かうと もっと つよくなる。</p>
@@ -748,8 +748,9 @@ async function battle(){
   }
   const win=hp<=0, before=calc();
   const prize=win?coinWin(st.stage):COIN_LOSE; st.won=(st.won||0)+prize;
-  if(win){st.stage++; st.bonus=(st.bonus||0)+XP_WIN;} save(); const after=calc(), bd=earnBadges(); fighting=false; render();
-  A.innerHTML=win?`<div class="glyph">🏆</div><div class="big">${f.n}を たおした!</div>${bd}${after.lv>before.lv?`<div class="lvup">レベルアップ! Lv.${after.lv}</div>`:""}<div><b>${coinSVG} +${prize}コイン</b> <span class="muted">(いま ${after.coins}コイン)</span></div><div class="row" style="justify-content:center"><button class="ghost" type="button" data-close="gear">そうびを かう</button></div><button class="primary" type="button" data-close="battle">やったー!</button>`
+  const lucky=win&&Math.random()<LUCKY;
+  if(win){st.stage++; st.bonus=(st.bonus||0)+XP_WIN; if(lucky)st.used=Math.max(0,(st.used||0)-1);} save(); const after=calc(), bd=earnBadges(); fighting=false; render();
+  A.innerHTML=win?`<div class="glyph">🏆</div><div class="big">${f.n}を たおした!</div>${bd}${after.lv>before.lv?`<div class="lvup">レベルアップ! Lv.${after.lv}</div>`:""}<div><b>${coinSVG} +${prize}コイン</b> <span class="muted">(いま ${after.coins}コイン)</span></div>${lucky?`<div class="lvup" style="font-size:1.1rem">ラッキー! ${TICKET} チケットが もどってきた!</div>`:""}<div class="row" style="justify-content:center"><button class="ghost" type="button" data-close="gear">そうびを かう</button></div><button class="primary" type="button" data-close="battle">やったー!</button>`
     :`<div class="glyph">${f.e}</div><div class="big">あと ${hp}! にげられた…</div><div><b>${coinSVG} +${prize}コイン</b></div><p class="muted">きろくして つよくなって、もういちど ちょうせん しよう!</p><button class="primary" type="button" data-close="battle">つぎは かつ!</button>`;
 }
 
