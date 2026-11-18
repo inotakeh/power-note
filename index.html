@@ -334,7 +334,8 @@ const SLOTS_DAY=[
   {k:"y",e:"🌙",n:"よる",core:["yoru","protein","yasai","tetsudai","katazuke","fuku","junbi","neru"],more:["hon","gaman","kirikae"]}];
 const slotNow=()=>{const h=new Date().getHours();return h>=4&&h<11?"a":h>=11&&h<17?"h":"y";};
 function usualToday(){const d=new Date(), out=new Set(); for(let i=1;i<=4;i++){d.setDate(d.getDate()-7);(st.days[dkey(d)]||[]).forEach(id=>out.add(id));} return out;}
-const XP_ACT=10, XP_WIN=20, BONUS_AT=5; // a day's first record gives one ticket, the fifth thing done that day gives one more
+const XP_ACT=10, XP_WIN=20, TICKET_AT=[1,3,5,8]; // tickets come at the 1st, 3rd, 5th and 8th thing recorded in a day, plus one per cleared mission and per parent stamp
+const nextTicket=n=>TICKET_AT.find(t=>t>n);
 // Looks the child can change in せってい.
 const HAIRS=[["#2a1c14","こげちゃ"],["#15131a","くろ"],["#8a5a2b","ちゃいろ"],["#e0b040","きんいろ"],["#c8402a","あか"],["#2f6fe4","あお"]];
 const SKINS=[["#ffd2a6","#e8a878","あかるい"],["#f1b98a","#cf9164","ふつう"],["#c98a5c","#a36b40","こい"]];
@@ -379,7 +380,8 @@ function mission(){const t=today(), m=st.mission;
 function calc(){
   const s={brain:0,leg:0,arm:0,body:0,heart:0}; let xp=st.bonus||0, earned=0, n=0, nc=0, stamps=0;
   for(const k in st.days){const ids=(st.days[k]||[]).filter(id=>ACT[id]); if(!ids.length)continue;
-    ids.forEach(id=>{for(const p in ACT[id].s)s[p]+=ACT[id].s[p];}); xp+=ids.length*XP_ACT; n+=ids.length; nc+=ids.filter(id=>!ACT[id].kind).length; if(st.stamps[k]){stamps++;xp+=STAMP_XP;} earned+=1+(ids.length>=BONUS_AT?1:0);}
+    ids.forEach(id=>{for(const p in ACT[id].s)s[p]+=ACT[id].s[p];}); xp+=ids.length*XP_ACT; n+=ids.length; nc+=ids.filter(id=>!ACT[id].kind).length; if(st.stamps[k]){stamps++;xp+=STAMP_XP;} earned+=TICKET_AT.filter(t=>ids.length>=t).length+(st.stamps[k]?1:0);}
+  earned+=st.mcount||0;
   for(const k in st.moods)if(MOOD[st.moods[k]])s.heart+=1; // naming a feeling counts, whichever feeling it is
   let lv=1, need=40, left=xp; while(left>=need){left-=need;lv++;need=30+lv*10;}
   let streak=0; const d=new Date(); if(!(st.days[dkey(d)]||[]).length)d.setDate(d.getDate()-1);
@@ -544,6 +546,7 @@ function viewBattle(g){
     <p><b>かつと ${coinSVG} ${prize}コイン!</b></p>
     ${ticketBox(g,`<span class="muted">きろくすると もらえる</span>`)}
     ${g.tickets?`<button class="primary" id="fight" type="button">バトル スタート!</button>`:`<button class="primary" data-go="rec" type="button">きろくして チケットを もらう</button>`}
+    <p class="muted" style="margin:.6em 0 0">チケットは きろく 1こ・3こ・5こ・8こめ、ミッション クリア、おうちの ひとの スタンプで もらえるよ。</p>
   </section>
   ${powerPanel(g,b)}
   <section class="panel"><h2>バトルの しかた</h2><p class="muted">5つの ミニゲームで こうげき! ちからが たかいほど ダメージが おおきいよ。コインで そうびを かうと もっと つよくなる。</p>
@@ -591,7 +594,7 @@ function saveRecord(){
     ${cleared?`<div class="lvup" style="font-size:1.1rem">ミッション クリア! +${MISSION_COIN}コイン</div>`:""}
     ${add.some(id=>ACT[id].kind)?`<div><b style="color:var(--heart)">だれかの ために できたね。やさしい こころが そだったよ。</b></div>`:""}
     <div><b>${coinSVG} +${add.filter(id=>!ACT[id].kind).length*COIN_ACT+(cleared?MISSION_COIN:0)}コイン</b> <span class="muted">(いま ${after.coins}コイン)</span></div>
-    ${tk>0?`<div><b>バトルチケット +${tk}</b> <span class="muted">(いま ${after.tickets}まい)</span></div>`:(had+add.length<BONUS_AT?`<div class="muted">あと ${BONUS_AT-had-add.length}こ できたら チケットが もう 1まい</div>`:"")}
+    ${tk>0?`<div><b>バトルチケット +${tk}</b> <span class="muted">(いま ${after.tickets}まい)</span></div>`:(nextTicket(had+add.length)?`<div class="muted">あと ${nextTicket(had+add.length)-had-add.length}こ できたら チケットが もう 1まい</div>`:"")}
     <div class="row" style="justify-content:center">${after.tickets?`<button class="ghost" type="button" data-close="battle">バトルに いく</button>`:""}<button class="primary" type="button" data-close="" style="flex:1;width:auto">やったね!</button></div>`);
 }
 
