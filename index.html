@@ -467,7 +467,9 @@ function heroSVG(lv){
   let px="";
   G.forEach((row,y)=>{let x=0;while(x<W){const c=row[x];if(c==="."){x++;continue;}let w=1;while(x+w<W&&row[x+w]===c)w++;px+=`<rect x="${x}" y="${y}" width="${w}" height="1" fill="${col(c)}"/>`;x+=w;}});
   const gimg=(x,box)=>{const d=gpxOf(x);return d?`<image href="data:image/png;base64,${d}" x="${box[0]}" y="${box[1]}" width="${box[2]}" height="${box[3]}" preserveAspectRatio="xMidYMax meet" style="${gfil(x)}image-rendering:pixelated"/>`:"";};
-  const sword=sw?gimg(sw,[7,34,14,48]):"", shield=sh?gimg(sh,[44,63,22,22]):"";
+  // The sword leans outward with its grip in the fist; the fist is drawn again on top so the hand closes around it.
+  const HAND=[21,76.5], TILT=-22, fistPx=(()=>{let o="";for(let y=74;y<79;y++)for(let x=18;x<25;x++){const c=G[y][x];if(c!==".")o+=`<rect x="${x}" y="${y}" width="1" height="1" fill="${col(c)}"/>`;}return o;})();
+  const sword=sw?`<g transform="rotate(${TILT} ${HAND[0]} ${HAND[1]})">${gimg(sw,[HAND[0]-11,HAND[1]-41,22,47])}</g>${fistPx}`:"", shield=sh?gimg(sh,[44,63,22,22]):"";
   const ac=lv>=35?"#5ab8ff":lv>=17?"#ff6a2b":lv>=11?"#ffd34f":"#19c37d";
   const ring=(c,rx,ry,o)=>`<ellipse cx="12" cy="19" rx="${rx}" ry="${ry}" fill="${c}" opacity="${o}"/>`;
   const aura=lv>=40?ring("#ff5a5a",11.9,17.6,.3)+ring("#ffd34f",10.8,16.4,.3)+ring("#41c9a0",9.7,15.2,.3)+ring("#5ab8ff",8.6,14,.3)+ring("#b98bff",7.5,12.8,.3)
