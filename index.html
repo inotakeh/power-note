@@ -294,6 +294,7 @@ const GROUPS=[
   ["にゅうがく じゅんび",[
     {id:"hamigaki",e:"🪥",t:"はみがきを した",s:{body:1,heart:1}},
     {id:"tearai",e:"🫧",t:"てを あらった",s:{body:1}},
+    {id:"youi",e:"👒",t:"ようちえんの よういを じぶんで した",s:{brain:1,heart:1}},
     {id:"nimotsu",e:"👜",t:"ようちえんの にもつを かたづけた",s:{arm:1,heart:1}},
     {id:"junbi",e:"🎒",t:"あしたの じゅんびを した",s:{brain:1,heart:1}},
     {id:"namae",e:"✏️",t:"じぶんの なまえを かいた",s:{brain:2}},
@@ -301,7 +302,7 @@ const GROUPS=[
 ];
 // Things done for other people (kind:1) grow the hero but pay no coins: paying for kindness made small children less kind in Ulber, Hamann & Tomasello (2016).
 // きょうの ミッション is drawn from things that can be done on any day, whenever the app is first opened.
-const MISSIONS=["yoru","protein","yasai","hira","kata","hon","soto","tetsudai","fuku","neru","aisatsu","arigato","katazuke","gaman","hamigaki","tearai","nimotsu","junbi","namae","tokei"];
+const MISSIONS=["yoru","protein","yasai","hira","kata","hon","soto","tetsudai","fuku","neru","aisatsu","arigato","katazuke","gaman","hamigaki","tearai","youi","nimotsu","junbi","namae","tokei"];
 const MISSION_COIN=10, STAMP_COIN=10, STAMP_XP=10;
 // The stamps praise what the child did (effort, doing it alone), not how good the result was.
 const STAMPS=[["💮","がんばったね"],["🌟","じぶんで できたね"],["💖","ありがとう"]];
@@ -330,7 +331,7 @@ const BADGES=[
 const ACT={};GROUPS.forEach(g=>g[1].forEach(a=>ACT[a.id]=a));
 // The record screen shows one part of the day at a time. "core" is what shows first; "more" joins it on a weekday when it was recorded before (swimming day, soccer day) or when it is the mission.
 const SLOTS_DAY=[
-  {k:"a",e:"☀️",n:"あさ",core:["okita","asa","hamigaki","aisatsu","tearai"],more:[]},
+  {k:"a",e:"☀️",n:"あさ",core:["okita","asa","hamigaki","aisatsu","youi"],more:[]},
   {k:"h",e:"🌤️",n:"ひる",core:["hiru","soto","hira","kata","namae","tokei","chosen","arigato"],more:["soccer","taisou","pool"]},
   {k:"y",e:"🌙",n:"よる",core:["yoru","protein","yasai","tetsudai","katazuke","nimotsu","fuku","junbi","neru"],more:["hon","gaman","kirikae"]}];
 const slotNow=()=>{const h=new Date().getHours();return h>=4&&h<11?"a":h>=11&&h<17?"h":"y";};
