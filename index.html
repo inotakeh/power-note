@@ -586,8 +586,9 @@ function viewBattle(g){
   ${powerPanel(g,b)}
   <section class="panel"><h2>バトルの しかた</h2><p class="muted">5つの ミニゲームで こうげき! ちからが たかいほど ダメージが おおきいよ。コインで そうびを かうと もっと つよくなる。</p>
     <ul class="unl"><li><span>🧠 まほうの ちから</span><span>あたまクイズ</span></li><li><span>💨 すばやさ</span><span>すばやく タッチ</span></li><li><span>⚔️ こうげき力</span><span>ぴったり こうげき</span></li><li><span>🛡️ しゅび力</span><span>いまだ! ガード</span></li><li><span>❤️ ゆうきの ちから</span><span>おぼえて タップ</span></li></ul><p class="muted">あたまクイズは もじ・ことばの おと・かず・とけい。レベルが あがると たしざんも でるよ。</p></section>
-  <section class="panel"><div class="row2"><h2>モンスターずかん</h2><span class="muted">${Math.min(st.stage,FOES.length)} / ${FOES.length}</span></div>
-    <div class="zukan">${FOES.map((x,i)=>i<st.stage?`<button type="button" class="got${prac&&n===i?" sel":""}" data-pick="${i}" aria-label="${x[1]}と れんしゅう">${x[0]}</button>`:`<div title="?">?</div>`).join("")}</div>${st.stage?`<p class="muted" style="margin:.8em 0 0">たおした モンスターを おすと、れんしゅう あいてに えらべるよ。</p>`:""}${st.stage>=FOES.length?`<p class="muted" style="margin:.8em 0 0">ずかん コンプリート! いろちがいの ${foeOf(st.stage).n.split(" ")[0]} モンスターが でてくるよ。(ぜんぶで ${st.stage}ひき たおした)</p>`:""}</section>`;
+  <section class="panel"><div class="row2"><h2>モンスターずかん</h2><span class="muted">${Math.min(st.stage,FOES.length*LAPS.length)} / ${FOES.length*(Math.min(Math.floor(st.stage/FOES.length),LAPS.length-1)+1)}</span></div>
+    ${LAPS.map((L,l)=>l*FOES.length>st.stage?"":`${l?`<h3 style="margin:1em 0 .5em">${L[0]} モンスター (いろちがい)</h3>`:""}<div class="zukan">${FOES.map((x,i)=>{const k=l*FOES.length+i, y=foeOf(k);return k<st.stage?`<button type="button" class="got${prac&&n===k?" sel":""}" data-pick="${k}" aria-label="${y.n}と れんしゅう">${y.e}</button>`:`<div title="?">?</div>`;}).join("")}</div>`).join("")}
+    ${st.stage?`<p class="muted" style="margin:.8em 0 0">たおした モンスターを おすと、れんしゅう あいてに えらべるよ。${st.stage>=FOES.length?`ぜんぶ たおすと、いろちがいの モンスターが でてくるよ。(ぜんぶで ${st.stage}ひき たおした)`:""}</p>`:""}</section>`;
 }
 function viewCal(g){
   const now=new Date(), y=now.getFullYear(), m=now.getMonth(), first=new Date(y,m,1).getDay(), last=new Date(y,m+1,0).getDate(), t=today();
@@ -823,7 +824,7 @@ document.addEventListener("click",e=>{
   if(t.id==="recMore"){recMore=!recMore; const y=window.scrollY; render(); window.scrollTo(0,y); return;}
   if(t.id==="saveRec")return saveRecord();
   if(t.id==="fight")return battle();
-  if(t.id==="choose"){const lo=Math.max(0,st.stage-FOES.length), L=[]; for(let i=st.stage;i>=lo;i--)L.push(i);
+  if(t.id==="choose"){const lo=Math.max(0,st.stage-FOES.length*LAPS.length), L=[]; for(let i=st.stage;i>=lo;i--)L.push(i);
     sheet(`<div class="big">あいてを えらぶ</div><p class="muted">きいろが つぎの あいて。ほかは れんしゅう (かつと しゅぎょうパワー +1)。</p><div class="pickg">${L.map(i=>{const x=foeOf(i);return `<button type="button" class="${i===st.stage?"nx":""}" data-pick="${i}" aria-label="${x.n}">${x.e}<small>${i===st.stage?"つぎ":"れんしゅう"} ・ ${x.hp}</small></button>`;}).join("")}</div><button class="ghost" type="button" data-close="">やめる</button>`); return;}
   if(t.dataset.pick!=null){const i=+t.dataset.pick; foePick=i<st.stage?i:null; closeOv(); render(); window.scrollTo(0,0); return;}
   if(t.id==="gearBtn")return openSettings();
