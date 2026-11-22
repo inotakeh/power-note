@@ -586,8 +586,8 @@ function viewBattle(g){
   ${powerPanel(g,b)}
   <section class="panel"><h2>バトルの しかた</h2><p class="muted">5つの ミニゲームで こうげき! ちからが たかいほど ダメージが おおきいよ。コインで そうびを かうと もっと つよくなる。</p>
     <ul class="unl"><li><span>🧠 まほうの ちから</span><span>あたまクイズ</span></li><li><span>💨 すばやさ</span><span>すばやく タッチ</span></li><li><span>⚔️ こうげき力</span><span>ぴったり こうげき</span></li><li><span>🛡️ しゅび力</span><span>いまだ! ガード</span></li><li><span>❤️ ゆうきの ちから</span><span>おぼえて タップ</span></li></ul><p class="muted">あたまクイズは もじ・ことばの おと・かず・とけい。レベルが あがると たしざんも でるよ。</p></section>
-  <section class="panel"><div class="row2"><h2>モンスターずかん</h2><span class="muted">${Math.min(st.stage,FOES.length*LAPS.length)} / ${FOES.length*LAPS.length}</span></div>
-    ${LAPS.map((L,l)=>`${l?`<h3 style="margin:1em 0 .5em">${L[0]} モンスター (いろちがい)</h3>`:""}<div class="zukan">${FOES.map((x,i)=>{const k=l*FOES.length+i, y=foeOf(k);return k<st.stage?`<button type="button" class="got${prac&&n===k?" sel":""}" data-pick="${k}" aria-label="${y.n}と れんしゅう">${y.e}</button>`:`<div title="?">?</div>`;}).join("")}</div>`).join("")}
+  <section class="panel"><div class="row2"><h2>モンスターずかん</h2><span class="muted">${Math.min(st.stage,FOES.length*LAPS.length)} / ${FOES.length*(Math.min(Math.floor(st.stage/FOES.length),LAPS.length-1)+1)}</span></div>
+    ${LAPS.map((L,l)=>l*FOES.length>st.stage?"":`${l?`<h3 style="margin:1em 0 .5em">${L[0]} モンスター (いろちがい)</h3>`:""}<div class="zukan">${FOES.map((x,i)=>{const k=l*FOES.length+i, y=foeOf(k);return k<st.stage?`<button type="button" class="got${prac&&n===k?" sel":""}" data-pick="${k}" aria-label="${y.n}と れんしゅう">${y.e}</button>`:`<div title="?">?</div>`;}).join("")}</div>`).join("")}
     ${st.stage?`<p class="muted" style="margin:.8em 0 0">たおした モンスターを おすと、れんしゅう あいてに えらべるよ。${st.stage>=FOES.length?`ぜんぶ たおすと、いろちがいの モンスターが でてくるよ。(ぜんぶで ${st.stage}ひき たおした)`:""}</p>`:""}</section>`;
 }
 function viewCal(g){
