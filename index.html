@@ -158,7 +158,10 @@ h2{font-size:1.2rem} h3{font-size:1rem} p{margin:0}
 .items{font-size:2rem;line-height:1.25;letter-spacing:.1em;max-width:280px}
 .clock{width:150px;height:150px;color:var(--ink)}
 .sum{font-family:var(--display);font-size:3rem;line-height:1.2}
-.moods{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.moods{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.talk{border:2px solid var(--heart)}.talk .q{font-family:var(--display);font-size:1.15rem;line-height:1.5}
+.coop{border:2px solid var(--leg)}.real{border:2px solid var(--brain)}
+.steps{font-size:.8rem;font-weight:800;color:var(--muted)}
 .moods button{border:2px solid var(--rule);background:var(--chip);border-radius:14px;padding:8px 0 4px;font-size:1.8rem;line-height:1.2;display:flex;flex-direction:column;align-items:center;min-width:0}
 .moods button span{font-size:.62rem;font-weight:800;white-space:nowrap}
 .week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center}
@@ -290,10 +293,10 @@ const GROUPS=[
   ["べんきょう",[
     {id:"hira",e:"あ",t:"ひらがなの べんきょう",s:{brain:3}},
     {id:"kata",e:"ア",t:"カタカナの べんきょう",s:{brain:3}},
-    {id:"hon",e:"📖",t:"えほんを よんだ",s:{brain:2}}]],
+    {id:"hon",e:"📖",t:"えほんを よんだ",love:1,s:{brain:2}}]],
   ["うごく・せいかつ",[
-    {id:"soto",e:"🏃",t:"そとで はしった",s:{leg:3}},
-    {id:"soccer",e:"⚽",t:"サッカーを した",s:{leg:2,body:1}},
+    {id:"soto",e:"🏃",t:"そとで はしった",love:1,s:{leg:3}},
+    {id:"soccer",e:"⚽",t:"サッカーを した",love:1,s:{leg:2,body:1}},
     {id:"taisou",e:"🤸",t:"たいそうを した",s:{arm:2,body:1}},
     {id:"pool",e:"🏊",t:"プールで およいだ",s:{arm:2,leg:1}},
     {id:"tetsudai",e:"🧺",t:"おてつだいを した",kind:1,s:{arm:2}},
@@ -305,7 +308,7 @@ const GROUPS=[
     {id:"arigato",e:"💐",t:"「ありがとう」を いえた",kind:1,s:{heart:2}},
     {id:"katazuke",e:"🧸",t:"かたづけを した",kind:1,s:{heart:1,arm:1}},
     {id:"gaman",e:"🌱",t:"がまん できた",s:{heart:2}},
-    {id:"kirikae",e:"🌈",t:"ないても きりかえた",s:{heart:2}},
+    {id:"kirikae",e:"🌈",t:"ないても じぶんで おちつけた",s:{heart:2}},
     {id:"chosen",e:"🧗",t:"むずかしい ことに ちょうせんした",s:{heart:2,brain:1}}]],
   ["にゅうがく じゅんび",[
     {id:"hamigaki",e:"🪥",t:"はみがきを した",s:{body:1,heart:1}},
@@ -316,21 +319,33 @@ const GROUPS=[
     {id:"tokei",e:"🕒",t:"とけいを よんだ",s:{brain:2}}]]
 ];
 // Things done for other people (kind:1) grow the hero but pay no coins: paying for kindness made small children less kind in Ulber, Hamann & Tomasello (2016).
+// Things the child already loves (love:1) pay no fixed coins from NEW_RULES on: expected rewards lower children's own wish to do enjoyable things (Deci, Koestner & Ryan 1999). Instead a surprise gift comes now and then, never announced (unexpected rewards showed no such effect).
 // きょうの ミッション is drawn from things that can be done on any day, whenever the app is first opened.
 const MISSIONS=["yoru","okawari","protein","yasai","hira","kata","hon","soto","tetsudai","fuku","neru","aisatsu","arigato","katazuke","gaman","hamigaki","youi","nimotsu","junbi","namae","tokei"];
 const MISSION_COIN=10, STAMP_COIN=10, STAMP_XP=10;
 // The stamps praise what the child did (effort, doing it alone), not how good the result was.
 const STAMPS=[["💮","がんばったね"],["🌟","じぶんで できたね"],["💖","ありがとう"]];
-const MOODS=[["ureshii","😄","うれしい"],["futsu","😌","ふつう"],["kanashii","😢","かなしい"],["okotta","😠","おこった"],["tsukareta","😴","つかれた"]];
+const MOODS=[["ureshii","😄","うれしい"],["tanoshii","🤩","たのしい"],["futsu","😌","ふつう"],["tsukareta","😴","つかれた"],["kuyashii","😣","くやしい"],["kanashii","😢","かなしい"],["okotta","😠","おこってる"],["kowai","😨","こわい"]];
+const HARD=["kuyashii","kanashii","okotta","kowai","tsukareta"]; // after these the child picks a way to calm down, done away from the screen (CDC emotion coaching: name it, then a way through it)
+const CALM=[["iki","🌬️","ふかく いきを 3かい する"],["gyu","🤗","ぎゅっと して もらう"],["hanasu","🗣️","おうちの ひとに はなす"],["mizu","💧","みずを のむ"],["suki","🧸","すきな ものを さわる"],["sora","🪟","まどの そとを みる"]];
+// New rules start the day after they were added, so coins and tickets already earned never shrink.
+const NEW_RULES="2026-11-24", COIN_FADE_AT=500, GIFT_P=.35, WEEK_DAYS=3;
+// A question for the grown-up to ask at bedtime (talk together; no coins).
+const TALKS=["きょう いちばん たのしかった ことは なに?","きょう むずかしかった ことは あった?","だれかに やさしく できた?","あした やって みたい ことは?","きょう がんばった ことは なに?","きょう わらった ことは なに?","「ありがとう」って おもった ことは?","きょう はじめて した ことは ある?","いま いちばん すきな ものは なに?","きょう くやしかった ことは あった?"];
+// A mission for the two brothers to do together, picked from three once a week. Doing things together, not racing each other.
+const COOP=[["⚽","ふたりで パスを 10かい つなぐ"],["🧸","いっしょに かたづけを する"],["📖","いっしょに えほんを よむ"],["🏃","ふたりで おにごっこを する"],["🤸","ふたりで ストレッチを する"],["🍳","いっしょに おてつだいを する"],["🧱","ふたりで なにかを つくる"],["🙌","おたがいに 「ありがとう」を いう"],["🥅","ふたりで シュートれんしゅう"],["🎲","いっしょに ゲームを して さいごまで あそぶ"]];
+// おうちで やってみよう: small things to do with real objects. Quiz slips add one that fits; otherwise one of these (plus the grown-up's own ideas).
+const REAL=["やさいを 1つ さわって、いろと かたちを いおう","そとで あかい ものを 3つ みつけよう","おふろで 10まで かぞえよう","ほんものの とけいで いま なんじか いおう","おみせで ひらがなを 1つ よもう","くつを そろえて、なんそく あるか かぞえよう","おうちの ひとに きょう あった ことを はなそう","はっぱや いしを 5こ あつめて ならべよう"];
+const REAL_MAX=2;
 const MOOD={};MOODS.forEach(m=>MOOD[m[0]]=m);
 const cnt=o=>Object.keys(o||{}).length;
 const dayHas=test=>Object.keys(st.days).some(k=>test((st.days[k]||[]).filter(id=>ACT[id])));
 // Badges: id, picture, name, how to earn it, test. Once earned they stay.
 const BADGES=[
   ["first","👣","はじめの いっぽ","はじめて きろくする",g=>g.n>=1],
-  ["s3","🔥","3にち れんぞく","3にち つづけて きろく",g=>g.streak>=3],
-  ["s7","☄️","7にち れんぞく","7にち つづけて きろく",g=>g.streak>=7],
-  ["s30","🌋","30にち れんぞく","30にち つづけて きろく",g=>g.streak>=30],
+  ["s3","🔥","3にち きろく","3にち きろくする",g=>g.ndays>=3],
+  ["s7","☄️","7にち きろく","7にち きろくする",g=>g.ndays>=7],
+  ["s30","🌋","30にち きろく","30にち きろくする",g=>g.ndays>=30],
   ["n50","📚","きろく 50こ","ぜんぶで 50こ きろく",g=>g.n>=50],
   ["n200","🏛️","きろく 200こ","ぜんぶで 200こ きろく",g=>g.n>=200],
   ["balance","🌈","バランス ヒーロー","1にちで 5つの なかま ぜんぶ",g=>dayHas(ids=>GROUPS.every(gr=>gr[1].some(a=>ids.includes(a.id))))],
@@ -345,7 +360,13 @@ const BADGES=[
   ["boss1","👹","ボス ハンター","しゅうまつボスを たおす",g=>(st.bossN||0)>=1],
   ["boss4","🐲","ボス マスター","しゅうまつボスを 4かい たおす",g=>(st.bossN||0)>=4],
   ["gear1","🛍️","はじめての そうび","そうびを 1つ かう",g=>st.bought.length>=1],
-  ["lv10","🚀","レベル 10","レベル 10に なる",g=>g.lv>=10]];
+  ["lv10","🚀","レベル 10","レベル 10に なる",g=>g.lv>=10],
+  ["peace1","🤝","なかなおり","なかなおりを する",g=>cnt(st.peace)>=1],
+  ["coop1","🤜","なかよし","きょうだいで ミッション",g=>(st.coopN||0)>=1],
+  ["coop4","🫶","なかよし マスター","きょうだいで ミッション 4かい",g=>(st.coopN||0)>=4],
+  ["real5","🏡","おうちで やってみた","おうちで やってみよう 5かい",g=>realN()>=5],
+  ["talk7","💬","おはなし 7にち","きょうの しつもん 7にち",g=>cnt(st.talk)>=7]];
+const realN=()=>Object.values(st.real.done||{}).reduce((a,b)=>a+(+b||0),0);
 const ACT={};GROUPS.forEach(g=>g[1].forEach(a=>ACT[a.id]=a));
 const LIVE=Object.keys(ACT);
 // Retired things can no longer be picked, but days that already hold them keep their points.
@@ -357,7 +378,7 @@ const SLOTS_DAY=[
   {k:"y",e:"🌙",n:"よる",core:["yoru","okawari","protein","yasai","tetsudai","katazuke","nimotsu","fuku","junbi","neru"],more:["hon","gaman","kirikae"]}];
 const slotNow=()=>{const h=new Date().getHours();return h>=4&&h<11?"a":h>=11&&h<17?"h":"y";};
 function usualToday(){const d=new Date(), out=new Set(); for(let i=1;i<=4;i++){d.setDate(d.getDate()-7);(st.days[dkey(d)]||[]).forEach(id=>out.add(id));} return out;}
-const XP_ACT=10, XP_WIN=20, TICKET_AT=[1,3,5,8], LUCKY=1/3, STREAK_AT=3; // every third day in a row gives one more ticket // a win hands the ticket back one time in three // tickets come at the 1st, 3rd, 5th and 8th thing recorded in a day, plus one per cleared mission and per parent stamp
+const XP_ACT=10, XP_WIN=20, TICKET_AT=[1,3,5,8], LUCKY=1/3, STREAK_AT=3; // before NEW_RULES every third day in a row gave one more ticket; from then on every WEEK_DAYS days recorded in a week do, so a missed day loses nothing // a win hands the ticket back one time in three // tickets come at the 1st, 3rd, 5th and 8th thing recorded in a day, plus one per cleared mission and per parent stamp
 const nextTicket=n=>TICKET_AT.find(t=>t>n);
 // Looks the child can change in せってい.
 const HAIRS=[["#2a1c14","こげちゃ"],["#15131a","くろ"],["#8a5a2b","ちゃいろ"],["#e0b040","きんいろ"],["#c8402a","あか"],["#2f6fe4","あお"]];
@@ -403,8 +424,10 @@ const dmgOf=(stat,score)=>Math.max(1,Math.round((8+stat*.6)*(.4+.6*score)));
 
 /* ---------- state (kept in this browser) ---------- */
 const LS="power-note-v1";
-let st={name:"",days:{},used:0,stage:0,bonus:0,equip:{},won:0,bought:null,stamps:{},mission:null,moods:{},badges:[],miss:{},mcount:0};
+let st={name:"",days:{},used:0,stage:0,bonus:0,equip:{},won:0,bought:null,stamps:{},mission:null,moods:{},badges:[],miss:{},mcount:0,calm:{},peace:{},talk:{},coop:null,coopN:0,real:{q:[],done:{},custom:[]},skill:{},gifts:0};
 try{const d=JSON.parse(localStorage.getItem(LS)||"null");if(d&&typeof d==="object"){st=Object.assign(st,d);if(!st.days||typeof st.days!=="object")st.days={};if(!st.equip||typeof st.equip!=="object")st.equip={};if(!st.stamps||typeof st.stamps!=="object")st.stamps={};if(!st.moods||typeof st.moods!=="object")st.moods={};if(!st.miss||typeof st.miss!=="object")st.miss={};if(!Array.isArray(st.badges))st.badges=[];}}catch(e){}
+["calm","peace","talk","skill"].forEach(k=>{if(!st[k]||typeof st[k]!=="object")st[k]={};});
+if(!st.real||typeof st.real!=="object")st.real={}; ["q","custom"].forEach(k=>{if(!Array.isArray(st.real[k]))st.real[k]=[];}); if(!st.real.done||typeof st.real.done!=="object")st.real.done={};
 if(!Array.isArray(st.bought)){st.bought=[];for(let i=0;i<Math.min(st.stage||0,12);i++)st.bought.push(i);}
 function look(){const l=st.look&&typeof st.look==="object"?st.look:{}, ok=(v,a)=>Number.isInteger(v)&&v>=0&&v<a.length;
   return {hair:ok(l.hair,HAIRS)?l.hair:0,style:ok(l.style,STYLES)?l.style:0,skin:ok(l.skin,SKINS)?l.skin:0,shirt:ok(l.shirt,SHIRTS)?l.shirt:null,eyes:ok(l.eyes,EYES)?l.eyes:0,mouth:ok(l.mouth,MOUTHS)?l.mouth:0,cheek:ok(l.cheek,CHEEKS)?l.cheek:0};}
@@ -418,18 +441,31 @@ function mission(){const t=today(), m=st.mission;
     st.mission={day:t,opts:shuffle(pool.length>=3?pool:MISSIONS).slice(0,3),id:null,done:false}; save();} return st.mission;}
 
 function calc(){
-  const s={brain:0,leg:0,arm:0,body:0,heart:0}; let xp=st.bonus||0, earned=0, n=0, nc=0, stamps=0;
-  for(const k in st.days){const ids=(st.days[k]||[]).filter(id=>ACT[id]); if(!ids.length)continue;
-    ids.forEach(id=>{for(const p in ACT[id].s)s[p]+=ACT[id].s[p];}); xp+=ids.length*XP_ACT; n+=ids.length; nc+=ids.filter(id=>!ACT[id].kind).length; if(st.stamps[k]){stamps++;xp+=STAMP_XP;} earned+=TICKET_AT.filter(t=>ids.length>=t).length+(st.stamps[k]?1:0);}
+  const s={brain:0,leg:0,arm:0,body:0,heart:0}; let xp=st.bonus||0, earned=0, n=0, rc=0, stamps=0, ndays=0;
+  Object.keys(st.days).sort().forEach(k=>{const ids=(st.days[k]||[]).filter(id=>ACT[id]); if(!ids.length)return; ndays++;
+    ids.forEach(id=>{for(const p in ACT[id].s)s[p]+=ACT[id].s[p]; rc+=recCoin(id,k,n); n++;}); xp+=ids.length*XP_ACT; if(st.stamps[k]){stamps++;xp+=STAMP_XP;} earned+=TICKET_AT.filter(t=>ids.length>=t).length+(st.stamps[k]?1:0);});
   earned+=(st.mcount||0)+(st.xt||0);
-  {let run=0, prev=null; Object.keys(st.days).filter(k=>(st.days[k]||[]).some(id=>ACT[id])).sort().forEach(k=>{const t=new Date(k+"T00:00:00"); run=prev&&Math.round((t-prev)/864e5)===1?run+1:1; prev=t; if(run%STREAK_AT===0)earned++;});}
+  {let run=0, prev=null; const wk={}; Object.keys(st.days).filter(k=>(st.days[k]||[]).some(id=>ACT[id])).sort().forEach(k=>{const t=new Date(k+"T00:00:00");
+    if(k<NEW_RULES){run=prev&&Math.round((t-prev)/864e5)===1?run+1:1; prev=t; if(run%STREAK_AT===0)earned++;}
+    else{const w=weekOf(k); wk[w]=(wk[w]||0)+1; if(wk[w]%WEEK_DAYS===0)earned++;}});}
   for(const k in st.moods)if(MOOD[st.moods[k]])s.heart+=1; // naming a feeling counts, whichever feeling it is
+  for(const k in st.peace)s.heart+=2*Math.min(2,+st.peace[k]||0); // making up after a fight, with a grown-up
+  for(const k in st.talk)s.heart+=1;
+  s.heart+=2*(st.coopN||0); s.body+=st.coopN||0;
+  for(const k in st.real.done)s.brain+=2*Math.min(REAL_MAX,+st.real.done[k]||0);
   let lv=1, need=40, left=xp; while(left>=need){left-=need;lv++;need=30+lv*10;}
   let streak=0; const d=new Date(); if(!(st.days[dkey(d)]||[]).length)d.setDate(d.getDate()-1);
   while((st.days[dkey(d)]||[]).length){streak++;d.setDate(d.getDate()-1);}
-  return {s,xp,lv,left,need,coins:Math.max(0,nc*COIN_ACT+stamps*STAMP_COIN+(st.won||0)-st.bought.reduce((a,i)=>a+(GEAR[i]?priceOf(i):0),0)),tickets:Math.max(0,earned-(st.used||0)),streak,n,power:s.brain+s.leg+s.arm+s.body+s.heart};
+  return {s,xp,lv,left,need,ndays,coins:Math.max(0,rc+stamps*STAMP_COIN+(st.won||0)-st.bought.reduce((a,i)=>a+(GEAR[i]?priceOf(i):0),0)),tickets:Math.max(0,earned-(st.used||0)),streak,n,power:s.brain+s.leg+s.arm+s.body+s.heart};
 }
 const owned=i=>st.bought.includes(i);
+// Coins for one record: none for kindness; from NEW_RULES none for loved things, and 2 instead of 3 after many records (rewards thinned out slowly).
+function recCoin(id,k,nBefore){const a=ACT[id]; if(!a||a.kind)return 0; if(k<NEW_RULES)return COIN_ACT; if(a.love)return 0; return nBefore>=COIN_FADE_AT?COIN_ACT-1:COIN_ACT;}
+const weekOf=k=>{const d=new Date(k+"T12:00:00"); d.setDate(d.getDate()-((d.getDay()+6)%7)); return dkey(d);};
+function weekDays(){const w=weekKey(); return Object.keys(st.days).filter(k=>k>=NEW_RULES&&weekOf(k)===w&&(st.days[k]||[]).some(id=>ACT[id])).length;}
+// This week so far against the same days of last week: the child sees his own change, not anyone else's.
+function weekVs(){const a=monday(), b=monday(); b.setDate(b.getDate()-7); const now=new Date(); let x=0, y=0;
+  while(dkey(a)<=dkey(now)){x+=(st.days[dkey(a)]||[]).filter(id=>ACT[id]).length; y+=(st.days[dkey(b)]||[]).filter(id=>ACT[id]).length; a.setDate(a.getDate()+1); b.setDate(b.getDate()+1);} return [x,y];}
 const worn=k=>{const i=(st.equip||{})[k];return Number.isInteger(i)&&GEAR[i]&&GEAR[i].k===k&&owned(i)?GEAR[i]:null;};
 // Battle numbers: body stats plus what is worn.
 function bstats(g){const sw=worn("sword"),sh=worn("shield"),ar=worn("armor");
@@ -513,9 +549,25 @@ function missionPanel(){const m=mission(), a=ACT[m.id];
   return `<section class="panel mission"><div class="row2"><h2>きょうの ミッション</h2><span class="muted">${coinSVG} +${MISSION_COIN}コイン</span></div>
     <div class="m"><span class="e" aria-hidden="true">${a.e}</span><span><b>${a.t}</b>${a.sub?`<br><span class="muted">${a.sub}</span>`:""}</span></div>
     ${m.done?`<p><b style="color:var(--good)">ミッション クリア! じぶんで きめて できたね!</b></p>`:`<button class="ghost" data-go="rec" type="button">できたら きろくしよう</button>`}</section>`;}
-function moodPanel(){const m=MOOD[st.moods[today()]];
-  return m?`<section class="panel"><div class="row2"><h2>きょうの きもち</h2><span class="muted">こころ +1</span></div><div class="stamped"><span class="e" aria-hidden="true">${m[1]}</span><span>${m[2]} きもち なんだね。おしえてくれて ありがとう。</span></div></section>`
-    :`<section class="panel"><div class="row2"><h2>きょうの きもちは?</h2><span class="muted">こころ +1</span></div><div class="moods">${MOODS.map(x=>`<button type="button" data-mood="${x[0]}">${x[1]}<span>${x[2]}</span></button>`).join("")}</div><p class="muted">どの きもちでも だいじょうぶ。</p></section>`;}
+let moodAgain=false;
+function moodPanel(){const m=MOOD[st.moods[today()]], c=CALM.find(x=>x[0]===st.calm[today()]);
+  const peace=`<button class="ghost" type="button" id="peaceOpen">🤝 けんか しちゃった? なかなおりを する</button>`;
+  return m&&!moodAgain?`<section class="panel"><div class="row2"><h2>きょうの きもち</h2><span class="muted">こころ +1</span></div><div class="stamped"><span class="e" aria-hidden="true">${m[1]}</span><span>${m[2]} きもち なんだね。おしえてくれて ありがとう。</span></div>
+    ${c?`<p class="muted" style="margin:0">おちつく ほうほう: ${c[1]} ${c[2]}</p>`:HARD.includes(m[0])?`<button class="ghost" type="button" id="calmOpen">おちつく ほうほうを えらぶ</button>`:""}
+    <div class="row"><button class="ghost" type="button" id="moodAgain" style="flex:1">きもちが かわった</button></div>${peace}</section>`
+    :`<section class="panel"><div class="row2"><h2>${m?"いまの きもちは?":"きょうの きもちは?"}</h2><span class="muted">こころ +1</span></div><div class="moods">${MOODS.map(x=>`<button type="button" data-mood="${x[0]}">${x[1]}<span>${x[2]}</span></button>`).join("")}</div><p class="muted">どの きもちでも だいじょうぶ。</p>${peace}</section>`;}
+function talkPanel(){const t=TALKS[Math.floor(new Date(today()+"T12:00:00").getTime()/864e5)%TALKS.length], done=st.talk[today()];
+  return `<section class="panel talk"><div class="row2"><h2>きょうの しつもん</h2><span class="muted">こころ +1</span></div><p class="q">${t}</p>
+    ${done?`<p><b style="color:var(--heart)">おはなし できたね!</b></p>`:`<p class="muted" style="margin:0">ねる まえに おうちの ひとと おはなし しよう。</p><button class="ghost" type="button" id="talkDone">おはなし した!</button>`}</section>`;}
+function coopNow(){const w=weekKey(), c=st.coop; if(!c||c.wk!==w){st.coop={wk:w,opts:shuffle([...COOP.keys()]).slice(0,3),id:null,done:false}; save();} return st.coop;}
+function coopPanel(){const c=coopNow(), x=COOP[c.id];
+  if(!x)return `<section class="panel coop"><div class="row2"><h2>きょうだいで ミッション</h2><span class="muted">こんしゅう 1つ</span></div><div class="picks">${c.opts.filter(i=>COOP[i]).map(i=>`<button type="button" data-coop="${i}"><span class="e" aria-hidden="true">${COOP[i][0]}</span><span>${COOP[i][1]}</span></button>`).join("")}</div><p class="muted">ふたりで きょうりょく して やってみよう。</p></section>`;
+  return `<section class="panel coop"><div class="row2"><h2>きょうだいで ミッション</h2><span class="muted">こころ +2 からだ +1</span></div><div class="stamped"><span class="e" aria-hidden="true">${x[0]}</span><span>${x[1]}</span></div>
+    ${c.done?`<p><b style="color:var(--leg)">ふたりで できたね! なかよし パワー!</b></p>`:`<button class="ghost" type="button" id="coopDone">ふたりで できた!</button>`}</section>`;}
+function realNow(){const q=st.real.q, own=st.real.custom||[], pool=REAL.concat(own); if(q.length)return q[0]; return pool[(Math.floor(new Date(today()+"T12:00:00").getTime()/864e5)+(+st.real.done[today()]||0))%pool.length];}
+function realPanel(){const n=+st.real.done[today()]||0;
+  return `<section class="panel real"><div class="row2"><h2>おうちで やってみよう</h2><span class="muted">あたま +2</span></div>
+    ${n>=REAL_MAX?`<p><b style="color:var(--brain)">きょうは ${REAL_MAX}つ やったね! ほんものを つかうと よく わかるね。</b></p>`:`<p class="q" style="font-weight:800">🏡 ${esc(realNow())}</p><button class="ghost" type="button" id="realDone">やってみた!</button>`}</section>`;}
 function weekRow(){const d=new Date(), t=dkey(d); d.setDate(d.getDate()-((d.getDay()+6)%7)); let h="", n=0;
   ["げつ","か","すい","もく","きん","ど","にち"].forEach(w=>{const k=dkey(d), on=(st.days[k]||[]).some(id=>ACT[id]); if(on)n++; h+=`<span class="${on?"on":""}${k===t?" now":""}"><i></i>${w}</span>`; d.setDate(d.getDate()+1);});
   return `<div class="row2"><span>こんしゅう</span><b class="total">${n}<small style="font-size:.9rem"> にち</small></b></div><div class="week">${h}</div>`;}
@@ -532,6 +584,9 @@ function viewHome(g){
   ${done?"":`<section class="panel"><h2>きょうの きろくを しよう!</h2><p class="muted">ごはんや べんきょうを きろくすると、ヒーローが つよくなって バトルチケットが もらえるよ。</p><button class="primary" data-go="rec" type="button">きろくする</button></section>`}
   ${missionPanel()}
   ${moodPanel()}
+  ${realPanel()}
+  ${coopPanel()}
+  ${slotNow()==="y"?talkPanel():""}
   ${stampPanel()}
   ${g.tickets?ticketBox(g,`<button class="ghost" data-go="battle" type="button">バトルに いく</button>`):""}
   ${purse(g)}
@@ -540,8 +595,8 @@ function viewHome(g){
   </section>
   <section class="panel"><div class="row2"><h2>がんばり</h2></div>
     ${weekRow()}
-    <div class="row2"><span>つづけて きろくした ひ</span><b class="total">${g.streak}<small style="font-size:.9rem"> にち</small></b></div>
-    <p class="muted" style="margin:0">${STREAK_AT}にち つづくたびに チケット +1。${g.streak%STREAK_AT===0&&g.streak?"きょう もらえたよ!":`あと ${STREAK_AT-g.streak%STREAK_AT}にち!`}</p>
+    <p class="muted" style="margin:0">${(()=>{const w=weekDays(), r=w%WEEK_DAYS; return `1しゅうかんに ${WEEK_DAYS}にち きろくする たびに チケット +1。やすんだ ひが あっても なくならないよ。`+(w&&!r?" こんしゅう もらえたよ!":` あと ${WEEK_DAYS-r}にち!`);})()}</p>
+    ${(()=>{const v=weekVs(); return v[0]>v[1]&&v[1]>0?`<p style="margin:0"><b style="color:var(--good)">せんしゅうの おなじ ころより ${v[0]-v[1]}こ おおい! きのうの じぶんより つよく なってる!</b></p>`:"";})()}
     <div class="row2"><span>きろくした かず</span><b class="total">${g.n}<small style="font-size:.9rem"> こ</small></b></div>
     <div class="row2"><span>たおした モンスター</span><b class="total">${st.stage}<small style="font-size:.9rem"> ひき</small></b></div>
   </section>
@@ -576,7 +631,7 @@ const purse=g=>`<div class="purse"><span class="label">もっている コイン
 function viewGear(g){
   const b=bstats(g);
   return `${purse(g)}
-  <section class="panel"><p><b>コインで そうびを かおう!</b></p><p class="muted">きろく 1こで ${COIN_ACT}コイン。バトルに かつと たくさん もらえるよ。(だれかの ために した ことは、コインの かわりに こころが そだつよ)</p></section>
+  <section class="panel"><p><b>コインで そうびを かおう!</b></p><p class="muted">きろく 1こで ${COIN_ACT}コイン。バトルに かつと たくさん もらえるよ。(だれかの ために した ことは、コインの かわりに こころが そだつよ。サッカー・えほん・そとで はしる は、たのしむ こと だから コインは つかないよ)</p></section>
   ${SLOTS.map(sl=>`<section class="panel"><div class="row2"><h2>${sl[1]}</h2><span class="muted">${worn(sl[0])?worn(sl[0]).n:"なにも つけていない"}</span></div><div class="gears">${GEAR.map((x,i)=>x.k!==sl[0]?"":owned(i)
     ?`<button type="button" class="gi" data-equip="${i}" aria-pressed="${worn(sl[0])===x}">${gearIcon(x)}<span><span class="t">${x.n}</span><br><span class="up">${gearUp(x)}</span></span><span class="tag">${worn(sl[0])===x?"そうび中":"つける"}</span></button>`
     :`<button type="button" class="gi shop" data-buy="${i}" ${g.coins>=priceOf(i)?"":"disabled"}>${gearIcon(x)}<span><span class="t">${x.n}</span><br><span class="up">${gearUp(x)}${g.coins>=priceOf(i)?"":` ・ あと ${priceOf(i)-g.coins}コイン`}</span></span><span class="tag">${coinSVG} ${priceOf(i)}${g.coins>=priceOf(i)?" かう":""}</span></button>`).join("")}</div></section>`).join("")}
@@ -607,10 +662,10 @@ function viewBattle(g){
     ${prac?`<p class="muted" style="margin:0 0 .6em">まえに たおした あいてと れんしゅう。かつと ぜんぶの ちからが 1 あがるよ。</p>`:""}${b.tr?`<p class="muted" style="margin:0 0 .6em">いまの しゅぎょうパワー: <b>+${b.tr}</b></p>`:""}
     ${ticketBox(g,`<span class="muted">きろくすると もらえる</span>`)}
     ${g.tickets?`<button class="primary" id="fight" type="button">バトル スタート!</button>`:`<button class="primary" data-go="rec" type="button">きろくして チケットを もらう</button>`}
-    <p class="muted" style="margin:.6em 0 0">チケットは きろく 1こ・3こ・5こ・8こめ、ミッション クリア、おうちの ひとの スタンプ、3にち れんぞくの きろくで もらえるよ。バトルに かつと、ときどき チケットが もどってくるよ。</p>
+    <p class="muted" style="margin:.6em 0 0">チケットは きろく 1こ・3こ・5こ・8こめ、ミッション クリア、おうちの ひとの スタンプ、1しゅうかんに 3にち きろくすると もらえるよ。バトルに かつと、ときどき チケットが もどってくるよ。</p>
   </section>
   ${powerPanel(g,b)}
-  <section class="panel"><h2>バトルの しかた</h2><p class="muted">5つの ミニゲームで こうげき! ちからが たかいほど ダメージが おおきいよ。モンスターには よわい ところが あって、その ちからは ${WEAK_X}ばい きくよ。どようびと にちようびには ボスが きて、その しゅうに きろくした ぶんだけ こうげきが つよくなる。コインで そうびを かうと もっと つよくなる。</p>
+  <section class="panel"><h2>バトルの しかた</h2><p class="muted">5つの ミニゲームで こうげき! ちからが たかいほど ダメージが おおきいよ。モンスターには よわい ところが あって、その ちからは ${WEAK_X}ばい きくよ。どようびと にちようびには ボスが きて、その しゅうに きろくした ぶんだけ こうげきが つよくなる。コインで そうびを かうと もっと つよくなる。ミニゲームは うまく なると すこしずつ むずかしく なるよ。</p>
     <ul class="unl"><li><span>🧠 まほうの ちから</span><span>あたまクイズ</span></li><li><span>💨 すばやさ</span><span>すばやく タッチ</span></li><li><span>⚔️ こうげき力</span><span>ぴったり こうげき</span></li><li><span>🛡️ しゅび力</span><span>いまだ! ガード</span></li><li><span>❤️ ゆうきの ちから</span><span>おぼえて タップ</span></li></ul><p class="muted">あたまクイズは もじ・ことばの おと・かず・とけい。レベルが あがると たしざんも でるよ。</p></section>
   <section class="panel"><div class="row2"><h2>モンスターずかん</h2><span class="muted">${Math.min(st.stage,FOES.length*LAPS.length)} / ${FOES.length*(Math.min(Math.floor(st.stage/FOES.length),LAPS.length-1)+1)}</span></div>
     ${LAPS.map((L,l)=>l*FOES.length>st.stage?"":`${l?`<h3 style="margin:1em 0 .5em">${L[0]} モンスター (いろちがい)</h3>`:""}<div class="zukan">${FOES.map((x,i)=>{const k=l*FOES.length+i, y=foeOf(k);return k<st.stage?`<button type="button" class="got${prac&&n===k?" sel":""}" data-pick="${k}" aria-label="${y.n}と れんしゅう">${y.e}</button>`:`<div title="?">?</div>`;}).join("")}</div>`).join("")}
@@ -643,7 +698,10 @@ function saveRecord(){
   if(!picked.size)return; const before=calc(), k=today(), had=(st.days[k]||[]).length;
   const add=[...picked].filter(id=>ACT[id]&&!(st.days[k]||[]).includes(id));
   const m=mission(), cleared=!!m.id&&!m.done&&add.includes(m.id); if(cleared){m.done=true; st.won=(st.won||0)+MISSION_COIN; st.mcount=(st.mcount||0)+1;}
-  st.days[k]=(st.days[k]||[]).concat(add); picked.clear(); save();
+  const before0=new Set(); Object.keys(st.days).forEach(d=>(st.days[d]||[]).forEach(id=>before0.add(id))); const firsts=add.filter(id=>!before0.has(id));
+  st.days[k]=(st.days[k]||[]).concat(add); picked.clear();
+  let gift=0; if(k>=NEW_RULES&&add.some(id=>ACT[id].love)&&st.giftDay!==k&&Math.random()<GIFT_P){gift=rint(5,15); st.giftDay=k; st.won=(st.won||0)+gift; st.gifts=(st.gifts||0)+1;}
+  save();
   const after=calc(), tk=after.tickets-before.tickets, gain={}, bd=earnBadges();
   add.forEach(id=>{for(const p in ACT[id].s)gain[p]=(gain[p]||0)+ACT[id].s[p];});
   const newGear=UNLOCKS.filter(u=>u[0]>before.lv&&u[0]<=after.lv).map(u=>u[1]);
@@ -654,8 +712,11 @@ function saveRecord(){
     <div style="max-width:150px;margin:0 auto;width:100%">${heroSVG(after.lv)}</div>
     <ul class="unl">${STATS.filter(s=>gain[s[0]]).map(s=>`<li class="got"><span>${s[2]} ${s[1]}</span><span>+${gain[s[0]]}</span></li>`).join("")}</ul>
     ${cleared?`<div class="lvup" style="font-size:1.1rem">ミッション クリア! +${MISSION_COIN}コイン</div>`:""}
+    ${firsts.slice(0,3).map(id=>`<div><b style="color:var(--good)">はじめて「${ACT[id].t}」が できた!</b></div>`).join("")}
     ${add.some(id=>ACT[id].kind)?`<div><b style="color:var(--heart)">だれかの ために できたね。やさしい こころが そだったよ。</b></div>`:""}
-    <div><b>${coinSVG} +${add.filter(id=>!ACT[id].kind).length*COIN_ACT+(cleared?MISSION_COIN:0)}コイン</b> <span class="muted">(いま ${after.coins}コイン)</span></div>
+    ${add.some(id=>ACT[id].love)?`<div><b>たのしかった? すきな ことを すると ヒーローも うれしいよ!</b></div>`:""}
+    ${gift?`<div class="lvup" style="font-size:1.1rem">🎁 ヒーローから おくりもの! ${coinSVG} +${gift}コイン</div>`:""}
+    ${after.coins-before.coins-gift>0?`<div><b>${coinSVG} +${after.coins-before.coins-gift}コイン</b> <span class="muted">(いま ${after.coins}コイン)</span></div>`:`<div class="muted">いま ${after.coins}コイン</div>`}
     ${tk>0?`<div><b>バトルチケット +${tk}</b> <span class="muted">(いま ${after.tickets}まい)</span></div>`:(nextTicket(had+add.length)?`<div class="muted">あと ${nextTicket(had+add.length)-had-add.length}こ できたら チケットが もう 1まい</div>`:"")}
     <div class="row" style="justify-content:center">${after.tickets?`<button class="ghost" type="button" data-close="battle">バトルに いく</button>`:""}<button class="primary" type="button" data-close="" style="flex:1;width:auto">やったね!</button></div>`);
 }
@@ -686,16 +747,30 @@ function openParent(){
   const d=new Date(); d.setDate(d.getDate()-6); let days=0, moods="", per=GROUPS.map(()=>0); const seen=new Set();
   for(let i=0;i<7;i++){const k=dkey(d), ids=(st.days[k]||[]).filter(id=>ACT[id]); if(ids.length)days++; ids.forEach(id=>seen.add(id));
     GROUPS.forEach((gr,j)=>{if(gr[1].some(a=>ids.includes(a.id)))per[j]++;}); moods+=MOOD[st.moods[k]]?MOOD[st.moods[k]][1]:"・"; d.setDate(d.getDate()+1);}
+  const calmN=[], dd=new Date(); dd.setDate(dd.getDate()-6); let peaceN=0, talkN=0, hardN=0; for(let i=0;i<7;i++){const k=dkey(dd); const c=CALM.find(x=>x[0]===st.calm[k]); if(c)calmN.push(c[2]); peaceN+=+st.peace[k]||0; if(st.talk[k])talkN++; if(HARD.includes(st.moods[k]))hardN++; dd.setDate(dd.getDate()+1);}
   const not=LIVE.filter(id=>!seen.has(id)).slice(0,6), weak=Object.keys(st.miss).filter(x=>+x<HIRA.length).map(x=>HIRA[x]+"/"+KATA[x]);
   sheet(`<h2>おうちの ひとへ</h2><div class="parent">
-    <h3>この7日間</h3><ul><li>記録した日: ${days}日 / 7日</li>${GROUPS.map((gr,j)=>`<li>${gr[0]}: ${per[j]}日</li>`).join("")}<li>きもち(古い順): ${moods}</li></ul>
+    <h3>この7日間</h3><ul><li>記録した日: ${days}日 / 7日</li>${GROUPS.map((gr,j)=>`<li>${gr[0]}: ${per[j]}日</li>`).join("")}<li>きもち(古い順): ${moods}</li><li>つらい気持ちを選んだ日: ${hardN}日${calmN.length?`(選んだ落ち着き方: ${calmN.join("、")})`:""}</li><li>なかなおり: ${peaceN}回 / 寝る前のおはなし: ${talkN}日</li><li>きょうだいミッション: これまで ${st.coopN||0}回 / おうちでやってみよう: これまで ${realN()}回</li></ul>
     ${not.length?`<h3>この7日間まだ記録がない項目</h3><ul>${not.map(id=>`<li>${ACT[id].t}</li>`).join("")}</ul>`:""}
     ${weak.length?`<h3>クイズで まちがえた文字</h3><p>${weak.join("、")}</p>`:""}
-    <h3>声かけのヒント</h3><ul><li>結果より「やろうとしたこと」「続けたこと」を言葉にしてほめると、挑戦する気持ちが育ちます。</li><li>「かなしい」「おこった」を選んだ日は、理由を聞いて受け止めるだけで十分です。気持ちを言葉にできること自体が成長です。</li><li>記録が少ない日があっても責めずに、できた1つを一緒に喜ぶと長く続きます。</li></ul>
-    <h3>参考にした研究</h3><ul><li>数が順に並ぶ遊びは、就学前の数の理解を伸ばす (Siegler &amp; Ramani, 2008)。→ かずの ならびクイズ</li><li>ごほうびの「物」は、ほめ言葉とちがい、分け合う行動を減らした (Ulber, Hamann &amp; Tomasello, 2016)。→ だれかのための行動にはコインを付けていません</li><li>自分で選べると意欲が高まりやすい (Patall, Cooper &amp; Robinson, 2008)。→ ミッションは3つから本人が選びます</li><li>覚える・待つ遊びは、気持ちや行動をコントロールする力の練習になる (Diamond &amp; Lee, 2011)。→ おぼえて タップ、いまだ! ガード</li><li>努力や工夫をほめられた子は、難しいことに挑戦しやすい (Gunderson et al., 2013)。→ スタンプの言葉</li></ul></div>
+    <h3>声かけのヒント</h3><ul><li>結果より「やろうとしたこと」「続けたこと」を言葉にしてほめると、挑戦する気持ちが育ちます。</li><li>「かなしい」「おこった」を選んだ日は、理由を聞いて受け止めるだけで十分です。気持ちを言葉にできること自体が成長です。</li><li>記録が少ない日があっても責めずに、できた1つを一緒に喜ぶと長く続きます。</li><li>けんかの後の「なかなおり」は、大人が進行役です。①それぞれの言い分を聞く ②気持ちに名前をつける ③相手が何をしたかったか考える ④解決策を一緒に決める、の順で、どちらが悪いかは決めません。</li><li>泣いている時は、まず落ち着いてから。アプリを落ち着かせる道具にはせず、「ぎゅっ」や深呼吸など画面の外で落ち着けるようにしています。</li></ul>
+    <h3>おうちで やってみよう (大人が考えたミッション)</h3><p>ひらがなで書いてください。毎日のおすすめに混ざります。</p>
+    <div class="row"><input id="customIn" maxlength="40" placeholder="れい: おふろで 20まで かぞえよう" style="flex:1;min-width:0;border:2px solid var(--rule);background:var(--chip);border-radius:12px;padding:8px 10px"><button class="ghost" type="button" id="customAdd">追加</button></div>
+    ${st.real.custom.length?`<ul>${st.real.custom.map((x,i)=>`<li>${esc(x)} <button class="ghost" type="button" data-cdel="${i}" style="padding:2px 8px">消す</button></li>`).join("")}</ul>`:""}
+    <h3>参考にした研究</h3><ul><li>数が順に並ぶ遊びは、就学前の数の理解を伸ばす (Siegler &amp; Ramani, 2008)。→ かずの ならびクイズ</li><li>ごほうびの「物」は、ほめ言葉とちがい、分け合う行動を減らした (Ulber, Hamann &amp; Tomasello, 2016)。→ だれかのための行動にはコインを付けていません</li><li>自分で選べると意欲が高まりやすい (Patall, Cooper &amp; Robinson, 2008)。→ ミッションは3つから本人が選びます</li><li>決まって出るごほうびは、子どもが自分から楽しむ気持ちを下げやすく、予告なしのごほうびではその影響が見られなかった (Deci, Koestner &amp; Ryan, 1999)。→ サッカー・えほん・外で走るはコインなし、ときどきサプライズのおくりもの。記録が500個を超えるとコインは1個2枚に</li><li>「毎日来ないと損」の仕組みは子ども向けアプリでは利用を引き延ばす設計とされる (Radesky et al., 2022)。→ 連続記録ではなく「週に3日」でチケット</li><li>気づく・寄り添う・聴く・名前をつける・一緒に解決する「感情コーチング」(CDC)。→ きもち8種類と落ち着く方法</li><li>親が仲裁のしかたを身につけると、弟妹が自分でもめごとを解決しやすくなった (Siddiqui &amp; Ross, 2004)。→ なかなおり</li><li>良い教育アプリは親子・兄弟のやりとりと現実の生活への橋渡しがある (Meyer et al., 2021)。→ きょうの しつもん、きょうだいで ミッション、おうちで やってみよう</li><li>記憶・反応のゲームの効果はそのゲームの中に限られやすく、効果が出たのは難しさが上がり続ける場合 (Scionti et al., 2020; Diamond &amp; Lee, 2011)。→ ミニゲームは楽しみとして、うまくなると少しずつ難しく</li><li>努力や工夫をほめられた子は、難しいことに挑戦しやすい (Gunderson et al., 2013)。→ スタンプの言葉</li></ul></div>
     <button class="primary" type="button" data-close="">とじる</button>`);}
-let stampAns=0;
-function openStamp(msg){const x=rint(6,9), y=rint(6,9); stampAns=x*y;
+let stampAns=0, stampMode="stamp";
+function openCalm(){sheet(`<h2>おちつく ほうほうを えらぼう</h2><p class="muted">どれか 1つ、がめんの そとで やってみよう。</p><div class="picks">${CALM.map(c=>`<button type="button" data-calm="${c[0]}"><span class="e" aria-hidden="true">${c[1]}</span><span>${c[2]}</span></button>`).join("")}</div><button class="ghost" type="button" data-close="">あとで</button>`);}
+// なかなおり: run by a grown-up with both children. Steps: calm down, name feelings, think what the other wanted, choose what to do, a grown-up confirms.
+const PK_FEEL=[["😣","くやしい"],["😢","かなしい"],["😠","おこってる"],["😨","こわい"]], PK_WANT=[["🎮","あそびたかった"],["🛡️","じぶんの ものを まもりたかった"],["🙈","わざとじゃ なかった"],["❓","わからない → きいて みよう"]], PK_DO=[["🙇","「ごめんね」を いう"],["🔁","じゅんばんこに する"],["🤲","いっしょに あそぶ"],["🧑‍🧑‍🧒","おうちの ひとと きめる"]];
+let pk={};
+function openPeace(step){step=step||1; const opt=(arr,key)=>`<div class="picks">${arr.map((x,i)=>`<button type="button" data-pk="${step}:${i}"><span class="e" aria-hidden="true">${x[0]}</span><span>${x[1]}</span></button>`).join("")}</div>`, head=`<h2>🤝 なかなおり</h2><p class="steps">${step} / 5 ・ おうちの ひとと いっしょに</p>`;
+  if(step===1){pk={}; return sheet(`${head}<p class="big">まず おちつこう</p><p>ふたりで ゆっくり いきを すって… はいて…<br>3かい やってみよう。</p><button class="primary" type="button" data-pk="1:0">おちついた</button><button class="ghost" type="button" data-close="">やめる</button>`);}
+  if(step===2)return sheet(`${head}<p class="big">じぶんの きもちは?</p>${opt(PK_FEEL)}<p class="muted">あいての きもちも きいて みよう。</p>`);
+  if(step===3)return sheet(`${head}<p class="big">あいては なにを したかったのかな?</p>${opt(PK_WANT)}`);
+  if(step===4)return sheet(`${head}<p class="big">どうする?</p>${opt(PK_DO)}`);
+  sheet(`${head}<p class="big">なかなおり できたら、おうちの ひとに おして もらおう</p><button class="primary" type="button" id="peaceAdult">おうちの ひとが おす</button><button class="ghost" type="button" data-close="">まだ</button>`);}
+function openStamp(msg,mode){if(mode)stampMode=mode; const x=rint(6,9), y=rint(6,9); stampAns=x*y;
   sheet(`<h2>おうちの ひとへ</h2><p class="muted">おとなの かくにんです。こたえを いれてください。</p>${msg?`<p><b style="color:var(--kick)">${msg}</b></p>`:""}
     <label class="field"><span class="label">${x} × ${y} = ?</span><input id="stampIn" inputmode="numeric" autocomplete="off" maxlength="3"></label>
     <div class="row" style="justify-content:center"><button class="ghost" type="button" data-close="">やめる</button><button class="primary" type="button" id="stampCheck" style="flex:1;width:auto">すすむ</button></div>`);}
@@ -718,8 +793,19 @@ function clockSVG(h,half){const ha=(h%12+(half?.5:0))*30, ma=half?180:0, pt=(deg
   return `<svg class="clock" viewBox="0 0 100 100" role="img" aria-label="とけい"><circle cx="50" cy="50" r="47" fill="var(--chip)" stroke="currentColor" stroke-width="3"/>${ticks}<path d="M50 50L${pt(ha,22)}" stroke="currentColor" stroke-width="5" stroke-linecap="round"/><path d="M50 50L${pt(ma,31)}" stroke="var(--kick)" stroke-width="3" stroke-linecap="round"/><circle cx="50" cy="50" r="3" fill="currentColor"/></svg>`;}
 // One question: what is shown, what is asked, the three answers (the first is the right one) and whether the answers are words.
 function question(lv){
-  const kinds=["kana","kana","count","clock","seq","head"]; if(lv>=5)kinds.push("add","add"); if(lv>=12)kinds.push("sub");
-  const k=pick(kinds);
+  const sk=skillOf("brain"), kinds=["kana","kana","count","clock","seq","head"]; if(lv>=5||sk>=4)kinds.push("add","add"); if(lv>=12||sk>=7)kinds.push("sub");
+  const k=pick(kinds), Q=question0(k,lv); Q.k=k; return Q;}
+// What to try at home after a slip in each kind of question.
+function realFor(Q){const k=Q.k;
+  if(k==="kana")return `「${HIRA[Q.kana]}」の つく ものを おうちで さがそう`;
+  if(k==="head")return `「${Q.opts[0]}」から はじまる ものを おうちで さがそう`;
+  if(k==="count")return pick(["おうちに ある くつを かぞえて みよう","スプーンが いくつ あるか かぞえよう","おもちゃを 10こ ならべて かぞえよう"]);
+  if(k==="clock")return "ほんものの とけいを みて、なんじか いって みよう";
+  if(k==="seq")return "かいだんを 1、2、3… と かぞえながら のぼろう";
+  if(k==="add")return "おかしや おもちゃで たしざんを して みよう";
+  return "おかしや おもちゃで ひきざんを して みよう";}
+function addReal(t){const q=st.real.q; if(!t||q.includes(t))return; q.push(t); while(q.length>5)q.shift();}
+function question0(k,lv){
   if(k==="kana"){const toKata=Math.random()<.5, from=toKata?HIRA:KATA, to=toKata?KATA:HIRA, weak=Object.keys(st.miss).filter(x=>+x<HIRA.length), i=weak.length&&Math.random()<.5?+pick(weak):rint(0,HIRA.length-1); // letters that were missed come back more often
     return {kana:i,note:`「${HIRA[i]}」と「${KATA[i]}」は おなじ よみかた`,show:`<div class="glyph">${from[i]}</div>`,ask:"おなじ よみかたは どれ?",opts:[to[i]].concat(shuffle([...Array(HIRA.length).keys()].filter(x=>x!==i)).slice(0,2).map(x=>to[x]))};}
   if(k==="count"){const n=rint(lv>=5?4:1,lv>=5?12:8);
@@ -741,7 +827,7 @@ async function gameQuiz(A,lv){
     const Q=question(lv), opts=shuffle(Q.opts.map((t,i)=>({t,ok:i===0})));
     A.innerHTML=`<p class="muted">あたまクイズ ${q+1} / 3</p>${Q.show}<p><b>${Q.ask}</b></p><div class="choices${Q.txt?" txt":""}">${opts.map((o,i)=>`<button type="button" data-o="${i}">${o.t}</button>`).join("")}</div>`;
     const hit=await new Promise(res=>{A.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>res(b));});
-    const right=opts[+hit.dataset.o].ok; if(right)ok++;
+    const right=opts[+hit.dataset.o].ok; if(right)ok++; else{addReal(realFor(Q)); save();}
     if(Q.kana!==undefined){const c=st.miss[Q.kana]||0; if(right){if(c>1)st.miss[Q.kana]=c-1;else delete st.miss[Q.kana];}else st.miss[Q.kana]=Math.min(3,c+1); save();}
     if(Q.note&&(!right||Q.always))A.insertAdjacentHTML("beforeend",`<p><b>${Q.note}</b></p>`);
     A.querySelectorAll("[data-o]").forEach(b=>{b.disabled=true;if(opts[+b.dataset.o].ok)b.classList.add("ok");else if(b===hit)b.classList.add("ng");});
@@ -749,8 +835,11 @@ async function gameQuiz(A,lv){
   }
   return ok/3;
 }
+// Each mini game keeps its own skill (0-10): a strong round makes the next one a little harder, a weak one a little easier.
+const skillOf=k=>{const v=st.skill[k]; return Number.isInteger(v)?v:clamp(Math.floor(calc().lv/4),0,4);};
+function skillAfter(k,score){const v=skillOf(k); st.skill[k]=clamp(v+(score>=.85?1:score<.5?-1:0),0,10);}
 async function gameMemory(A,lv){
-  const len=lv>=15?5:lv>=8?4:3, cols=["var(--brain)","var(--leg)","var(--arm)","var(--body)"], seq=[]; for(let i=0;i<len;i++)seq.push(rint(0,3));
+  const len=3+Math.floor(skillOf("heart")/3), cols=["var(--brain)","var(--leg)","var(--arm)","var(--body)"], seq=[]; for(let i=0;i<len;i++)seq.push(rint(0,3));
   A.innerHTML=`<p id="mt"><b>ひかる じゅんばんを おぼえてね</b></p><div class="pads">${cols.map((c,i)=>`<button type="button" class="pad" data-p="${i}" style="background:${c}" aria-label="${["むらさき","あお","オレンジ","みどり"][i]}" disabled></button>`).join("")}</div>`;
   const pads=[...A.querySelectorAll(".pad")]; await wait(900);
   for(const i of seq){pads[i].classList.add("lit"); await wait(620); pads[i].classList.remove("lit"); await wait(260);}
@@ -763,7 +852,7 @@ async function gameMemory(A,lv){
 }
 // すばやさ: the monster pops up in one of nine squares; touch it before it hides. A friend sometimes pops up instead and must be left alone.
 async function gameDash(A,lv,foe){
-  const stay=lv>=15?750:lv>=8?900:1100, order=shuffle([1,1,1,1,1,1,1,1,0,0]), foes=order.filter(Boolean).length; let hits=0, slips=0;
+  const stay=1150-skillOf("spd")*45, order=shuffle([1,1,1,1,1,1,1,1,0,0]), foes=order.filter(Boolean).length; let hits=0, slips=0;
   A.innerHTML=`<p><b>${foe} を すばやく タッチ!</b></p><p class="muted">${DOG} は なかまだから さわらないでね</p><div class="holes">${[0,1,2,3,4,5,6,7,8].map(i=>`<button type="button" class="hole" data-h="${i}" aria-label="ます ${i+1}"></button>`).join("")}</div><div class="count" id="ct">0 / ${foes}</div>`;
   const hs=[...A.querySelectorAll(".hole")], ct=A.querySelector("#ct"); await wait(900); let last=-1;
   for(const isFoe of order){
@@ -779,7 +868,7 @@ async function gameDash(A,lv,foe){
 async function gamePunch(A){
   A.innerHTML=`<p><b>まんなかの あかで とめろ!</b></p><div class="gauge"><i id="gi" style="left:0%"></i></div><button type="button" class="tap" id="tp">${worn("sword")?"きる!":"パンチ!"}</button>`;
   const gi=A.querySelector("#gi"), b=A.querySelector("#tp"); let pos=0, live=true; const t0=performance.now();
-  (function loop(t){if(!live)return; const p=((t-t0)/1100)%2; pos=p<1?p:2-p; gi.style.left=(pos*100)+"%"; requestAnimationFrame(loop);})(t0);
+  const per=1150-skillOf("atk")*45; (function loop(t){if(!live)return; const p=((t-t0)/per)%2; pos=p<1?p:2-p; gi.style.left=(pos*100)+"%"; requestAnimationFrame(loop);})(t0);
   await new Promise(r=>{b.onpointerdown=e=>{e.preventDefault();r();};}); live=false; b.disabled=true;
   const d=Math.abs(pos-.5); b.textContent=d<=.08?"ぴったり!":d<=.2?"いいね!":"おしい!"; await wait(800);
   return d<=.08?1:d<=.2?.7:clamp(1-d*2.2,.1,.5);
@@ -789,7 +878,9 @@ async function gameGuard(A){
   const b=A.querySelector("#tp");
   for(let tries=0;tries<2;tries++){
     b.className="tap wait"; b.textContent="まって…";
-    const r=await new Promise(res=>{let t0=0; const tm=setTimeout(()=>{t0=performance.now();b.className="tap go";b.textContent="いまだ!";},1400+Math.random()*2200);
+    const fake=skillOf("def")>=3&&Math.random()<.4; // later on a yellow "not yet" shows first: wait for green
+    const r=await new Promise(res=>{let t0=0; const at=1400+Math.random()*2200, tm=setTimeout(()=>{t0=performance.now();b.className="tap go";b.textContent="いまだ!";},at), fk=fake?setTimeout(()=>{if(!t0){b.className="tap";b.style.background="var(--accent)";b.textContent="まだ!";setTimeout(()=>{b.style.background="";if(!t0){b.className="tap wait";b.textContent="まって…";}},500);}},at-900):0;
+      if(fake)b.addEventListener("pointerdown",()=>clearTimeout(fk),{once:true});
       b.onpointerdown=e=>{e.preventDefault();b.onpointerdown=null;if(!t0){clearTimeout(tm);res(-1);}else res(performance.now()-t0);};});
     if(r<0){b.textContent="はやすぎ!";await wait(900);continue;}
     b.disabled=true; b.textContent=r<450?"かんぺき!":r<800?"いいね!":"セーフ!"; await wait(800);
@@ -812,7 +903,7 @@ async function battle(boss){
   for(let i=0;i<GAMES.length&&hp>0;i++){
     const key=GAMES[i][0], s=[key,GAMES[i][3],GAMES[i][2]];
     A.innerHTML=`<p class="muted">こうげき ${i+1} / ${GAMES.length}</p><div class="glyph">${s[2]}</div><div class="big">${s[1]} で こうげき!</div><p><b>ちから ${b[key]}</b>${key===f.w?` <span class="weakhit">よわい ところ! ×${WEAK_X}</span>`:""}</p>${boss?`<p class="muted">こんしゅうの きろくパワー ×${mul.toFixed(1)}</p>`:""}`; sfx("go"); await wait(1300);
-    const score=await GAMES[i][1](A,g.lv,f.e), wk=key===f.w, d=Math.max(1,Math.round(dmgOf(b[key],score)*(wk?WEAK_X:1)*mul)); hp=Math.max(0,hp-d);
+    const score=await GAMES[i][1](A,g.lv,f.e); skillAfter(key,score); save(); const wk=key===f.w, d=Math.max(1,Math.round(dmgOf(b[key],score)*(wk?WEAK_X:1)*mul)); hp=Math.max(0,hp-d);
     $("#fhp").style.width=(hp/f.hp*100)+"%"; $("#fhpt").textContent=`たいりょく ${hp} / ${f.hp}`;
     const em=$("#fem"); again($("#bhero"),"lunge"); await wait(180); again(em,"shake"); again(em,"flash"); sfx(score>=.85||wk?"big":"hit");
     em.querySelectorAll(".pop").forEach(x=>x.remove()); em.insertAdjacentHTML("beforeend",`<span class="pop">-${d}</span>`);
@@ -839,13 +930,32 @@ document.addEventListener("click",e=>{
   if(t.dataset.equip){const i=+t.dataset.equip, x=GEAR[i]; if(!x||!owned(i))return; st.equip=Object.assign({},st.equip,{[x.k]:(st.equip||{})[x.k]===i?null:i}); save(); const y=window.scrollY; render(); window.scrollTo(0,y); return;}
   if(t.dataset.buy){const i=+t.dataset.buy, x=GEAR[i], g=calc(); if(!x||owned(i)||g.coins<priceOf(i))return; st.bought.push(i); st.equip=Object.assign({},st.equip,{[x.k]:i}); save(); render();
     const bd=earnBadges(); render(); sheet(`<div class="big">「${x.n}」を かった!</div>${bd}<div style="max-width:150px;margin:0 auto;width:100%">${heroSVG(g.lv)}</div><ul class="unl"><li class="got"><span>${x.n}</span><span>${gearUp(x)}</span></li></ul><button class="primary" type="button" data-close="">そうび した!</button>`); return;}
-  if(t.dataset.mood){if(!MOOD[t.dataset.mood])return; st.moods[today()]=t.dataset.mood; save(); const bd=earnBadges(), y=window.scrollY; render(); window.scrollTo(0,y);
+  if(t.dataset.mood){if(!MOOD[t.dataset.mood])return; st.moods[today()]=t.dataset.mood; moodAgain=false; if(st.calm[today()]&&!HARD.includes(t.dataset.mood))delete st.calm[today()]; save(); const bd=earnBadges(), y=window.scrollY; render(); window.scrollTo(0,y);
+    if(HARD.includes(t.dataset.mood)){delete st.calm[today()]; save(); render(); window.scrollTo(0,y); return openCalm();}
     if(bd)sheet(`${bd}<button class="primary" type="button" data-close="">やったー!</button>`); return;}
+  if(t.id==="moodAgain"){moodAgain=true; const y=window.scrollY; render(); window.scrollTo(0,y); return;}
+  if(t.id==="calmOpen")return openCalm();
+  if(t.dataset.calm){const c=CALM.find(x=>x[0]===t.dataset.calm); if(!c)return; st.calm[today()]=c[0]; save(); render();
+    return sheet(`<div class="glyph">${c[1]}</div><div class="big">${c[2]}</div><p>やって みてね。おちついたら、おうちの ひとに きもちを おはなし しよう。</p><p class="muted">どんな きもちに なっても だいじょうぶ。</p><button class="primary" type="button" data-close="">やってみる</button>`);}
+  if(t.id==="peaceOpen")return openPeace(1);
+  if(t.dataset.pk){const [st1,ix]=t.dataset.pk.split(":").map(Number); pk[st1]=ix; return openPeace(st1+1);}
+  if(t.id==="peaceAdult")return openStamp("","peace");
+  if(t.id==="talkDone"){st.talk[today()]=1; save(); const bd=earnBadges(), y=window.scrollY; render(); window.scrollTo(0,y); if(bd)sheet(`${bd}<button class="primary" type="button" data-close="">やったー!</button>`); return;}
+  if(t.dataset.coop!=null){const c=coopNow(), i=+t.dataset.coop; if(c.id!=null||!c.opts.includes(i))return; c.id=i; save(); const y=window.scrollY; render(); window.scrollTo(0,y); return;}
+  if(t.id==="coopDone"){const c=coopNow(); if(c.id==null||c.done)return; c.done=true; st.coopN=(st.coopN||0)+1; save(); const bd=earnBadges(); render();
+    return sheet(`<div class="glyph">${COOP[c.id][0]}</div><div class="big">ふたりで できた!</div><p>きょうりょく できたね。こころ +2 からだ +1</p>${bd}<button class="primary" type="button" data-close="">やったー!</button>`);}
+  if(t.id==="realDone"){const k=today(), n=+st.real.done[k]||0; if(n>=REAL_MAX)return; const txt=realNow(); if(st.real.q[0]===txt)st.real.q.shift(); st.real.done[k]=n+1; save(); const bd=earnBadges(); render();
+    return sheet(`<div class="glyph">🏡</div><div class="big">やって みたね!</div><p>${esc(txt)}</p><p>ほんものを つかうと よく わかるね。あたま +2</p>${bd}<button class="primary" type="button" data-close="">やったー!</button>`);}
+  if(t.id==="customAdd"){const v=(($("#customIn")||{}).value||"").trim().slice(0,40); if(v&&!st.real.custom.includes(v)){st.real.custom.push(v); save();} return openParent();}
+  if(t.dataset.cdel!=null){st.real.custom.splice(+t.dataset.cdel,1); save(); return openParent();}
   if(t.dataset.mis){const m=mission(), id=t.dataset.mis; if(m.id||!ACT[id]||!m.opts.includes(id))return; m.id=id;
     if(doneToday().includes(id)){m.done=true; st.won=(st.won||0)+MISSION_COIN; st.mcount=(st.mcount||0)+1;} save(); const y=window.scrollY; render(); window.scrollTo(0,y); return;}
   if(t.id==="parentOpen")return openParent();
-  if(t.id==="stampOpen")return openStamp();
-  if(t.id==="stampCheck"){if(+($("#stampIn").value||"").trim()===stampAns)pickStamp();else openStamp("こたえが ちがいます。もういちど どうぞ。"); return;}
+  if(t.id==="stampOpen")return openStamp("","stamp");
+  if(t.id==="stampCheck"){if(+($("#stampIn").value||"").trim()!==stampAns)return openStamp("こたえが ちがいます。もういちど どうぞ。");
+    if(stampMode==="peace"){stampMode="stamp"; const k=today(); st.peace[k]=(+st.peace[k]||0)+1; save(); const bd=earnBadges(); render();
+      return sheet(`<div class="glyph">🤝</div><div class="big">なかなおり できたね!</div><p>きもちを はなして、いっしょに きめられたね。<br>${PK_DO[pk[4]]?PK_DO[pk[4]][1]+" が できたね。":""}</p><p><b style="color:var(--heart)">こころ +2</b></p>${bd}<button class="primary" type="button" data-close="">やったー!</button>`);}
+    pickStamp(); return;}
   if(t.dataset.stamp){const k=today(); if(!doneToday().length||st.stamps[k])return closeOv(); st.stamps[k]=t.dataset.stamp; save(); render(); const g=calc();
     const bd=earnBadges(); render(); sheet(`<div class="glyph">${esc(st.stamps[k])}</div><div class="big">スタンプを もらった!</div>${bd}<div><b>${coinSVG} +${STAMP_COIN}コイン</b> <span class="muted">(いま ${g.coins}コイン)</span></div><button class="primary" type="button" data-close="">やったー!</button>`); return;}
   if(t.dataset.slot){recSlot=t.dataset.slot; recMore=false; render(); return;}
@@ -862,10 +972,13 @@ document.addEventListener("click",e=>{
     const L=look(); L[k]=v<0?null:v; st.look=L; const ni=$("#nameIn"); if(ni)st.name=(ni.value||"").trim().slice(0,12); save();
     const sh=document.querySelector(".sheet"), y=sh?sh.scrollTop:0; render(); openSettings(); const s2=document.querySelector(".sheet"); if(s2)s2.scrollTop=y; return;}
   if(t.id==="setOk"){st.name=($("#nameIn").value||"").trim().slice(0,12); save(); closeOv(); return render();}
-  if(t.id==="undoToday"){if(t.dataset.sure){delete st.days[today()]; delete st.stamps[today()]; delete st.moods[today()]; save(); closeOv(); render();}else{t.dataset.sure="1";t.textContent="もういちど おすと きょうの ぶんを けします";} return;}
-  if(t.id==="resetAll"){if(t.dataset.sure){st={name:st.name,look:st.look,days:{},used:0,stage:0,bonus:0,equip:{},won:0,bought:[],stamps:{},mission:null,moods:{},badges:[],miss:{},mcount:0}; save(); closeOv(); render();}else{t.dataset.sure="1";t.textContent="もういちど おすと ぜんぶ きえます";} return;}
+  if(t.id==="undoToday"){if(t.dataset.sure){delete st.days[today()]; delete st.stamps[today()]; delete st.moods[today()]; delete st.calm[today()]; delete st.talk[today()]; save(); closeOv(); render();}else{t.dataset.sure="1";t.textContent="もういちど おすと きょうの ぶんを けします";} return;}
+  if(t.id==="resetAll"){if(t.dataset.sure){st={name:st.name,look:st.look,days:{},used:0,stage:0,bonus:0,equip:{},won:0,bought:[],stamps:{},mission:null,moods:{},badges:[],miss:{},mcount:0,calm:{},peace:{},talk:{},coop:null,coopN:0,real:{q:[],done:{},custom:(st.real&&st.real.custom)||[]},skill:{},gifts:0}; save(); closeOv(); render();}else{t.dataset.sure="1";t.textContent="もういちど おすと ぜんぶ きえます";} return;}
 });
 render();
+{const t=today(), ks=Object.keys(st.days).filter(k=>k<t&&(st.days[k]||[]).some(id=>ACT[id])).sort(), last=ks[ks.length-1];
+  if(last&&!(st.days[t]||[]).length&&st.hello!==t&&(new Date(t+"T12:00:00")-new Date(last+"T12:00:00"))/864e5>=3){st.hello=t; save();
+    sheet(`<div style="max-width:150px;margin:0 auto;width:100%">${heroSVG(calc().lv)}</div><div class="big">おかえり! まってたよ</div><p>また いっしょに がんばろう!</p><button class="primary" type="button" data-close="">ただいま!</button>`);}}
 })();
 </script>
 </body>
