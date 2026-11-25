@@ -540,8 +540,10 @@ function heroSVG(lv){
   const aura=lv>=8?AF.map((d,i)=>`<image class="au${i+1}" href="data:image/png;base64,${d}" x="${ax}" y="${ay}" width="${aw}" height="${ah}" preserveAspectRatio="none" style="image-rendering:pixelated"/>`).join(""):"";
   const bolts=lv>=35&&lv<40?`<path d="M1 2h2v2h2v2H3v2H1V6h-1V4h1zM21 1h2v2h1v2h-1v2h-2V5h-2V3h2z" fill="#ffe86b"/>`:"";
   const stars=lv>=50?`<path d="M1 1h1v1H1zM21 0h1v1h-1zM0 29h1v1H0zM23 31h1v1h-1zM4 0h1v1H4zM19 34h1v1h-1zM2 10h1v1H2zM22 11h1v1h-1z" fill="#fff6b0"/>`:"";
+  // Armour: the drawn armour sprite is worn over the shirt (shoulders to waist); the fists stay on top.
+  const ARB=[ox+NF.gx-19,oy+NF.st-3,38,28], armour=ar&&gpxOf(ar)?`<image href="data:image/png;base64,${gpxOf(ar)}" x="${ARB[0]}" y="${ARB[1]}" width="${ARB[2]}" height="${ARB[3]}" preserveAspectRatio="xMidYMin meet" style="${gfil(ar)}image-rendering:pixelated"/>`:"";
   const chm=worn("charm"), pend=chm?(gpxOf(chm)?gimg(chm,[31.5,oy+NF.st,9,13]):charmSVG(chm).replace("<svg ",`<svg x="31.5" y="${oy+NF.st+1}" width="9" height="9" `)):""; // the charm hangs on the chest
-  return `<svg viewBox="0 0 ${W} ${HT}" role="img" aria-label="ヒーロー" shape-rendering="crispEdges">${aura}<g transform="translate(7.2 8.5) scale(2.4)">${bolts}${stars}<ellipse cx="12" cy="35.2" rx="7.5" ry=".7" fill="#000" opacity=".35"/></g>${px}${sword}${shield}${pend}</svg>`;
+  return `<svg viewBox="0 0 ${W} ${HT}" role="img" aria-label="ヒーロー" shape-rendering="crispEdges">${aura}<g transform="translate(7.2 8.5) scale(2.4)">${bolts}${stars}<ellipse cx="12" cy="35.2" rx="7.5" ry=".7" fill="#000" opacity=".35"/></g>${px}${armour}${fistPx}${sword}${shield}${pend}</svg>`;
 }
 
 /* ---------- screens ---------- */
