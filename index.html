@@ -545,7 +545,7 @@ function heroSVG(lv){
   // the head and neck are drawn again over the armour so its dark collar opening never hides the neck
   const neckPx=armour?(()=>{let o="";for(let y=Math.max(0,ARB[1]);y<=oy+NF.st;y++)for(let x=Math.floor(ARB[0]);x<ARB[0]+ARB[2]&&x<W;x++){const c=G[y][x];if(c!==".")o+=`<rect x="${x}" y="${y}" width="1" height="1" fill="${col(c)}"/>`;}return o;})():"";
   const chm=worn("charm"), pend=chm?(gpxOf(chm)?gimg(chm,[31.5,oy+NF.st,9,13]):charmSVG(chm).replace("<svg ",`<svg x="31.5" y="${oy+NF.st+1}" width="9" height="9" `)):""; // the charm hangs on the chest
-  return `<svg viewBox="0 0 ${W} ${HT}" role="img" aria-label="ヒーロー" shape-rendering="crispEdges">${aura}<g transform="translate(7.2 8.5) scale(2.4)">${bolts}${stars}<ellipse cx="12" cy="35.2" rx="7.5" ry=".7" fill="#000" opacity=".35"/></g>${px}${armour?`<rect x="${BC-4}" y="${oy+NF.st-3}" width="8" height="7" fill="${tone[4]}"/><rect x="${BC-4}" y="${oy+NF.st+3}" width="8" height="1" fill="${tone[3]}"/>`:""}${armour}${neckPx}${fistPx}${sword}${shield}${pend}</svg>`;
+  return `<svg viewBox="0 0 ${W} ${HT}" role="img" aria-label="ヒーロー" shape-rendering="crispEdges">${aura}<g transform="translate(7.2 8.5) scale(2.4)">${bolts}${stars}<ellipse cx="12" cy="35.2" rx="7.5" ry=".7" fill="#000" opacity=".35"/></g>${px}${armour?`<rect x="${BC-4}" y="${oy+NF.st-3}" width="8" height="7" fill="${tone[4]}"/><rect x="${BC-4}" y="${oy+NF.st+3}" width="8" height="1" fill="${tone[3]}"/>`:""}${armour?`<g transform="translate(${BC} 0) scale(1.15 1) translate(${-BC} 0)">${armour}</g>`:""}${neckPx}${fistPx}${sword}${shield}${pend}</svg>`;
 }
 
 /* ---------- screens ---------- */
