@@ -734,6 +734,10 @@ function openSettings(){
     </div>
     <button class="ghost" type="button" id="parentOpen">おうちの ひとへ (1しゅうかんの まとめ)</button>
     <button class="ghost" type="button" id="undoToday">きょうの きろくを やりなおす</button>
+    <div class="bk"><span class="label">データの バックアップ (おうちの ひと むけ)</span>
+      <p class="muted" style="margin:.3em 0 .5em">きろくは この たんまつの なかだけに あります。きしゅへんこうや データが きえた ときの ために、ときどき ファイルに かきだして ほぞんして ください。${st.lastBackup?`さいごの かきだし: ${st.lastBackup.replace(/-/g,"/")}`:"まだ かきだして いません。"}</p>
+      <button class="ghost" type="button" id="bkOut">データを ファイルに かきだす</button>
+      <button class="ghost" type="button" id="bkIn">ファイルから データを もどす</button><input type="file" id="bkFile" accept=".json,application/json" hidden></div>
     <button class="ghost" type="button" id="resetAll">ぜんぶ けして さいしょから</button>
     <p class="muted">きろくは この たんまつの なかに ほぞんされます。</p>
     <button class="primary" type="button" id="setOk">とじる</button>`);
@@ -917,6 +921,26 @@ async function battle(boss){
 }
 
 /* ---------- events ---------- */
+// Backup: the whole saved state goes into one JSON file (shared to Files on a phone, downloaded elsewhere) and can be read back on any device.
+let bkPending=null;
+function exportData(){
+  st.lastBackup=today(); save();
+  const name=`power-note-${today()}.json`, txt=JSON.stringify({app:"power-note",v:1,at:new Date().toISOString(),data:st}), blob=new Blob([txt],{type:"application/json"});
+  const dl=()=>{const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=name; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href); a.remove();},1000);};
+  let file=null; try{file=new File([blob],name,{type:"application/json"});}catch(err){}
+  if(file&&matchMedia("(pointer:coarse)").matches&&navigator.canShare&&navigator.canShare({files:[file]}))navigator.share({files:[file],title:name}).catch(err=>{if(err&&err.name!=="AbortError")dl();});
+  else dl();
+  const p=document.querySelector(".bk .muted"); if(p)p.textContent=p.textContent.replace(/(さいごの かきだし: .*|まだ かきだして いません。)$/,`さいごの かきだし: ${st.lastBackup.replace(/-/g,"/")}`);
+}
+function importData(f){
+  if(!f)return; const r=new FileReader();
+  r.onload=()=>{let d=null; try{const o=JSON.parse(r.result); d=o&&o.data&&typeof o.data==="object"?o.data:o;}catch(err){}
+    if(!d||typeof d!=="object"||!d.days||typeof d.days!=="object"){sheet(`<div class="big">よみこめませんでした</div><p class="muted">パワーノートで かきだした ファイルを えらんで ください。</p><button class="primary" type="button" data-close="">とじる</button>`); return;}
+    bkPending=d; const n=Object.keys(d.days).filter(k=>(d.days[k]||[]).length).length, last=Object.keys(d.days).sort().pop()||"-";
+    sheet(`<div class="big">この データに もどしますか?</div><p>きろくした ひ: <b>${n}にち</b><br>さいごの きろく: <b>${esc(String(last)).replace(/-/g,"/")}</b><br>たおした モンスター: <b>${+d.stage||0}ひき</b></p><p class="muted">いまの この たんまつの データは、この ファイルの なかみに おきかわります。</p><button class="primary" type="button" id="bkApply">この データで もどす</button><button class="ghost" type="button" data-close="">やめる</button>`);};
+  r.readAsText(f);
+}
+document.addEventListener("change",e=>{if(e.target&&e.target.id==="bkFile"){importData(e.target.files[0]); e.target.value="";}});
 document.addEventListener("click",e=>{
   const t=e.target.closest("button"); if(!t)return;
   if(fighting)return;
@@ -968,6 +992,9 @@ document.addEventListener("click",e=>{
     const L=look(); L[k]=v<0?null:v; st.look=L; const ni=$("#nameIn"); if(ni)st.name=(ni.value||"").trim().slice(0,12); save();
     const sh=document.querySelector(".sheet"), y=sh?sh.scrollTop:0; render(); openSettings(); const s2=document.querySelector(".sheet"); if(s2)s2.scrollTop=y; return;}
   if(t.id==="setOk"){st.name=($("#nameIn").value||"").trim().slice(0,12); save(); closeOv(); return render();}
+  if(t.id==="bkOut")return exportData();
+  if(t.id==="bkIn"){$("#bkFile").click(); return;}
+  if(t.id==="bkApply"&&bkPending){try{localStorage.setItem(LS,JSON.stringify(bkPending));}catch(err){} location.reload(); return;}
   if(t.id==="undoToday"){if(t.dataset.sure){delete st.days[today()]; delete st.stamps[today()]; delete st.moods[today()]; delete st.calm[today()]; delete st.talk[today()]; save(); closeOv(); render();}else{t.dataset.sure="1";t.textContent="もういちど おすと きょうの ぶんを けします";} return;}
   if(t.id==="resetAll"){if(t.dataset.sure){st={name:st.name,look:st.look,days:{},used:0,stage:0,bonus:0,equip:{},won:0,bought:[],stamps:{},mission:null,moods:{},badges:[],miss:{},mcount:0,calm:{},peace:{},talk:{},coop:null,coopN:0,real:{q:[],done:{},custom:(st.real&&st.real.custom)||[]},skill:{},gifts:0}; save(); closeOv(); render();}else{t.dataset.sure="1";t.textContent="もういちど おすと ぜんぶ きえます";} return;}
 });
