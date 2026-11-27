@@ -358,7 +358,9 @@ const COOP=[["⚽","ふたりで パスを 10かい つなぐ"],["🧸","いっ�
 // goals: [count, picture] for a badge each. Close goals first (children keep at it better with near goals: Bandura & Schunk 1981).
 const DRILLS=[{id:"wan",e:"⚽",n:"ワンバン リフティング",b:"ワンバン",how:"ボールを けって、じめんで 1かい はねたら また ける。なんかい つづけて けれたかな?",u:"かい",goals:[[10,"👟"],[30,"🤩"]]},
   {id:"lift",e:"⚽",n:"ふつうの リフティング",b:"リフティング",how:"ボールを じめんに おとさずに、なんかい つづけて けれたかな?",u:"かい",goals:[[5,"⚽"],[10,"🏆"]]},
-  {id:"touch",e:"👟",n:"ボールタッチ",how:"ボールの うえを、みぎ ひだり こうごに あしの うらで タッチ。30びょうで なんかい できたかな?",u:"かい",sec:30}];
+  {id:"touch",e:"👟",n:"ボールタッチ",how:"ボールの うえを、みぎ ひだり こうごに あしの うらで タッチ。30びょうで なんかい できたかな?",u:"かい",sec:30},
+  {id:"rally",e:"⚽",n:"おにいちゃんと パスラリー",b:"パスラリー",how:"おにいちゃんと 3ぽ はなれて むかいあう。ボールを ピタッと とめてから、あしの うちがわで けりかえそう。ふたりで なんかい パスが つづいたかな?",u:"かい",s:{leg:2,heart:1},goals:[[10,"💖"],[30,"🏆"]]}];
+// s: what a new best adds to the hero (default あし +PB_LEG). The rally is the brothers' shared record, so it grows こころ too.
 const PB_LEG=2, DRILL_MAX=9999;
 // おうちで やってみよう: small things to do with real objects. Quiz slips add one that fits; otherwise one of these (plus the grown-up's own ideas).
 const REAL=["やさいを 1つ さわって、いろと かたちを いおう","そとで あかい ものを 3つ みつけよう","おふろで 10まで かぞえよう","ほんものの とけいで いま なんじか いおう","おみせで ひらがなを 1つ よもう","くつを そろえて、なんそく あるか かぞえよう","おうちの ひとに きょう あった ことを はなそう","はっぱや いしを 5こ あつめて ならべよう"];
@@ -482,7 +484,9 @@ function dlog(id){if(!st.soccer||typeof st.soccer!=="object"||Array.isArray(st.s
 DRILLS.forEach(d=>{const L=dlog(d.id); st.soccer[d.id]=L.filter(x=>Array.isArray(x)&&typeof x[0]==="string");});
 const pbOf=id=>dlog(id).reduce((a,x)=>Math.max(a,+x[1]||0),0);
 // Days on which a best went up (once per drill per day); each one adds あし.
-function pbDays(){let n=0; DRILLS.forEach(d=>{let best=0; const days=new Set(); dlog(d.id).forEach(x=>{const v=+x[1]||0; if(v>best){best=v; days.add(x[0]);}}); n+=days.size;}); return n;}
+function pbDayMap(){const m={}; DRILLS.forEach(d=>{let best=0; const days=new Set(); dlog(d.id).forEach(x=>{const v=+x[1]||0; if(v>best){best=v; days.add(x[0]);}}); m[d.id]=days.size;}); return m;}
+const pbDays=()=>Object.values(pbDayMap()).reduce((a,b)=>a+b,0);
+const drillGain=d=>d.s||{leg:PB_LEG};
 const numIn=v=>{const t=String(v==null?"":v).replace(/[０-９]/g,c=>String.fromCharCode(c.charCodeAt(0)-0xFEE0)).replace(/[^0-9]/g,""); return t?Math.min(DRILL_MAX,parseInt(t,10)):null;};
 if(!st.real||typeof st.real!=="object")st.real={}; ["q","custom"].forEach(k=>{if(!Array.isArray(st.real[k]))st.real[k]=[];}); if(!st.real.done||typeof st.real.done!=="object")st.real.done={};
 if(!Array.isArray(st.bought)){st.bought=[];for(let i=0;i<Math.min(st.stage||0,12);i++)st.bought.push(i);}
@@ -509,7 +513,7 @@ function calc(){
   for(const k in st.peace)s.heart+=2*Math.min(2,+st.peace[k]||0); // making up after a fight, with a grown-up
   for(const k in st.talk)s.heart+=1;
   s.heart+=2*(st.coopN||0); s.body+=st.coopN||0;
-  s.leg+=PB_LEG*pbDays();
+  {const pm=pbDayMap(); DRILLS.forEach(d=>{const g=drillGain(d); for(const k in g)s[k]+=g[k]*(pm[d.id]||0);});}
   for(const k in st.real.done)s.brain+=2*Math.min(REAL_MAX,+st.real.done[k]||0);
   let lv=1, need=40, left=xp; while(left>=need){left-=need;lv++;need=30+lv*10;}
   let streak=0; const d=new Date(); if(!(st.days[dkey(d)]||[]).length)d.setDate(d.getDate()-1);
@@ -638,13 +642,14 @@ function realPanel(){const n=+st.real.done[today()]||0;
     ${n>=REAL_MAX?`<p><b style="color:var(--brain)">きょうは ${REAL_MAX}つ やったね! ほんものを つかうと よく わかるね。</b></p>`:`<p class="q" style="font-weight:800">🏡 ${esc(realNow())}</p><button class="ghost" type="button" id="realDone">やってみた!</button>`}</section>`;}
 function drillPicks(){const t=today(); return `<div class="picks">${DRILLS.map(d=>{const L=dlog(d.id), b=pbOf(d.id), td=L.filter(x=>x[0]===t).map(x=>+x[1]||0), last=L[L.length-1];
   return `<button type="button" class="drill" data-drill="${d.id}"><span class="e" aria-hidden="true">${d.e}</span><span class="dn"><span class="kp">${d.n}</span><small>${d.sec?`${d.sec}びょう ・ `:""}${td.length?`きょう ${Math.max(...td)}${d.u}`:last?`まえ ${+last[1]||0}${d.u}`:"まだ きろく なし"}</small></span><span class="pb"><small>じこベスト</small><b>${L.length?b:"-"}</b></span></button>`;}).join("")}</div>`;}
-function soccerPanel(){return `<section class="panel soc"><div class="row2"><h2>サッカー じこベスト</h2><span class="muted">こうしんで あし +${PB_LEG}</span></div>${drillPicks()}<p class="muted" style="margin:0">まえの じぶんを こえられるかな?</p></section>`;}
+const gainTxt=d=>Object.entries(drillGain(d)).map(([k,v])=>`${(STATS.find(x=>x[0]===k)||[])[2]||""} ${(BSTATS.find(x=>x[3]===k)||[])[4]||k} +${v}`).join(" ");
+function soccerPanel(){return `<section class="panel soc"><div class="row2"><h2>サッカー じこベスト</h2><span class="muted">こうしんで パワー アップ!</span></div>${drillPicks()}<p class="muted" style="margin:0">まえの じぶんを こえられるかな?</p></section>`;}
 function openDrills(){sheet(`<div class="big">サッカー じこベスト</div><p class="muted" style="margin:0">どれを きろく する?</p>${drillPicks()}<button class="ghost" type="button" data-close="">とじる</button>`);}
 function openDrill(id,msg,extra){const d=DRILLS.find(x=>x.id===id); if(!d)return; const L=dlog(id), b=pbOf(id), rec=L.slice(-10), mx=Math.max(1,...rec.map(x=>+x[1]||0)), last=L[L.length-1];
   sheet(`<div class="big kp">${d.e} ${d.n}</div>${msg?`<p style="margin:0"><b style="color:var(--leg)">${msg}</b></p>`:""}${extra||""}
     <p class="kp" style="margin:0">${d.how}</p>
     <div class="row2"><span>じこベスト</span>${L.length?`<b class="total">${b}<small style="font-size:.9rem"> ${d.u}</small></b>`:`<span class="muted">まだ なし</span>`}</div>
-    ${(()=>{const nx=(d.goals||[]).find(x=>b<x[0]); return L.length||nx?`<p class="muted kp" style="margin:0">${L.length?`つぎの めあて: <b>${b+1}${d.u}</b>`:""}${L.length&&nx?" ・ ":""}${nx?`${nx[0]}${d.u}で バッジ!`:""}</p>`:"";})()}
+    ${(()=>{const nx=(d.goals||[]).find(x=>b<x[0]); return `<p class="muted kp" style="margin:0">こうしんで ${gainTxt(d)}</p>`+(L.length||nx?`<p class="muted kp" style="margin:0">${L.length?`つぎの めあて: <b>${b+1}${d.u}</b>`:""}${L.length&&nx?" ・ ":""}${nx?`${nx[0]}${d.u}で バッジ!`:""}</p>`:"");})()}
     ${rec.length?`<div class="spark" role="img" aria-label="さいきんの きろく ${rec.map(x=>+x[1]||0).join(", ")}">${rec.map(x=>{const v=+x[1]||0; return `<i class="${b>0&&v===b?"top":""}" style="height:${Math.max(4,Math.round(v/mx*100))}%"><span>${v}</span></i>`;}).join("")}</div>`:""}
     ${d.sec?`<div class="dclock" id="drillClock" aria-live="polite">${d.sec}</div><button class="ghost" type="button" id="drillGo" data-sec="${d.sec}">よーい スタート! (${d.sec}びょう)</button>`:""}
     <label class="field"><span class="label">なんかい できた?</span><input id="drillIn" inputmode="numeric" pattern="[0-9]*" autocomplete="off" maxlength="4" placeholder="0"></label>
@@ -858,7 +863,8 @@ const KOKORO_ART={"iki": "iVBORw0KGgoAAAANSUhEUgAAAB4AAAAdCAMAAACKeiw+AAAAYFBMVE
   CALM.forEach(c=>{const k=c[0]==="suki"?"teddy":c[0]; if(KOKORO_ART[k])c[1]=im(k);});
   ["pass","box","ehon","run","stretch","cook","block","thanks","goal","dice"].forEach((k,i)=>{if(COOP[i])COOP[i][0]=im(k);});
   ["game","shield","peek","ask"].forEach((k,i)=>{if(PK_WANT[i])PK_WANT[i][0]=im(k);});
-  ["bow","turns","offer","family"].forEach((k,i)=>{if(PK_DO[i])PK_DO[i][0]=im(k);});}
+  ["bow","turns","offer","family"].forEach((k,i)=>{if(PK_DO[i])PK_DO[i][0]=im(k);});
+  if(KOKORO_ART.pass){const r=DRILLS.find(d=>d.id==="rally"); if(r)r.e=im("pass"); BADGES.forEach(b=>{if(b[0]==="rally10")b[1]=im("pass");});}}
 let pk={};
 function openPeace(step){step=step||1; const opt=(arr,key)=>`<div class="picks">${arr.map((x,i)=>`<button type="button" data-pk="${step}:${i}"><span class="e" aria-hidden="true">${x[0]}</span><span>${x[1]}</span></button>`).join("")}</div>`, head=`<h2>🤝 なかなおり</h2><p class="steps">${step} / 5 ・ おうちの ひとと いっしょに</p>`;
   if(step===1){pk={}; return sheet(`${head}<p class="big">まず おちつこう</p><p>ふたりで ゆっくり いきを すって… はいて…<br>3かい やってみよう。</p><button class="primary" type="button" data-pk="1:0">おちついた</button><button class="ghost" type="button" data-close="">やめる</button>`);}
@@ -1071,10 +1077,10 @@ document.addEventListener("click",e=>{
   if(t.dataset.dn){const inp=$("#drillIn"); if(!inp)return; inp.value=String(Math.max(0,Math.min(DRILL_MAX,(numIn(inp.value)||0)+(+t.dataset.dn||0)))); return;}
   if(t.id==="drillGo")return drillGo(t);
   if(t.dataset.drillsave){const id=t.dataset.drillsave, d=DRILLS.find(x=>x.id===id), v=numIn(($("#drillIn")||{}).value); if(!d)return; if(v==null)return openDrill(id,"なんかい できたか いれてね");
-    const b0=pbOf(id), had=dlog(id).length, u0=pbDays(); dlog(id).push([today(),v]); save(); const up=pbDays()>u0, bd=earnBadges(); render();
+    const b0=pbOf(id), had=dlog(id).length, u0=pbDayMap()[id]||0; dlog(id).push([today(),v]); save(); const up=(pbDayMap()[id]||0)>u0, bd=earnBadges(); render();
     if(v>b0){sfx("win"); return sheet(`<div class="glyph" aria-hidden="true">🏆</div><div class="big">${had?(b0?"じこベスト こうしん!":"はじめて できた!"):"はじめての きろく!"}</div>
       <div class="pbnew"><span class="kp">${d.e} ${d.n}</span><b>${v}<small> ${d.u}</small></b>${b0?`<span class="muted">まえの じこベスト: ${b0}${d.u}</span>`:""}</div>
-      ${up?`<div class="lvup" style="font-size:1.1rem">👟 あし +${PB_LEG}</div>`:`<p class="muted kp" style="margin:0">あし +${PB_LEG} は 1にち 1かい。きょうの ぶんは もう もらったよ</p>`}${bd}
+      ${up?`<div class="lvup" style="font-size:1.1rem">${gainTxt(d)}</div>`:`<p class="muted kp" style="margin:0">パワー アップは 1しゅもく 1にち 1かい。きょうの ぶんは もう もらったよ</p>`}${bd}
       <p class="kp" style="margin:0">${b0?"まえの じぶんより うまく なったね!":"つぎは これを こえよう!"}</p>
       <div class="row" style="justify-content:center"><button class="ghost" type="button" data-drill="${id}">もういちど</button><button class="primary" type="button" data-close="" style="flex:1;width:auto">やったー!</button></div>`);}
     return openDrill(id,v===b0?`じこベストと おなじ! あと 1${d.u}で こうしん!`:`きろく したよ! あと ${b0-v+1}${d.u}で じこベスト!`,bd);}
