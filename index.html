@@ -519,8 +519,9 @@ const pad=n=>String(n).padStart(2,"0");
 const dkey=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
 const today=()=>dkey(new Date());
 // Once a day, before anything new is saved: the last copy moves to .bak2 and the data as it is now becomes .bak. Data with no records is not worth a copy.
-{const d=asState(loadRaw), b=snapOf(LS_BAK), t=today();
+function dailyCopy(d){const b=snapOf(LS_BAK), t=today();
   if(d&&d.days&&typeof d.days==="object"&&Object.keys(d.days).length&&(!b||b.day!==t)){const prev=lsGet(LS_BAK); if(b&&prev)lsSet(LS_BAK2,prev); lsSet(LS_BAK,JSON.stringify({day:t,at:Date.now(),data:d}));}}
+dailyCopy(asState(loadRaw));
 const keepUndo=why=>lsSet(LS_UNDO,JSON.stringify({day:today(),at:Date.now(),why,data:st}));
 const doneToday=()=>(st.days[today()]||[]).filter(id=>ACT[id]);
 function mission(){const t=today(), m=st.mission;
@@ -1185,6 +1186,9 @@ render();
   if(last&&!(st.days[t]||[]).length&&st.hello!==t&&(new Date(t+"T12:00:00")-new Date(last+"T12:00:00"))/864e5>=3){st.hello=t; save();
     sheet(`<div style="max-width:150px;margin:0 auto;width:100%">${heroSVG(calc().lv)}</div><div class="big">おかえり! まってたよ</div><p>また いっしょに がんばろう!</p><button class="primary" type="button" data-close="">ただいま!</button>`);}}
 
+// The app can stay open in the background overnight: when it comes back on a new day, take the daily copy and draw the new day.
+let shownDay=today();
+document.addEventListener("visibilitychange",()=>{if(document.hidden||today()===shownDay)return; shownDay=today(); if(!saveBad)dailyCopy(st); if(!fighting)render();});
 if(loadNote)sheet(`<h2>おうちの ひとへ</h2><div class="parent"><p><b>保存していたデータを読み込めませんでした。</b></p>
   <p>${loadNote.day?`自動の控え (${esc(loadNote.day).replace(/-/g,"/")} に最初に開いたときのデータ) から戻しました。それより後の記録は入っていません。`:"自動の控えがまだなかったので、最初からの状態で開いています。"}</p>
   <p>書き出したバックアップのファイルがあれば、「せってい」の「おうちの ひとの メニュー」から戻せます。読み込めなかったデータも、この端末の中に残してあります。</p></div>
