@@ -487,7 +487,7 @@ const BSTATS=[["atk","こうげき力","⚔️","arm","うで"],["def","しゅ�
 const dmgOf=(stat,score)=>Math.max(1,Math.round((8+stat*.6)*(.4+.6*score)));
 
 /* ---------- state (kept in this browser) ---------- */
-const LS="power-note-v1", LS_BAK=LS+".bak", LS_BAK2=LS+".bak2", LS_UNDO=LS+".undo", LS_BROKEN=LS+".broken", BUILD="dev";
+const LS="power-note-v1", LS_BAK=LS+".bak", LS_BAK2=LS+".bak2", LS_UNDO=LS+".undo", LS_BROKEN=LS+".broken", BUILD="2026-11-28 00:24";
 let st={name:"",days:{},used:0,stage:0,bonus:0,equip:{},won:0,bought:null,stamps:{},mission:null,moods:{},badges:[],miss:{},mcount:0,calm:{},peace:{},talk:{},coop:null,coopN:0,real:{q:[],done:{},custom:[]},skill:{},gifts:0,soccer:{}};
 // Safety net for the saved data. Copies kept in this browser: the data as it was when the app was first opened on each of the last two days it was used (.bak, .bak2),
 // the data from just before the last reset, restore or "redo today" (.undo), and saved text that could not be read (.broken).
