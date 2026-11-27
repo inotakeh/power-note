@@ -868,7 +868,7 @@ const SNAPS=[[LS_UNDO,s=>(s.why==="reset"?"ぜんぶ消す":s.why==="today"?"き
 function openAdult(msg){
   if(!adult())return openStamp("","adult");
   const pts=SNAPS.map(([k,f])=>{const s=snapOf(k); if(!s)return ""; const i=dataInfo(s.data);
-    return `<li><span><b>${mdhm(s.at)||esc(s.day)}</b> ${f(s)}<br><small>記録 ${i.n}日 ・ たおした数 ${i.stage}</small></span><button class="ghost" type="button" data-snap="${k}">これに戻す</button></li>`;}).join("");
+    return `<li><span><b>${mdhm(s.at)||esc(s.day)}</b><br>${f(s)}<br><small>記録 ${i.n}日 ・ たおした数 ${i.stage}</small></span><button class="ghost" type="button" data-snap="${k}">これに戻す</button></li>`;}).join("");
   const alone=matchMedia("(display-mode: standalone)").matches||navigator.standalone===true, kb=Math.max(1,Math.round(JSON.stringify(st).length/1024));
   sheet(`<h2>おうちの ひとの メニュー</h2><div class="parent adm">
     ${msg?`<p class="okmsg">${msg}</p>`:""}
