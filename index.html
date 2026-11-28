@@ -23,8 +23,8 @@
 /* Layout: one phone column. Hero card on top (pixel hero, level), panels below, tab bar fixed to the bottom. Same family as the big brother's soccer note, with a green hero colour. */
 :root{
   --bg:#eceff6; --paper:#ffffff; --ink:#141a2e; --muted:#5a6480; --rule:#d3d9e8;
-  --accent:#ffc928; --accent-ink:#3a2c00; --kick:#e8501f; --on:#ffffff;
-  --good:#12915a; --soft:#e0f3ea; --chip:#f2f5fc;
+  --accent:#ffc928; --accent-ink:#3a2c00; --kick:#d24516; --on:#ffffff;
+  --good:#0d7a4b; --soft:#e0f3ea; --chip:#f2f5fc;
   --brain:#6c44c8; --leg:#2f6fe4; --arm:#e8501f; --body:#12915a; --heart:#d93a74;
   --display:"Dela Gothic One","Hiragino Sans","Noto Sans JP",sans-serif;
   --body-font:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Hiragino Sans","Noto Sans JP",sans-serif;
@@ -65,7 +65,7 @@ h2{font-size:1.2rem} h3{font-size:1rem} p{margin:0}
 .fig svg{width:100%;height:auto;display:block}
 .who{display:flex;flex-direction:column;gap:6px;min-width:0}
 .tags{padding-right:70px}
-.rank{display:inline-flex;font-weight:800;font-size:.8rem;padding:2px 12px;border-radius:3px;transform:skewX(-10deg);background:#ffd34f;color:#2a2000}
+.rank{display:inline-flex;font-weight:800;font-size:.8rem;padding:2px 12px;border-radius:3px;transform:skewX(-10deg);background:#ffd34f;color:#2a2000;word-break:keep-all;line-height:1.35}
 .pname{font-family:var(--display);font-size:1.4rem;line-height:1.2;word-break:keep-all;overflow-wrap:anywhere}
 .lv{font-family:var(--display);font-size:2.4rem;line-height:1;text-shadow:0 0 14px var(--team)}
 .lv small{font-size:1rem;margin-right:4px}
@@ -100,8 +100,8 @@ h2{font-size:1.2rem} h3{font-size:1rem} p{margin:0}
 .ej{width:1.15em;height:1.15em;object-fit:contain;image-rendering:pixelated;vertical-align:-.2em}.ie{width:1.4em;height:1.4em;object-fit:contain;image-rendering:pixelated;vertical-align:middle}.e .ie{width:1.25em;height:1.25em;display:block;margin:auto}
 .act .e{font-size:2.1rem;line-height:1.15;font-family:var(--display)}
 .act .t{font-weight:800;font-size:.92rem;line-height:1.3;word-break:keep-all;overflow-wrap:anywhere}
-.act .sub{font-size:.68rem;color:var(--muted);line-height:1.3}
-.act .up{font-size:.72rem;font-weight:800;color:var(--muted)}
+.act .sub{font-size:.75rem;color:var(--muted);line-height:1.3}
+.act .up{font-size:.8rem;font-weight:800;color:var(--muted)}
 .act[aria-pressed="true"]{border-color:var(--kick);background:var(--kick);color:var(--on)}
 .act[aria-pressed="true"] .sub,.act[aria-pressed="true"] .up{color:var(--on)}
 .act.done{border-color:var(--good);background:var(--soft);color:var(--good)}
@@ -111,8 +111,8 @@ h2{font-size:1.2rem} h3{font-size:1rem} p{margin:0}
 
 /* calendar */
 .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center}
-.cal .wd{font-size:.75rem;font-weight:800;color:var(--muted)}
-.cal .d{aspect-ratio:1;border-radius:12px;background:var(--chip);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:.75rem;color:var(--muted);line-height:1.1}
+.cal .wd{font-size:.8rem;font-weight:800;color:var(--muted)}
+.cal .d{aspect-ratio:1;border-radius:12px;background:var(--chip);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:.8rem;color:var(--muted);line-height:1.1}
 .cal .d b{font-family:var(--display);font-size:1rem;color:var(--good)}
 .cal .d.on{background:var(--soft)}
 .cal .d.today{outline:2px solid var(--kick)}
@@ -182,9 +182,9 @@ h2{font-size:1.2rem} h3{font-size:1rem} p{margin:0}
 .pbnew b small{font-size:1.1rem}
 .steps{font-size:.8rem;font-weight:800;color:var(--muted)}
 .moods button{border:2px solid var(--rule);background:var(--chip);border-radius:14px;padding:8px 0 4px;font-size:1.8rem;line-height:1.2;display:flex;flex-direction:column;align-items:center;min-width:0}
-.moods button span{font-size:.62rem;font-weight:800;white-space:nowrap}
+.moods button span{font-size:.75rem;font-weight:800;white-space:nowrap}
 .week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center}
-.week span{font-size:.72rem;font-weight:800;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px}
+.week span{font-size:.8rem;font-weight:800;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px}
 .week i{display:block;width:100%;max-width:34px;aspect-ratio:1;border-radius:50%;background:var(--chip);border:2px solid var(--rule)}
 .week .on i{background:var(--good);border-color:var(--good)}
 .week .now i{border-color:var(--kick)}
@@ -274,6 +274,16 @@ h2{font-size:1.2rem} h3{font-size:1rem} p{margin:0}
 .tabrow button svg{width:26px;height:26px}
 .tabrow button[aria-current="page"]{color:var(--good)}
 .tabrow .dot{position:absolute;top:6px;left:calc(50% + 8px);min-width:18px;height:18px;border-radius:9px;background:var(--kick);color:var(--on);font-size:.7rem;line-height:18px;padding:0 4px}
+.pad{display:flex;align-items:center;justify-content:center}
+.pad svg{width:44%;height:auto;fill:#fff;pointer-events:none}
+.dots{letter-spacing:.08em;color:var(--brain)}.dots s{opacity:.35;text-decoration-thickness:2px}
+.hows{display:grid;gap:6px}
+.hows button{border:2px solid var(--rule);background:var(--chip);border-radius:12px;padding:6px 12px;font-weight:800;text-align:left;width:100%}
+.hows button[aria-pressed="true"]{border-color:var(--good);background:var(--soft);color:var(--good)}
+.hows button[aria-pressed="true"]::before{content:"✓ "}
+.selfchk{border:2px dashed var(--good);border-radius:14px;padding:8px 10px;display:grid;gap:6px}
+.calnav{display:flex;gap:8px;margin:0 0 8px}
+.calnav button:disabled{opacity:.4}
 </style>
 </head>
 <body>
@@ -363,7 +373,8 @@ const CALM=[["iki","🌬️","ふかく いきを 3かい する"],["gyu","🤗"
 // New rules start the day after they were added, so coins and tickets already earned never shrink.
 const NEW_RULES="2026-11-24", COIN_FADE_AT=500, GIFT_P=.35, WEEK_DAYS=3;
 // A question for the grown-up to ask at bedtime (talk together; no coins).
-const TALKS=["きょう いちばん たのしかった ことは なに?","きょう むずかしかった ことは あった?","だれかに やさしく できた?","あした やって みたい ことは?","きょう がんばった ことは なに?","きょう わらった ことは なに?","「ありがとう」って おもった ことは?","きょう はじめて した ことは ある?","いま いちばん すきな ものは なに?","きょう くやしかった ことは あった?"];
+// [question, what the grown-up can ask next]: open questions about what happened and how it felt (Van Bergen et al. 2009).
+const TALKS=[["きょう いちばん たのしかった ことは なに?","どうして たのしかったの?"],["きょう むずかしかった ことは あった?","その とき どう したの?"],["きょう だれに やさしく できた?","あいては どんな かお してた?"],["あした やって みたい ことは なに?","どう やったら できそう?"],["きょう がんばった ことは なに?","どんな ふうに がんばったの?"],["きょう わらった ことは なに?","だれと いっしょ だった?"],["「ありがとう」って おもった ことは?","その とき どんな きもち だった?"],["きょう はじめて した ことは ある?","やって みて どう だった?"],["いま いちばん すきな ものは なに?","どんな ところが すき?"],["きょう くやしかった ことは あった?","そうか、くやしかったね。つぎは どう したい?"]];
 // A mission for the two brothers to do together, picked from three once a week. Doing things together, not racing each other.
 const COOP=[["⚽","ふたりで パスを 10かい つなぐ"],["🧸","いっしょに かたづけを する"],["📖","いっしょに えほんを よむ"],["🏃","ふたりで おにごっこを する"],["🤸","ふたりで ストレッチを する"],["🍳","いっしょに おてつだいを する"],["🧱","ふたりで なにかを つくる"],["🙌","おたがいに 「ありがとう」を いう"],["🥅","ふたりで シュートれんしゅう"],["🎲","いっしょに ゲームを して さいごまで あそぶ"]];
 // サッカー じこベスト: count a drill and keep the best. Beating your own best is the reward (no coins, like soccer itself); a day with a new best also adds あし to the hero.
@@ -374,6 +385,12 @@ const DRILLS=[{id:"wan",e:"⚽",n:"ワンバン リフティング",b:"ワンバ
   {id:"rally",e:"⚽",n:"おにいちゃんと パスラリー",b:"パスラリー",how:"おにいちゃんと 3ぽ はなれて むかいあう。ボールを ピタッと とめてから、あしの うちがわで けりかえそう。ふたりで なんかい パスが つづいたかな?",u:"かい",s:{leg:2,heart:1},goals:[[10,"💖"],[30,"🏆"]]}];
 // s: what a new best adds to the hero (default あし +PB_LEG). The rally is the brothers' shared record, so it grows こころ too.
 const PB_LEG=2, DRILL_MAX=9999;
+// やりかたの めあて: before a drill the child may pick one way of doing it to try today, and after recording says whether it went well.
+// Goals about how to do a skill helped performance more than goals about the score (Williamson et al. 2022). Saved as [day, count, goal, done].
+const HOW={wan:["ボールを よく みる","やさしく ける","あしくびを ピンと する"],lift:["ボールを よく みる","やさしく ける","あしくびを ピンと する"],touch:["あしの うらで かるく さわる","みぎ ひだり じゅんばんに","リズムよく タン タン"],rally:["あいての あしもとを ねらう","ピタッと とめてから ける","あしの うちがわで ける"]};
+const howNow=id=>{const h=st.dhow&&typeof st.dhow==="object"?st.dhow[id]:null; return h&&h.d===today()&&HOW[id]&&HOW[id][h.i]?h.i:null;};
+const howPick=id=>HOW[id]?`<div class="hows" role="group" aria-label="きょうの やりかたの めあて"><span class="label">きょうの やりかたの めあて (えらんでね)</span>${HOW[id].map((h,i)=>`<button type="button" data-dhow="${id}:${i}" aria-pressed="${howNow(id)===i}">${h}</button>`).join("")}</div>`:"";
+const selfChk=(id,hi)=>hi==null||!HOW[id]||!HOW[id][hi]?"":`<div class="selfchk" id="selfchk"><p class="kp" style="margin:0"><b>めあて「${HOW[id][hi]}」は できた?</b></p><div class="row"><button class="ghost" type="button" data-dself="${id}:1" style="flex:1;width:auto">できた!</button><button class="ghost" type="button" data-dself="${id}:0" style="flex:1;width:auto">もう すこし</button></div></div>`;
 // おうちで やってみよう: small things to do with real objects. Quiz slips add one that fits; otherwise one of these (plus the grown-up's own ideas).
 const REAL=["やさいを 1つ さわって、いろと かたちを いおう","そとで あかい ものを 3つ みつけよう","おふろで 10まで かぞえよう","ほんものの とけいで いま なんじか いおう","おみせで ひらがなを 1つ よもう","くつを そろえて、なんそく あるか かぞえよう","おうちの ひとに きょう あった ことを はなそう","はっぱや いしを 5こ あつめて ならべよう"];
 const REAL_MAX=2;
@@ -416,6 +433,7 @@ const EMO={"🧠": "iVBORw0KGgoAAAANSUhEUgAAABkAAAAUCAMAAABPqWaPAAAAYFBMVEUAAAD/
 GROUPS.forEach(g=>g[1].forEach(a=>{const k=a.e.replace(/️/g,""); if(ICONS[a.id]&&!EMO[k]&&/\p{Extended_Pictographic}/u.test(k))EMO[k]=ICONS[a.id];}));
 const emoRe=()=>new RegExp("(?:"+Object.keys(EMO).sort((a,b)=>b.length-a.length).map(k=>k.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"\\uFE0F?").join("|")+")","gu"); let EMO_RE=emoRe();
 function swapEmoji(root){
+  if(!root||!root.nodeType)return; // a node already taken out again before the observer ran
   const list=[], w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
   for(let n=w.currentNode.nodeType===3?w.currentNode:w.nextNode();n;n=w.nextNode()){const p=n.parentNode; if(!p||/^(SCRIPT|STYLE|TEXTAREA|TITLE|OPTION)$/.test(p.nodeName))continue; EMO_RE.lastIndex=0; if(EMO_RE.test(n.nodeValue))list.push(n);}
   list.forEach(n=>{const f=document.createDocumentFragment(), s=n.nodeValue; let i=0; EMO_RE.lastIndex=0; let m;
@@ -441,7 +459,7 @@ const SKINS=[["#ffd2a6","#e8a878","あかるい"],["#f1b98a","#cf9164","ふつ�
 const STYLES=["ふつう","ツンツン","ながい","みじかい","ぱっつん"];
 const EYES=["ふつう","ぱっちり","にこにこ","きりっ"], MOUTHS=["にっこり","わらう","むん"], CHEEKS=["なし","あり"];
 const SHIRTS=[["#19c37d","#0f8a57","みどり"],["#2f7bff","#1c55c0","あお"],["#e8501f","#b53d0c","オレンジ"],["#f2b705","#b98600","きいろ"],["#e86aa6","#b8437c","ピンク"],["#8a5be0","#6238b3","むらさき"]];
-const RANKS=[[1,"たまご ヒーロー"],[3,"ちびっこ ヒーロー"],[6,"げんき ヒーロー"],[10,"つよつよ ヒーロー"],[15,"スーパー ヒーロー"],[22,"でんせつの ヒーロー"],[30,"ゆうしゃ"],[40,"だいゆうしゃ"],[50,"うちゅう一の ヒーロー"]];
+const RANKS=[[1,"たまご ヒーロー"],[3,"ちびっこ ヒーロー"],[6,"げんき ヒーロー"],[10,"つよつよ ヒーロー"],[15,"スーパー ヒーロー"],[22,"でんせつの ヒーロー"],[30,"ゆうしゃ"],[40,"だいゆうしゃ"],[50,"うちゅういちの ヒーロー"]];
 const UNLOCKS=[[2,"あかい はちまき"],[4,"ヒーローの マント"],[6,"あおい ふく"],[8,"パワーの オーラ"],[11,"きんの ふく"],[14,"おうさまの かんむり"],[17,"おおきな オーラ"],[20,"きんいろの オーラ と へんしん"],[25,"きんの マント"],[30,"てんしの つばさ と あおい オーラ と へんしん"],[35,"いなずまの オーラ"],[40,"ぎんいろの オーラ と へんしん"],[50,"でんせつの ほし"]];
 const PX=d=>`<img class="px" alt="" src="data:image/png;base64,${d}">`;
 const FOES=[[PX("iVBORw0KGgoAAAANSUhEUgAAAEUAAAA7CAMAAAAae7eqAAAAYFBMVEV52PsAAABdtOoLBysvfMHg+/6T5v0aOWg5isx5rdYgADhkvu+OzesAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACXst1uAAAAIHRSTlP/AP//////////////AAAAAAAAAAAAAAAAAAAAAAAAAC2CcuAAAAJySURBVHjanZdZksQgCEAZXNA29z/vKKYTUMzS/KQK8QlKBOFvLU7LhSVcEBDjKYgXJFgxEOIkuOKADcFoC9oYMB0BgBhCgEEax3QHLEf2Cef0ExhjMTAwQwo7EqUT7FcI/ImR3B2Fo5mD+UI6ZvIGTAgYEgQmuStKgwQbojHerSkXngiKERQ8hlxhQELSJQTEDoPOP0nxd5AvhhOHTMpdPDJ1YEgbUK48lfG4D4qjPvoIMuYw/OIKdAoalCKsCl9uw1Q3KCMYFGGfHM2YDiEn7omJIgNy7pNdCBrjXG6qTSjP/T0oKCZs25qyCUqZKOKEmDKGtBeCsFkhgbEt1Y81JbyhkN7JquwaSYGRorKlmm7ZE0VF2Yj8RpqS9l8SjGyp1+5GuUalTzrn4EndxzVjNGUoGSEQ0ZB1VUP6b72hPJYLSs55W00bxtaUzLKEKMxDX5z6vPBliFxBlBSDUpYb6BZrvKEsBRFNCr5gJJtSdW8o3qQ0XXpDwQUFX1DimvKmInk/URxHmZgSyqNS0imePguKvz2dahRnivsU3pZeHildnVVpcQcojVIPtrdDsLccncLbWyltmUWi1d1rVskntknsDLQKjX08JfJNzxQcUYfSN6G0r4WtWkPvb/fx1O6zdFJMUUZcjf+Ae4XDgAVvRNq0G7TWCu6gTIMnwt213ykBf5PeWDVK6j3hewTsLZ5nX7w/Lh0opRyHcwf5/pZMcX4QZGIwwtxPfJxQ78L2HBrVXnaleu3J1FM76fGV+R2c/0mUq+tX6fSyaSlFklI0hcdFw/z5mO8jZ4U4uvHs9WmTls9qePgkv36YLyk14FlWtv9B1xs3N3GZpAAAAABJRU5ErkJggg=="),"ぷるぷる スライム"],[PX("iVBORw0KGgoAAAANSUhEUgAAAE4AAABNCAMAAAA/4KKBAAAAYFBMVEUAAAD9/v7V3u0NDRrW4O2ersVxgZuhscahqshqeJQSFSmKlrI7RGEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACNguK3AAAAIHRSTlMA////////////////AAAAAAAAAAAAAAAAAAAAAAAAAGkUL34AAAOgSURBVHjarZiLtqwgCIZ3CnIs3/95D4jX0qyZYV/WLCc/fxDR/Pt7YLazv6/MDuw72GEaOz4HRhYIZCuWiZ/BDLSsZPABMCvbRhYVvqMFYwC2mYnCN7S5tCrwBW0YtR74lKfJAdvC4Blv7ekbfUIDgG37CS96+oy2bbjkWfvMU7XV/EZXn+NgiXvu6lrewxx5OhsaObP9Rt7jlHsWPYncW9yNvCGOvBhdGx3FgjrFpUp+7vdPrOeRNOoYd7iLOFLYiZdbpW1eqgbzWmgdr47BwYM5zpwmlhqc9L3gaO6ttf7sbEsb4aRtjkOY4nzY99K878FX3CR4jBurE5RYg9sT0c9TZYTzfk/GnyrOl8Z3uN1n4tHiMI/wDke7P9iEduymadamY8dXuO1Q3tHRWF7QNhEML3CZ50VHU+Zi6x6HMPACx45FO7Wa2njjLL4uUG9wi9Js4kbwDQ5av9c4XOjpV0diznBOcXCDk6Q+4XCG84hvd7I5rnpr0oODDfwylgG0i+AJxbi45fjVqdFAmBy9S/BYAiYOeVjgTPAbTXjZWzC1vt/pk1AHmJTkimtmNxz3vmKQD2PccRReDroJ9+tCcSN5nCrOufoKtpQHMhM63Fge40BZCEt5fIZmcXiPSzz2Gu5xoL6SucclVwMpDoKZaJOnPE/fNp1awTn2E1wIPq4KMGOceAqywjgbAPAGxxYC/+kSoRFOVqBMhIsrHdHNcUTyDzGE2CcEGCgDxckCE16l1SXH751Oecg/5IPjPgqFM0pcFV/zhcHp9qD1FZkFLI9dZiMDZxNXJdPB205PPOfwIE6ZIeNiF4bGMF9Ycc3EsJ4iJpuhPKI8X8Q1XZOYjpbNn+IvZ7D4kGuskaSg0h26D5fs4ONr7oeFJi4mjP5ODK7inKmRpaIN055h0jcDlAw0jVwC8FxKvmH21kDvYgOTXhdxVmJO4h3F/8WILmE/4+hS0RlnRJpzRVWxOhedvJLAV1pUR4iuDVoxAy0xBzKbrNLREYyoJgiN9GUWQKVxlL0d4VBwPqdwzzPX1ZVg3Gm4N1D0VVdYUkjNfFyAWqaRJvWIOzv9KvNUYYHWvEglP37j5tu+q+XJ1YJSJWKd1jSSc/NDTqO78OicNQWtWTV/R3Rt/thGYFXYBpMi7OZ1ndqyYCvQ9YuEKCXo7U2lFPouvVugRlGXIGp6rq49ZTb6J2xPbMw/uEMd3ATbrtLrPvn4Dnr4lP3pffYV+eD5/0vLM8GMZEt0AAAAAElFTkSuQmCC"),"ねむねむ おばけ"],[PX("iVBORw0KGgoAAAANSUhEUgAAADAAAABFCAMAAAA7M5XHAAAAYFBMVEUAAAAMByrgqDTa2j762Vm+tSFxhCTc3ED+9H1qeyRacSXv41Gnoh/byTTVsSng3D/+94seIykAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADuqlDqAAAAIHRSTlMA//////////////////////8AAAAAAAAAAAAAAAAAAFCw8GQAAANKSURBVHjajVeLkqQgDNyI4MCAjv//s9edoKIwu5eq2RLozoOEwP783EQoP0MZLom4jxszuLR1S1Lcp5Q00pRKebnSEWIBPpQnQ6RkMEroNYUQBLQ7A3jMcmkYGmlub9fEEfp1O4jId0L+Dj0QPl4Y8X8SgIlyif8TTxMp50DJyf9JgFIQnHMbfi7BI5Ff4QHqvXMvFVBy5LZ+x3vvt+3Ak7FtG9yS73g6sixG4ddCK/kLQ7Kuu8UZ1EaU8d5KruDDyinLMmRIizs+lqpDxg61au8yMCGLCva9mmiG/Oir2+bl85FyOqRDtdzVt+iOOkVcoVQCvnxPsOAo5XRJh7rNTwJqQi1LUsJyhZAsJv/wiQS1kMA48TCYvhGiNzfownJlTIfLF4IVwzKWkUuLmyB3htO5ESGyUm3ROZqjewcBHo0IVSV937mXck2AEPt99VdNaEKueHoDICQw/On5aUsDBj71xaSM5y6ZOyM8uzTi8NXMwbOZOOrqAf0rBj+QyJUuZkyhn6BPx3gDa0+HtijPbQ1+Xde47zESBEQVzGDBhy7Twc8zk2TgcJI4N889AY68KViOFUuOoiFd4pA3wuf3bHYOwVD1vAcEKorvuZN3UELnUlDLkX9fp3CUPI10t5zYvJcWT4aoad+lWiyKEcEc6gkSMzI1IHifY3evoPSY7ChTGwS/J6uBtvy0+SBxvJ6mfpdWvcaaoFlzGb9Vk5YflMlr8ujVpdxv65G4qRbDIRiuTeIkrAVFsZGg86ozNHKmetUnRHi9imTE6EHDQhqEAA1JUyrYme2FF4+fPy9YYAHMaeozPSVaCCTAF88IsBNeg5iZhkceNNVWSvwyAnjWA8YEO9UMwSwUNYA+nXOS3iWoCinZY4oq7QjzlFPqebngOB26kHpCgonj0Fw7pIIlI7AlVN95JGPO041io5ypTeq7MLKKlJCZ12kgKU5rJQCcxFIqeuBp/I6OOrHW1odgdpGWAHfSTWyyFrfwIMnJaFtFGwMJUu/mUDvhg9FFUc+bWOfkk0s/wpiCpaMH6DOfqQ92LvCYzB1cLF/to8EIu5bM08jKXv8g1ECSN2Z7fniT1EQ9/gHB373eHXexbI1e97KP50+N/z9/yD/uDS2TdmhZgQAAAABJRU5ErkJggg=="),"いもむしん"],[PX("iVBORw0KGgoAAAANSUhEUgAAAEkAAAA3CAMAAAB3hZdfAAAAYFBMVEUAAAARBirpHhqPCTX+bTf3OhvrJBnKMSlUBy2mDTD8gkn7VSjpOyAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACwC/K5AAAAIHRSTlMA////////////////AAAAAAAAAAAAAAAAAAAAAAAAAGkUL34AAANSSURBVHjarZfRtqwgCIaHQMTs/Z/3AFqh1T7tWZuLWaPJ5y8h2ufjBmqfL2zy09a6fksiOmEAG63Lt6RM67b7wrZS+g5kqGTe7X9e1+SkX8YKmk9KtGZ3BFJQJyV8D5IknaSqGmk9SRnfq5INDtJqboAGMhIIJpKXKJBai87rpERo/kyBtL4mwRpIq/vbv8QKlZJSDaQ5W4e2JlJi8yruf5IMNZHmdB3bOwnTSer/EbMB35O6V/c+Sdy7Imlc3tjupBRJpYGQ06QpA8SkgALAgZSDKG6aMLBznBUxvkltYnxagqjSScy9gzkPr0c4klRvfDiQimepLaxLYhleOzIE43EDyIHS0EBXXVS4CtIeGQKMLHSYWDCiKiybB9gMjgAUtRgHpVQSZKSFzZZFSUWoShgiuBscSzYKlmOUc9SxMCpDzWCKFQVWPEdB45RIVzulAxJ1/8ZZohGdEnbPKenOuWj0DS1f6VEwRr9eI0T25AGoNn5tupZJj0+y706NlEn6TKRUew0t3acpy2C/rbP1qqp9pO6uiWR0rLml16TDcyovPKwYW4lN4zbYSbhZwkiISQ+MR553a/32gorukgupJVVS1kVSi3JAeUsHbimk0oTSGSRf43yICWIzDDk5H19GWh5JY6QsHs8HpK19WW5Zly78+Zy9J/EdvPx8YD9p+gMSBXtL6lsokpgm45EEt/c3vVHVTd8GljPCdLEQcB2KtRLBdVnVSx1i2cNM9IwqPhRL5UmVVjbfL3KSbkG2f7sk7A51TE6ggn3diuJnUI+VF+o2vNShPNXFSH31iHfRjuvDFgdNdItrikeZ7kXwUU2znoD0aOzHidhW15aiJpKWk2STSduZP5CWtnN1xoX1GqH3ivGgBtLN25ZvA3PO9xx9gMcwFqkw1AO9Segb01JuZ5jYdDnfsrzbQXaieOVAmEgeI/CI2QJztwvGSSaI7WZosRpJfjDZrdHjacryo6GpccSnkaYvF9VkRZ64pwo+sPan+k5svJOmbeeSoPCec3jHwvOpFwMVNW+8TkKLerirTBYPfJHipATX88DDJHCtNHB7ardAXc8EaCTV/PJmj50Et19Gvyc9Fk75BWm8SV6el/ek/3x2vf5YtBvE35A+l4H/AJ+fIXHA9z11AAAAAElFTkSuQmCC"),"かにチョッキン"],[PX("iVBORw0KGgoAAAANSUhEUgAAAE8AAABICAMAAACA71gMAAAAYFBMVEUAAAA7M3kIBCpFN4ahfdglGVKbdtMuIl8eFEYCAh96XLg2K21WQ5i4n+FELn0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACKQ3yzAAAAIHRSTlMA//////////////////8AAAAAAAAAAAAAAAAAAAAAAFkoFncAAAUlSURBVHjapZiLkqQwCEU7ICaY6P9/7l4g2vYzznZqa2dUOF4gIXFut5ehSnS7NIguWFJi5itEooQxNCSWwklVh9pqkpJ0xFOThxcrDcTBzEyH4aa5W34xJa0ItbWJRwFrmqapNWIo1O84bjAdCSSezOpryF6JksJyxDN9UEhixXtrLKhEknjxxN8LQtp5zWfDW2PKaY92mgZ1O3BdoH6W1wLIF3jNxqfpGi9ykzHP09ciYPMTei1GDnndcMyLOBq/FxjyNp7NaPkD732Jye4Kbc157QJvcdy2bfyuxNrlbdsUAtOIF1nmZdu0B4y1r9bFrD31cLeF+RrPC8zbAh4VXyTRmGxU2sPF85iA6QpvgTmAgispBm12vTRciuRUSjxfrvJ4OXg2liXtPB+dt2x/5EWgpi09jELBswwiB+N+EDxP/dshdOcN+0vqPK/GV+DmjW3AK3irp5/Sl+E8FBix30YNCwK/RnsInKzdjzYk9QwO5LlArDiW4X6pIVDkO08EvE8d/GnF21IayAPpUrQdiGUWWaLnNNqSswadqKK2V3ARMgVOn4DZu0IJ3tVzzs1lIder6qr6EKWsREspgpep3q4OUkigFb7PPFpJlzWT8S6LA086b+9W6zo7z/rgvNYSPNXh+QUTCzxLkZ546xpAb63rmkyfdVoYf98vdVmEYpeAn1QocJz1ztl4KvXEywDqt1CBU991mOFnDZXsoIJ/cwPQdsuyrlyDB2Br+vmcg0WZnWf1SGwBWzlwnLEl02afQ80jj3qoeOugtzS0lZxz13cq6klfv3HwCA55wd5Kr5lrzR5m9h3tcf363njgfGJHvJrcB0B9UZdzQXpytMhDINHj/Mt7w3IrZsSDEtUnIHDVlmbpApGYXWGhM652XOk85KfYiq4PSTQczjgMeTaTVc8h02l46gwXJoxFmbM5Smr3Vq3EjmPNsXTxLpwISgAxP8RHWfdgPVpbidaBqp/ezUvv6jAv8NVh76LsCtUVOpHWHu5ag2Y4XzgiikYTwJJan4h4gvt2rxKy54EWDw8Sn/s0DgzkZxnMeEhGBkOgKYwUGg4vYS54gjbVS9EzVkp5aPNCcTzyi4z3s1bkC3lF6alvudZsTV6GzEyy16IUNSAkHcNbttSeROf1gOGYkuFsLXLwqEed3KnuIOnI/r/hjJZ2h9T9S/CyVp7nSfZE4AcS6uVASLmDvMJFMN8i6HqA4FDm2T7TqmePsNIxLG5bqogiuRnFBD+Ha+vbExgWcACHciU/NdpuTNiy4lOHUuF4HPIdmV+HVZb3BJkDvr3AM4U2K9Eb47BuPNd550nw9kuuzssnnusCzxwRsa0ZyDPeRv2up3GaD15lfgAGz/PVdcEjjudsHSLCnQvKjmfQmatw5JfkrO4Ael5mLlikhpsxQ8UQs/Ec5zeJQzVVCxwK6VnewZuDp/6LBVzcdXae35tl582ai0R66RnnwM6TUiNB84mnrPHbXR8KUuLxR1447Dzoqyd9PvB4f5sHfIEXs6VrQUD+vaP9REgWb4RolvDwJvKedxKACzYHmfdedRycK/mJyWZQJX/NR55vMHR2KPr6IbqzTVfvZPl5vqTcdzZslaSHw5tz7/mPUfvvr/Mv2S740f6R93rhAtOZl3u47+0vHN7QoO4Ks7Uruv0wzksu5SN5/z0kgMcov/PIu7Rpi83o9mO8ovvpACcV+ZnnJT1mz4UvrAHQjnG687jlX3nUaNeXbav9mVe1Hryf8/fwV2Ealvcf/qI4YOXcthMAAAAASUVORK5CYII="),"こうもりん"],[PX("iVBORw0KGgoAAAANSUhEUgAAAFAAAABOCAMAAACAE2F0AAAAYFBMVEUAAADK7AA3ihEAAiT9947bwGPN8ABlqRAAAh8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADz9lj+AAAAIHRSTlMA//////////8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAORL9MUAAAQaSURBVHjarZjbliMhCEUjKPL/X9yAqFiXJGXah+mVTGrXkZvg6/VpMWNYzK/fljBqpdRXBcH/wmOsKctKAfkLETEdeERJRO7zKC045aW0rRG5AcIyOgHuuQZBHl55TSYA7xowXfF2N81AEncLUFgSNiBrD2ihvGgk+0qAOwGOwDUrEToOknzMlVUhbpgQuMjzyBT0ycfS9oyPc0RMWHSDNaSJfhZg2rAig4RHVjPGyFGXZNAEfAwUYZJldHYKgWXLDtDD2tKvZzT5lzvA2tMkp/PaADI4D5oVCWHufMcpEhwpEgMvbQWiJgRhCvWBTBsbbyf32FLMiqASyNUabq/IWtKiFRc5qbSWETK0tVcRmU0LW6FFbmVBYJvVpmsEoWnlJvDNwj5QgqfvsW+1bRr3j2fsG20c7NxfzvrWO9i/5R94UmjLXP8B5BW4k8f3Ci2+fxS4AjUB4ccOjHN2XDYgDaD5auNwyWOV2Nr46QBPe0YsJ6BHU7Xv6KlNg8BsJbHtWOSNvuxR4iCvQG+95LRWXpWDIj1rGVGd0Xlzx1LNhKc+sUD6PjJRdzyCZj5rB4KesWDH4/dm5OmSHjMBaCx+cgji0SX9SW4KUX38CBh5RDEI+/H1CHgUSDVkSfWQeQQMQV3Xdt3bMvA/3wHxJmbioWi8b5sxFehlIVunU5fnWMOwvgfOKXG1oBWudM4IEejNHV6nWWviKDVo8Eh2j5546Y1AMUodo1itC7Ceeri+FU3la4EmX6RQB+YTcDyn1rPmU7vuej1Zqb5WkaqtpcyMmHPLeMvoyBuBeqCprWptR2WJwGHCNguRZYmalkzkTRvTps3qLVGIwWFCbSPcJtSGNTq7agiE1k9Xn+Zm3XI/Acydyifq4+61j3H0lDbeQPRxqR3Y5wJ9ofxtb7oHLhNTPvsEcLTYVhMovxmfbZuTWK+BoavT+aXdGFwp7N3pW6BeiPSurjZ9RC4Xl6Q0Wvute/AGCJ4d0C8jWj/fmuQZPHrXo68F10gW12dgOrzVrTks0WulpRxB3w94opQroD87xik3qPXhPaOtYuT2OTbTIa5LGddKcOi5ndeuNoyo+20lZnTkcIjrMiQSHF6rQwFCHzCNiGYSy8qWW+O9F0Ycjhk/srs2yj3CAV8+I/ZxGHDc7l0Ck9WOUddbYueRmxNoX0rpoGHuxSs5jKK03IWZvJzOwHkNRz23boDJXp0OT0VgTfF/c4+vRWIBWpDj3sBPmwUIlc43ABY4d8DrBQMYNIY7AMYYiQW+4SmwEY8ifc8zEnOBN0hKc8SaCXckrm55SxzpMGZigKUe9mw/Ei+ZMQv9QuVurbHYR0e4hIWZEg/peUOcw+jNb8NpinzHZC7L+gp36LuOq3xGIj4Yps7IcrqGeDg/4oe1/PgPzognZK73PHsAAAAASUVORK5CYII="),"にょろへび"],[PX("iVBORw0KGgoAAAANSUhEUgAAADwAAABMCAMAAAAGACSBAAAAYFBMVEUAAABcdZSmt8sHBSs0Smxjd5soNlhqgKBIXX+YqcK4xdQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABZN0dJAAAAIHRSTlMA/////////////wAAAAAAAAAAAAAAAAAAAAAAAAAAAOfTLAMAAAQLSURBVHjajZgLluQgCEUbET/Z/4KHBzFGjdZ4TndVJd6AgID5+2uDmf9O43SfWY708T6TSNrf5ShCBzjRluYUiZLwlqUYhb5pTkUkKr97tkiwx/OXzkUfncIeJgohyUPDtsxmYV0v6fVwgoPDvm6sQu2bHxZw2MA6IYDGNMhU2zLsD/G4WCJu6wO3WgdbNUSmqvYR2E+/F7DJYDrCyeFayb7FmAyOKf6EyfVOVPFB0fQo9i/QT5hM4DIKHvADVldXGHyFSddBZ1jlfgpWWi0pR5jqBiX3sxwlm6N2I+5DTCPhzHpw7/aNO+ZIxw2sAfmLhezdxmisR1If+F0bfYaDj5F98A2sW+g1NeTG1nbFn8efqWKQ+xIdpktxwdmC36ciedAbJlyJz/MWo+lNt7WyN/3AxmrKdljnraLbkhmiL+bQtgd+Vv1duS2at7Zm15u7ZPbfDV7t7fbCpuPr+oT1crAZk8X4bWqdpaoRZooOwNimGfDL4Dxk9ObTel14ksJiAzASyXXVHmflJRy2LuaUYDS01jDJymb3nbPZPFjirPgSEDcsw6WwyL2XzRPr7mWaaeYPP0+sKVuKLWCm16I/Tbo9tMCm0lRd69ccC8vlhtqcJ6XNNIPqmeYle9qXD4MR0WNbHj+5jjvaKvAUZpyaa8ip6h98JwRBv9Mg3XyT0R5fO+3maqqbaj0sw5s2xfUBiEiVYj6u1ExWBTep53zGnFFxQ2SxcJZM7XaHw0dGwdJHVpuolGLPIdbqLA2KZSN0E29cMjowH04j8GiGbzbK1+i0JkM36Aj7BHPKNHRr3rTDcQ7Um41hoU39prnB5r53H2tx4h1TyDNqXVYye3viWBsUFZ66f2S0HLvS6ktkc8vsI6zJLXyMbOkoEt+bwGJhgjWcokbUGiWwWNaO0jtJ30OywCq5ZMjJfYdnT2fF4NJrrwynBo7W6maJStfcpCrLSf/Qqkd+moQx+8MgopWMM6vsDgtERMYxAFPiXe+0Mi6wIIxehjaV4SA7nwD2MZQti032p7IeKLItPeATiccrsM250XfJczg+tEn0UCteUTC9wTEN6dvhZFaMKH19SyCo7FvqcPzYjpZJIBpnoWyjIGiLu8Y3Fi9V44Zbq6d6ldx0bh0aLyJH2INA/PvDiniFO8O3aLn1cx8NgjfHm7fe1vXE5H6lX1q3ZDDAeqT5bxgZ8jkmNJ88/R3Z/e0JehBdHvh/BHtbdIa3B3+c4irguw3qsP8GrDM2xq4511qsNpljW/lp/TuXWje0wiVqLM71/1XfNebSDtZlEi/Nw7uxwFuF3Qna+xdN+tYKyguG9Hg3OYd3IVZJSkVu5H5YQxXRw/n5HQzeOmi6iban+yW/cHhLMpV45tOlZ/wD3pgjN/Fh1sQAAAAASUVORK5CYII="),"オオカミだん"],[PX("iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAAYFBMVEV0FzoAAAAHAiRPDCinMkI0ByqZKkC3W2kAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAynLZOAAAAIHRSTlP/AP///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKkQLAoAAAMfSURBVHja5ZjZluQgCEApEPr//3hk0WCixuoz8zS+9GmjN+xQgc9m4bh2Rz/wz0F6swxLtrAvQOUXoAaBvBrsCxDKHZJggscgVBDAgiRzmWDGccxCKlXvCBSc8jTSlgQLjqxBcxIs9NqBpiSYcwIEcEx6glLUwHJ9AdqvF1BX7J32UA5m8my1Wsi0AMHfAf3GSjBwCM4XjaQRBN+s/xT014z9X4Bm5Wjc24MIUrLd+5pYxWucE1AlWLMfyknbk3dQ160Q/vzcSEK6UbfnnAeIQv8fRyWQY378XXQIsisKGgI5dg9BhgrN7qCumx7Dbc3GYxDivou4SPW8HqUBpBtkoIlAz3ZkIFIQEOVI9436YCrQpGU3Et4reDHNFpwVaJ9la1AaWp20aNi2nThp2oU0Bh+BskB5boYrDhF5TN03xTBHArQwrJfZD7xYqbseIxCIGB3k/xnpQKRLoMYxsoGqKKKk9qo3UFjaOKLvDVB9g6vH34FcGDRAj6Pfg24Babp10EvVT6DyABUDQVhx32JTzXmCwvx00LnNa4j0UM2ik2MfDyYAu3Cd7wHJmtHYYyJK/sxQ1EDUTzfzg/lIZ9TrkacZT0DcG9P12iKmoIJqq0I2t1lZjHTluxy6R5G6QdK/WEwkUIFEHaFW8l+O4eSW/1fqldb37JdkpCt6YXFQFfYTvbVxFqDe00tYuWpwgXyQN2nY3UYZdF33woDth7P/hQ4KlG35Abdil+0C2RMxRhpPNHWhnr9kJy5aTDw0J6CCESAggin76oMqZ6FOYhaAOCzdRJiMhC14Cl6FTr1X38/QSNFmKdy3BRFgd0U9zvBhNuXaAYtb1nCSXhBTXdFc8lpdWlBKnYJYU4RFbiBOo9EIUkfxDVQkarZlvqhY6FGc9PJSn9qB+Rw6yJXBVkaqnaiYp4QeLUPQq979QQNFF4PhSxGX8YI75IMPUuXT+FnpMUOmC+FYfcApRmIy2U1smjg9PN0jrUOFZ7ucBV4GLemx4Ey8SnHJj8rrfMTQrpghh5/yvqt2ZDz4yILt3ePXqyjTxfh49v1o8Zlv+/3vD+S3Gf6qmidxAAAAAElFTkSuQmCC"),"たこにゅうどう"],[PX("iVBORw0KGgoAAAANSUhEUgAAADYAAABCCAMAAAArKNU4AAAAYFBMVEUAAAD+fQAFAR365q79hQLxUwHgqXSqLA3qTgP98tXfXiJdFhi5OhXeom3uwoYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACTXEnWAAAAIHRSTlMA//////////////////8AAAAAAAAAAAAAAAAAAAAAAFkoFncAAAMPSURBVHjalZeLcuMgDEXDNQIccP7/c1cPbAOGpHsnk2ldjgVCr75e34RGrz+Kl5Jz3nnvWOknqe8GErlLniXkN+rN6qAKum9gFioPkILyRVjbKjOq2kxzDoVtpfM8eqZ+pwsslpL9cKb2l7k5xIhki1JmUWeO+MHKHOrJ8s7K3dkKP1iYO40JxeZKiwH7Z+WUVPejVO7MYcv7bww7B0zrSWCO8bLUYOgx3iRmGCSsvmCRsacr8b4xcQlfBqJdhopUEU+sXBgJxlLKN3IlrzHvjXtmgqcRK+XEhmjsUyEOSQPFaIrBoseXPGIakXzoRwzXGNUnfP9xem91l26pOAvlRKcb8n9g5y6lctBfMRTBZPm2hbDgyiROuJIw5jfRcWZR436ihBWW3FY50KBZ1VOsSPAF47aAUccE4zjJRQM2nOCggGnBq5hwEzAErDqAYilFAVvy8/kc63J+OyHm9xFuvb92HW4bZAWfHRM4cw9R/MaIp3h1DUhKja2w3p5WhRvTSPkDZp0tStJ4+TbfmbalO7jdSJpGLRnJqEageROX5C4JpAVDI6LHpHiljBlGpBigZaHjDjv2pFAiMnaVt8/Ho9+lbsQ/Od4HO+UuigX94djYidkxdazQuNKXnmiLvWXr8tH7Za9X518YuzNxQvq4owt+7gFIO2M+KqC9Xk7GKhJe8uLs9txjL+ldipmr1Yu5Ngd5QrAVY6ohvuRbz5D0ksyW3JmxO/dxzDP09KktjudvknDbcNtdYsPdXMrXz/yCWT1ozZ1riR15XRim2F3rECpXL6wq4YkdcA0WLNR6zONRgMKBJq6MoxEjPIsWtZMac+GJjeYCG3PdgCdckDI9YE2506pAPWacPO8P10tmjaFrAPaHhqMeOyCzxnMmkVUSw1ecYKRY83mrhqX5p6/HZUFdHViyTUak2xDMVFxXyigQqzQNzZiYl9WcV9hE1ry5UnWkWWHmEndP7qhQ1M9iLmfI1lxlTTFOoz3yh2fMOeZ4rpPZ7lpQN7nps7jA4pvXbzImXwuGjv/rH70vnfMf1/wmV90wS8QAAAAASUVORK5CYII="),"ガオザウルス"],[PX("iVBORw0KGgoAAAANSUhEUgAAADcAAABXCAMAAACX8S0uAAAAYFBMVEUAAACpsb0LCRlveIjS3OZaU0Lgsjelrrp6hJONx8IZFRyut8MAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACdUmH+AAAAIHRSTlMA//////////////8AAAAAAAAAAAAAAAAAAAAAAAAAALG4REsAAAJxSURBVHja3ZftduQgCIZHkCGZuf/7XcAY8Sux7W5Pu++PnsbhCSgo5vGYiuixrmJMz+f5QLfvoCf1HD2XORJMROuc2STqAH3EF5xaPU+RPaxxvf4fbqZfPz9Y0Ah7cbwRhx4Efsd7MQy5cK0hh9sdJsLv5Rh/R5wTjtkm8QFOSsj8Mad68iy4IayKDSBw4pQXyYDDXjYCaT3lDxQuRuPkZ4xx3xGwRIY6hDYkXIxvx8lrlTObBOZIwUZsyN5S+6u5GPEM9OBi5vivcBp+4vYS1MHtu49T16jjUNZu79dld+sy5Bby4LmSdzPQB3Ylcgz1eff1iaaqtpL45+yH7+Xq1RhSOOYWNDiwX5/C1hrLVSeDRTerPax3KjUb47bJGUA0nRrJWQLS6sr+A9ZHWReho7sJiK2TmEjAapK7IOj/yhlYpLZOlj5tZhEcljint3Ft2u2HBELaP2ucmXyRO3LUcGHMlXzmtCz58yk8jqIlf+DKB6J1hjV/mKc342b+5IVTLk2C6Jj4mIOWU6IStByk9EldN1xV0DUnLTkoaVwlooajxiBzcu5rZh5nfM1tJ4ebOomtKJxlVrj2YGP0XCq0httEI87Gfxy3jTiecksqnMtLuLpbhyrPR/5sDPHyTmcxhSp/mWun1u/aoCaJ0/sAmevbpmKlG6JVtjjkfGTc9iKrs3Mj5SNjoS8M2xIMGhDcNqUvcJamnnNdYcox95w2rH/AjZrqfXe3c00/IXTHg3dH+oFwZLvHSAuOmbUiPKf7yN4XRrHC2WXRStj52wKenRcGXHophSpZlr5AFkppDTWnUc649O004CaXlLsb00e5P5jRJOm2DFLjAAAAAElFTkSuQmCC"),"ロボキング"],[PX("iVBORw0KGgoAAAANSUhEUgAAADwAAABICAMAAACdkWaXAAAAYFBMVEUAAADILSnMMioJAyT9uEqVEyN4DiTodDEEAR+NDyPpXTbLTir9rkT9mjg4ByS4Iyb2zo8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAZM2slAAAAIHRSTlMA/////////////////////wAAAAAAAAAAAAAAAAAAAEzjGe4AAATKSURBVHjanZeLsqQqDEUbYhAUYf7/a2fvRPph095bk5o60yKLPAgJPh6fIjk/fkjO8rgVWZbf8FLlnq3pN5yWRe4Vyz+/XW+sNrtWuYHX9QMWub6WO7s+NF/s5Gu5s/rjtVyfluWnasLvhsnnZFh9D68VysTdlVw5WcbzgnjdwbS71kxASik0pJRkj1zp07AZLBJ6TimEYDB/pCI9iPwXvFaJMZYSTKDcfp0jua73cCYTKaRai+M3LbjdaFmzuk5HkMzJV4kcgu4132SY9JMmnhCjIxkVXP8d/BAL1BCHTw88BlOjxbfTo7xtm5mtx3Gsaj8xxNV4XmXs/Avu28bBM0BGh6BgTaWvhgAyBda1XwwQjRsGxR3E9HOHjNlGFJooTNAvx0U7lm9wjBYQiEPAWspBMx5UJ46LJ0SRP39Ib+cOU3HEAEb9/Td7ZjO0OUv7n0E2vRyPjNkkYPDFkxGTmqk+c4N/iTbCkXO27StgnbsB1ZiUZMC+AGFJgGE097F/G158R+UFx5HYLxgyD5gFJCpg0JZYm+dG5DNgC1iSGdubq+mkmdFMK0s2hglsdztkYnXHuy4h+mxLK9Mct+E832BC7F+0iELkeXwxNZyaR27aptksmfgMX/V1pMwK+izpueUlp6nPninltUHlDLi8nVIVuWkZquGZXC34SfJq0CUHLb9qARcVs5u63rPTUz7S6vyY6hYcaPxt6un4iTJpYtDGemHzLmpj37IVItLYtDdPE6o2lZOFEi7+waLmaLT9Aw38CGeCmtpw8H2y150z43v/Q5VtTePZlBrOR6h+EOlBZZzb2bKiNuafvNie0Fd0pLxYEY2v1AjP3WWScG4ftLOAgYv5rcR1nCpF0cxuM9ikNnnQQnYBvDalddYgiQ85B+AP1eIf+1/PrhhsrU1Ne8kwrGhJqzxl3TFUsHApDZM0efc0W0JiS09a0QRRW6O1Btr2kmKVIrBm10NbxdREu6kYD93+rufJiLrHOEie7OIBFJuUwqBxttm20ZggOZ1nshzLOso2A3LCUTgrxVpxR0Xtt/jmSlhy8zxGlfQ7hAl/whlLuZ6FbbcaNPY6h4TfVgtw7uxG8SHsFuZRYRaEa+nN7JGEO9Wv+/4ij323Hulu8+58vdKaemtuPFE0eh8Cww+eNbX6yCDP7sTBFMP4dbkKoi/NTsq8HrjHKcO/CQyz3a0gP2EU+DlMf8o9rFpziZs7+hS4zxMti3mdr58eMdt2xdIWwqbrPWDLAs2ZC6d43acg2PZcW+WlQx2+iJU/fGa065UbeySLWIfPpZUpzHONc5m/Nxm+cFCsUuBhDuu0bmcCwPHZpVYK90m0eemYXeJy88auYv+XiNh+pGfEiO3TlFZ7pdnX0Mq7HwONRRBtPB3q68/tNnE4lv24yn6edJl3uDdY8/6Jx90dmsOPvFvdVj/RmlFHXlr3PZ9Wz6+9pCFNLdxoLeuzDKEOsQfZi58fCVCQbBYFdf5ZO+Vt9GdnJ57Peec10VIKdwkfbXdfwJn06BVyHgt5nANN7r/coWUoTkb6pz76IjuGN9mbjwxUA+9t7e12C5g3uPRjp4ZmVPR69IgG0t6GW+o19qPef/dL3aSu6EX9IzbSOlY9Kr5U5dbnIf9n/C9xZDZIhAKDKQAAAABJRU5ErkJggg=="),"ドラゴン"],[PX("iVBORw0KGgoAAAANSUhEUgAAADsAAABKCAMAAAAyhdzlAAAAYFBMVEUAAAAVGC0CAR0lK01ECRkcIDcKByMyPGRPXpR2w+MuFCYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABz4f5+AAAAIHRSTlMA/////////////wAAAAAAAAAAAAAAAAAAAAAAAAAAAOfTLAMAAAPvSURBVHjajZfbouMgCEUrRjTz/x887I33mNP60DbKAkTA9PNpQ1U/34eGk5Tm/B0OOYejyp/Ys8wPhsOLSIg/sfHgc/iFNddyCAc05viVNZm4w0BL/CFWJrXDCvaHA9YAVh/s6rJKG/pwemFVg8kMOKjGMWx1oJZ+YXFQIIwYUirAC2yLgz8pbZ+lZKiShfU4w2+lzRTGSLSt9JeherAG29Fny8xuMnT7Bhesij8+2CDQj8yZ0Nxp25H9rJKfDRasaYkLG4dlOBQDJf+trPieNc9s6GhlAcpqFgfc3Q7nAafC02Mb2efN+CvLVRuaD+nmixreB9dPuYr8s+N/BZl8Ii+ZLuJeoSvNoz0eSXGFKj2dYn6QhJH7qwpBMmPyaWvxASZMMsoSp4RsBYtlWq/5lXNqFD4h9cgrM2oZl1LS+1bpUcVMsjDdt/jxm4o0Qi1kkynNsGhiRlu4k6Z6Kj5FVigJV2ug7FsTYEpC8C5w3dhk34UzJoGHYJ8Mbg1U5CbrSrh98KDT+ixShWMNl9XPdV00w925mWKPfmLtmRFIhpp0DI0lfElNWMKFMaLl0J8TRCAaG8smSZj7hb3UMySlJZ+loTqqgCxNG+zsTNH/VI3C43HCohWW0AK0juaLPNANJlo9cE/b3huqa15pj1ffWvVbhho5oTjsJ1zH3WccfRbidFIvpf9i1S8vPyr5A41HqywI3CaED51HQCqNbpblFs9wy9RLZLeNnPBEhtC9sflGeZWCsF4bzWwKbTndee/tdjuKpS3uK5Ayj9ZripVmNgWHNzNbgoZsGmQcEsJkVAZlEqc3OMXFTLNUsG43U2cGbRH5nGAMF5Ll7uZMLlXi1KJZ4cV3x6z2avK8xGxhFzgdcN+etNphv0pViUxZurOxH4tUILHy2q++KnE/IqSEW9CZDTPrbeeKGwyzaextdICOSoc3w73NplA37RUMyVGQwTu0rIZN1WVhZJu9eL+w5fqGa2pdVGVC12KYZu2NrbCHShi+9jD7vJSYy2pYnQ3JcvkS3VHCVr+W0yltLF5ujIVIPJnthiOvDaH85LIvdJefPtcNp0TZxlINF6ybNjbsKNjkQtcw3NjAO3j0q4UkK6G6trEXT1LeG2VdQg/pLH6ARaOR60/2qneZI8NsHzK9wy3fs8wXdvScV7a73Ka7uMyq6oYm1uAnW4o8WEz+wBamjkysiE9+Zy1zYmGXbnuw/uhV/5WtfxH6nPDvRvyL9aA2doorOkI8CUmrIun/AmPti531ZpSGkMicWKOUTbDwb850HVnRRkzK0iy6ng0l+6+tGovrZK744wt8+zM13c+idcNR/vxvLKfeLy8Xwn9O9CWA6MkIfgAAAABJRU5ErkJggg=="),"うちゅう まおう"]];
@@ -483,11 +501,11 @@ const COIN_ACT=3, COIN_LOSE=5, coinWin=n=>20+10*Math.min(n,30);
 const coinSVG=`<img class="coin px0" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACcAAAAoCAMAAABKKxPSAAAAYFBMVEUAAADulwIDAx6TMgD+1jjrgwXxoAH6uAb+53XIXw7+ziSLLwD+/OqsRwT+4lLUbAz+8qgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADLoPxzAAAAIHRSTlMA/////////////////////wAAAAAAAAAAAAAAAAAAAEzjGe4AAAICSURBVHjafdUJcsMgDAXQGCEEyIDvf9p+sXjJUk0mceLXz2Kgr9ez3KrX77Lb+6rf1tDhV8UYv0H8vb/QpP5T7n7fV47VuD78G3SjxehpFa59ZnlC6z4UE6XUrFIi5cr8hHOIjVrbVrVGlA3KCTECKEbWIOsjkQfz24Lu8BFsZaWjrEz1IZwtOxvBTml7dyJIFBF2K84fx8X2mnUwkUYxhBHobAYCbZfzniYTIQ4h9EDE5ajpzmqmyW6B1qy/x9X+fbqgeTiXjxxLsmnoZXGAZVQIKcXgm3u5mHO0OD0Om8YeJ/3xonfoG9Wc+eYS5Vqrx8tLwHf0XxPe4OTuAKXWzmZXyRicPB0g+lZrHooH++IA+WRNBwsUh5PLAVa/GqWwHLLhtpvDUNY8yt2l5eZaoZNNt2FepqOMoptL/SHC2eSgCfvdHogFjpWkufeRaMD+W0Fc68/XAjsUuGSov0lfXMVa0O6UzTGePOU0suyj53GPo7EArQvRVoi1KGuGiGarI84cRht8wWJLi9nyaVsokRkzvjaINpGIpkUwQCyASbnYDmY69xuR2FlRCvcpsxcWVLE0ZtVrA6uC5RjJ5KneWU+MtgEtc9ZQOBSeB4wqi93I87yyI4M5PdJmoiZ+FsLUfZ6mqnSXyNKvR68j3NG57XD11rXHOU7dDvTfme/cj38Mf/pyG0B2v0UhAAAAAElFTkSuQmCC">`;
 const DOG=PX("iVBORw0KGgoAAAANSUhEUgAAACAAAAAlCAMAAAAUaRt1AAAAYFBMVEUAAACcXTShYTcEBCADBBxzOyLOjFRpNB6fYDVAJiOWLyC1c0PSlWEuBRoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACKRextAAAAIHRSTlMA/////////////////wAAAAAAAAAAAAAAAAAAAAAAAMhUwNYAAAG5SURBVHjabVQHtsMwCAvLxGly/+t+CZp+d/A6MBaYIXvbFjF3M/xsv8UtHiXh9rlHPwt9SMmQMFrW0CIzRPYWYGKK2h3HJiyZ3MC3ELtmwjgL4lD3tNSWjiAJs+Io+EdFNMXfLv9iM2AK30zgJgwzxngmOYZqmtLHAGAErIbK6CijFvRBpjgCyEQZUXlRkCHO9d4AAPY0qF4mxiuVngHA5hEAqJ3GdsC/VOMRySoASGQk1btnAaU6zFndtEBMdNJR68lSfHpMNBL27iSAOPCaU0eJznkhEQDsOQnbKvhjDCTkQHSBvgzepJ3JhtbknRXIqO33vsYHJzx2mHMEPvSPL1qZB465RK5y/0E7Zymjvb85R9YdRzHWW/sOkFce44CcR16dwooC7yLySMqF6ZBt6P9aBWbXwyyFIXztBQHPViBNrTaY+npp9IWgRk6w3XcG2gC99wEApdJe8YtgoIpyCAWwtVsARCFI3iIpl8s0MOSoMxC4yYplLOMwIrwiEEBa0mXtAonCGwSA1UWK9zcA3mYnE2R14wStVdeBkp8jzioctxSU8HhnDOaoU2ePCAqp//0C3ba31+UPyrMNJtlAXPQAAAAASUVORK5CYII="), TICKET=`<img class="coin px0" alt="" style="width:1.8em" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAAaCAMAAAD2Zz7EAAAAYFBMVEX+iQD9ZwHBMgC8LgADAx7+twIEBCAAAADALwH5dQH+pwE5ERjZSgEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABiIjC+AAAAIHRSTlP/////////AP//////AAAAAAAAAAAAAAAAAAAAAAAAAJa12o8AAAEPSURBVHjajZOLrsQgCEQRqKLb///enUHvpncfbUlqtD2hMA7SWqvX4cAE5HYjKlH3rVzGVmuTWkmahX6PMCxg3SVJVTmJHmSruA+gIke4Hw+GRzNrYwUmOhOrWu5VIsLmG9WuWetCzY6J3g8TTQHWDz81+isIpbqkVKddJYpixfsNNErpQOsswH5xmlkHFWCxyta/kxCCCrhPDwC1n1nxpetweqCOO22BFV7WHQUG2ir30ALU5YVq8Dq5GoLrC5WpQP+wy/7fLl17KsA7gAcOdmFK7GK90R1ZO60tWeupXVgrb8s4BKd97QZUae2HcmBOgkMQcBam9hGXY2g5sUBTmZgZuMtYm/VtodDrMkA9AZSDCl9rqntgAAAAAElFTkSuQmCC">`;
 const SLOTS=[["sword","けん"],["shield","たて"],["armor","よろい"],["charm","おまもり"]];
-const BSTATS=[["atk","こうげき力","⚔️","arm","うで"],["def","しゅび力","🛡️","body","からだ"],["spd","すばやさ","💨","leg","あし"],["brain","まほうの ちから","🧠","brain","あたま"],["heart","ゆうきの ちから","❤️","heart","こころ"]];
+const BSTATS=[["atk","こうげきりょく","⚔️","arm","うで"],["def","しゅびりょく","🛡️","body","からだ"],["spd","すばやさ","💨","leg","あし"],["brain","まほうの ちから","🧠","brain","あたま"],["heart","ゆうきの ちから","❤️","heart","こころ"]];
 const dmgOf=(stat,score)=>Math.max(1,Math.round((8+stat*.6)*(.4+.6*score)));
 
 /* ---------- state (kept in this browser) ---------- */
-const LS="power-note-v1", LS_BAK=LS+".bak", LS_BAK2=LS+".bak2", LS_UNDO=LS+".undo", LS_BROKEN=LS+".broken", BUILD="2026-11-28 00:24";
+const LS="power-note-v1", LS_BAK=LS+".bak", LS_BAK2=LS+".bak2", LS_UNDO=LS+".undo", LS_BROKEN=LS+".broken", BUILD="2026-11-28 09:21";
 let st={name:"",days:{},used:0,stage:0,bonus:0,equip:{},won:0,bought:null,stamps:{},mission:null,moods:{},badges:[],miss:{},mcount:0,calm:{},peace:{},talk:{},coop:null,coopN:0,real:{q:[],done:{},custom:[]},skill:{},gifts:0,soccer:{}};
 // Safety net for the saved data. Copies kept in this browser: the data as it was when the app was first opened on each of the last two days it was used (.bak, .bak2),
 // the data from just before the last reset, restore or "redo today" (.undo), and saved text that could not be read (.broken).
@@ -652,12 +670,18 @@ let moodAgain=false;
 function moodPanel(){const m=MOOD[st.moods[today()]], c=CALM.find(x=>x[0]===st.calm[today()]);
   const peace=`<button class="ghost" type="button" id="peaceOpen">🤝 けんか しちゃった? なかなおりを する</button>`;
   return m&&!moodAgain?`<section class="panel"><div class="row2"><h2>きょうの きもち</h2><span class="muted">こころ +1</span></div><div class="stamped"><span class="e" aria-hidden="true">${m[1]}</span><span>${m[2]} きもち なんだね。おしえてくれて ありがとう。</span></div>
+    ${HARD.includes(m[0])?`<p class="muted kp" style="margin:0">おうちの ひとへ: 「${m[2]} きもち だったんだね」と うけとめて、「どうして?」と きいて みてください。</p>`:""}
     ${c?`<p class="muted" style="margin:0">おちつく ほうほう: ${c[1]} ${c[2]}</p>`:HARD.includes(m[0])?`<button class="ghost" type="button" id="calmOpen">おちつく ほうほうを えらぶ</button>`:""}
     <div class="row"><button class="ghost" type="button" id="moodAgain" style="flex:1">きもちが かわった</button></div>${peace}</section>`
     :`<section class="panel"><div class="row2"><h2>${m?"いまの きもちは?":"きょうの きもちは?"}</h2><span class="muted">こころ +1</span></div><div class="moods">${MOODS.map(x=>`<button type="button" data-mood="${x[0]}">${x[1]}<span>${x[2]}</span></button>`).join("")}</div><p class="muted">どの きもちでも だいじょうぶ。</p>${peace}</section>`;}
-function talkPanel(){const t=TALKS[Math.floor(new Date(today()+"T12:00:00").getTime()/864e5)%TALKS.length], done=st.talk[today()];
-  return `<section class="panel talk"><div class="row2"><h2>きょうの しつもん</h2><span class="muted">こころ +1</span></div><p class="q">${t}</p>
-    ${done?`<p><b style="color:var(--heart)">おはなし できたね!</b></p>`:`<p class="muted" style="margin:0">ねる まえに おうちの ひとと おはなし しよう。</p><button class="ghost" type="button" id="talkDone">おはなし した!</button>`}</section>`;}
+// The question shows in the evening; the talk itself is at bedtime with the screen closed (no screens in the hour before bed: AAP 2026),
+// so yesterday's can be marked in the morning.
+const talkOf=k=>TALKS[Math.floor(new Date(k+"T12:00:00").getTime()/864e5)%TALKS.length];
+const ydayKey=()=>{const d=new Date(); d.setDate(d.getDate()-1); return dkey(d);};
+const talkYday=()=>{const k=ydayKey(); return !st.talk[k]&&(st.days[k]||[]).some(id=>ACT[id])?k:null;};
+function talkPanel(k){const t=talkOf(k), done=st.talk[k], past=k!==today();
+  return `<section class="panel talk"><div class="row2"><h2>${past?"きのうの しつもん":"きょうの しつもん"}</h2><span class="muted">こころ +1</span></div><p class="q">${t[0]}</p>
+    ${done?`<p><b style="color:var(--heart)">おはなし できたね!</b></p>`:`<p class="muted" style="margin:0">${past?"きのうの よる おはなし できたら おしてね。":"ねる まえは がめんを とじて、おうちの ひとと おはなし しよう。"}</p><p class="muted kp" style="margin:0">おうちの ひとへ: こたえを きいたら「${t[1]}」と たずねて みてください。</p><button class="ghost" type="button" id="talkDone" data-day="${k}">おはなし した!</button>`}</section>`;}
 function coopNow(){const w=weekKey(), c=st.coop; if(!c||c.wk!==w){st.coop={wk:w,opts:shuffle([...COOP.keys()]).slice(0,3),id:null,done:false}; save();} return st.coop;}
 function coopPanel(){const c=coopNow(), x=COOP[c.id];
   if(!x)return `<section class="panel coop"><div class="row2"><h2>きょうだいで ミッション</h2><span class="muted">こんしゅう 1つ</span></div><div class="picks">${c.opts.filter(i=>COOP[i]).map(i=>`<button type="button" data-coop="${i}"><span class="e" aria-hidden="true">${COOP[i][0]}</span><span>${COOP[i][1]}</span></button>`).join("")}</div><p class="muted">ふたりで きょうりょく して やってみよう。</p></section>`;
@@ -675,6 +699,7 @@ function openDrills(){sheet(`<div class="big">サッカー じこベスト</div>
 function openDrill(id,msg,extra){const d=DRILLS.find(x=>x.id===id); if(!d)return; const L=dlog(id), b=pbOf(id), rec=L.slice(-10), mx=Math.max(1,...rec.map(x=>+x[1]||0)), last=L[L.length-1];
   sheet(`<div class="big kp">${d.e} ${d.n}</div>${msg?`<p style="margin:0"><b style="color:var(--leg)">${msg}</b></p>`:""}${extra||""}
     <p class="kp" style="margin:0">${d.how}</p>
+    ${howPick(id)}
     <div class="row2"><span>じこベスト</span>${L.length?`<b class="total">${b}<small style="font-size:.9rem"> ${d.u}</small></b>`:`<span class="muted">まだ なし</span>`}</div>
     ${(()=>{const nx=(d.goals||[]).find(x=>b<x[0]); return `<p class="muted kp" style="margin:0">こうしんで ${gainTxt(d)}</p>`+(L.length||nx?`<p class="muted kp" style="margin:0">${L.length?`つぎの めあて: <b>${b+1}${d.u}</b>`:""}${L.length&&nx?" ・ ":""}${nx?`${nx[0]}${d.u}で バッジ!`:""}</p>`:"");})()}
     ${rec.length?`<div class="spark" role="img" aria-label="さいきんの きろく ${rec.map(x=>+x[1]||0).join(", ")}">${rec.map(x=>{const v=+x[1]||0; return `<i class="${b>0&&v===b?"top":""}" style="height:${Math.max(4,Math.round(v/mx*100))}%"><span>${v}</span></i>`;}).join("")}</div>`:""}
@@ -711,7 +736,7 @@ function viewHome(g){
   ${realPanel()}
   ${coopPanel()}
   ${soccerPanel()}
-  ${slotNow()==="y"?talkPanel():""}
+  ${slotNow()==="y"?talkPanel(today()):slotNow()==="a"&&talkYday()?talkPanel(talkYday()):""}
   ${stampPanel()}
   ${g.tickets?ticketBox(g,`<button class="ghost" data-go="battle" type="button">バトルに いく</button>`):""}
   ${purse(g)}
@@ -721,7 +746,7 @@ function viewHome(g){
   <section class="panel"><div class="row2"><h2>がんばり</h2></div>
     ${weekRow()}
     <p class="muted" style="margin:0">${(()=>{const w=weekDays(), r=w%WEEK_DAYS; return `1しゅうかんに ${WEEK_DAYS}にち きろくする たびに チケット +1。やすんだ ひが あっても なくならないよ。`+(w&&!r?" こんしゅう もらえたよ!":` あと ${WEEK_DAYS-r}にち!`);})()}</p>
-    ${(()=>{const v=weekVs(); return v[0]>v[1]&&v[1]>0?`<p style="margin:0"><b style="color:var(--good)">せんしゅうの おなじ ころより ${v[0]-v[1]}こ おおい! きのうの じぶんより つよく なってる!</b></p>`:"";})()}
+    ${(()=>{const v=weekVs(); return v[0]>v[1]&&v[1]>0?`<p style="margin:0"><b style="color:var(--good)">せんしゅうの おなじ ころより ${v[0]-v[1]}こ おおい! まえの じぶんより つよく なってる!</b></p>`:"";})()}
     <div class="row2"><span>きろくした かず</span><b class="total">${g.n}<small style="font-size:.9rem"> こ</small></b></div>
     <div class="row2"><span>たおした モンスター</span><b class="total">${st.stage}<small style="font-size:.9rem"> ひき</small></b></div>
   </section>
@@ -754,9 +779,9 @@ const purse=g=>`<div class="purse"><span class="label">もっている コイン
 function viewGear(g){
   const b=bstats(g);
   return `${purse(g)}
-  <section class="panel"><p><b>コインで そうびを かおう!</b></p><p class="muted">きろく 1こで ${COIN_ACT}コイン。バトルに かつと たくさん もらえるよ。(だれかの ために した ことは、コインの かわりに こころが そだつよ。サッカー・えほん・そとで はしる は、たのしむ こと だから コインは つかないよ)</p></section>
+  <section class="panel"><p><b>コインで そうびを かおう!</b></p><p class="muted">きろく 1こで ${g.n>=COIN_FADE_AT?COIN_ACT-1:COIN_ACT}コイン。バトルに かつと たくさん もらえるよ。(だれかの ために した ことは、コインの かわりに こころが そだつよ。サッカー・えほん・そとで はしる は、たのしむ こと だから コインは つかないよ)</p></section>
   ${SLOTS.map(sl=>`<section class="panel"><div class="row2"><h2>${sl[1]}</h2><span class="muted">${worn(sl[0])?worn(sl[0]).n:"なにも つけていない"}</span></div><div class="gears">${GEAR.map((x,i)=>x.k!==sl[0]?"":owned(i)
-    ?`<button type="button" class="gi" data-equip="${i}" aria-pressed="${worn(sl[0])===x}">${gearIcon(x)}<span><span class="t">${x.n}</span><br><span class="up">${gearUp(x)}</span></span><span class="tag">${worn(sl[0])===x?"そうび中":"つける"}</span></button>`
+    ?`<button type="button" class="gi" data-equip="${i}" aria-pressed="${worn(sl[0])===x}">${gearIcon(x)}<span><span class="t">${x.n}</span><br><span class="up">${gearUp(x)}</span></span><span class="tag">${worn(sl[0])===x?"そうびちゅう":"つける"}</span></button>`
     :`<button type="button" class="gi shop" data-buy="${i}" ${g.coins>=priceOf(i)?"":"disabled"}>${gearIcon(x)}<span><span class="t">${x.n}</span><br><span class="up">${gearUp(x)}${g.coins>=priceOf(i)?"":` ・ あと ${priceOf(i)-g.coins}コイン`}</span></span><span class="tag">${coinSVG} ${priceOf(i)}${g.coins>=priceOf(i)?" かう":""}</span></button>`).join("")}</div></section>`).join("")}
   ${powerPanel(g,b)}`;
 }
@@ -789,18 +814,24 @@ function viewBattle(g){
   </section>
   ${powerPanel(g,b)}
   <section class="panel"><h2>バトルの しかた</h2><p class="muted">5つの ミニゲームで こうげき! ちからが たかいほど ダメージが おおきいよ。モンスターには よわい ところが あって、その ちからは ${WEAK_X}ばい きくよ。どようびと にちようびには ボスが きて、その しゅうに きろくした ぶんだけ こうげきが つよくなる。コインで そうびを かうと もっと つよくなる。ミニゲームは うまく なると すこしずつ むずかしく なるよ。</p>
-    <ul class="unl"><li><span>🧠 まほうの ちから</span><span>あたまクイズ</span></li><li><span>💨 すばやさ</span><span>すばやく タッチ</span></li><li><span>⚔️ こうげき力</span><span>ぴったり こうげき</span></li><li><span>🛡️ しゅび力</span><span>いまだ! ガード</span></li><li><span>❤️ ゆうきの ちから</span><span>おぼえて タップ</span></li></ul><p class="muted">あたまクイズは もじ・ことばの おと・かず・とけい。レベルが あがると たしざんも でるよ。</p></section>
+    <ul class="unl"><li><span>🧠 まほうの ちから</span><span>あたまクイズ</span></li><li><span>💨 すばやさ</span><span>すばやく タッチ</span></li><li><span>⚔️ こうげきりょく</span><span>ぴったり こうげき</span></li><li><span>🛡️ しゅびりょく</span><span>いまだ! ガード</span></li><li><span>❤️ ゆうきの ちから</span><span>おぼえて タップ</span></li></ul><p class="muted">あたまクイズは もじ・ことばの おと・かず・とけい。レベルが あがると たしざんも でるよ。</p></section>
   <section class="panel"><div class="row2"><h2>モンスターずかん</h2><span class="muted">${Math.min(st.stage,FOES.length*LAPS.length)} / ${FOES.length*(Math.min(Math.floor(st.stage/FOES.length),LAPS.length-1)+1)}</span></div>
     ${LAPS.map((L,l)=>l*FOES.length>st.stage?"":`${l?`<h3 style="margin:1em 0 .5em">${L[0]} モンスター (いろちがい)</h3>`:""}<div class="zukan">${FOES.map((x,i)=>{const k=l*FOES.length+i, y=foeOf(k);return k<st.stage?`<button type="button" class="got${prac&&n===k?" sel":""}" data-pick="${k}" aria-label="${y.n}と れんしゅう">${y.e}</button>`:`<div title="?">?</div>`;}).join("")}</div>`).join("")}
     ${st.stage?`<p class="muted" style="margin:.8em 0 0">たおした モンスターを おすと、れんしゅう あいてに えらべるよ。${st.stage>=FOES.length?`ぜんぶ たおすと、いろちがいの モンスターが でてくるよ。(ぜんぶで ${st.stage}ひき たおした)`:""}</p>`:""}</section>`;
 }
+// The calendar can go back to the month of the first record (calOff = months back from this month).
+let calOff=0;
+function calMax(){const ks=Object.keys(st.days).filter(k=>(st.days[k]||[]).some(id=>ACT[id])).sort(); if(!ks.length)return 0;
+  const f=new Date(ks[0]+"T12:00:00"), n=new Date(); return Math.max(0,(n.getFullYear()-f.getFullYear())*12+n.getMonth()-f.getMonth());}
 function viewCal(g){
-  const now=new Date(), y=now.getFullYear(), m=now.getMonth(), first=new Date(y,m,1).getDay(), last=new Date(y,m+1,0).getDate(), t=today();
+  calOff=Math.max(0,Math.min(calOff,calMax()));
+  const now=new Date(), base=new Date(now.getFullYear(),now.getMonth()-calOff,1), y=base.getFullYear(), m=base.getMonth(), first=base.getDay(), last=new Date(y,m+1,0).getDate(), t=today();
   let cells=""; for(let i=0;i<first;i++)cells+="<span></span>";
   for(let d=1;d<=last;d++){const k=y+"-"+pad(m+1)+"-"+pad(d), n=(st.days[k]||[]).filter(id=>ACT[id]).length;
     cells+=`<div class="d${n?" on":""}${k===t?" today":""}">${n&&st.stamps[k]?st.stamps[k]:d}${n?`<b>${n}</b>`:""}</div>`;}
   const ids=doneToday();
-  return `<section class="panel"><div class="row2"><h2>${m+1}がつの きろく</h2><span class="muted">すうじは できた かず ・ えは スタンプ</span></div>
+  return `<section class="panel"><div class="row2"><h2>${y!==now.getFullYear()?y+"ねん ":""}${m+1}がつの きろく</h2><span class="muted">すうじは できた かず ・ えは スタンプ</span></div>
+    <div class="calnav"><button class="ghost" type="button" data-cal="1" style="flex:1;width:auto" ${calOff<calMax()?"":"disabled"}>まえの つき</button><button class="ghost" type="button" data-cal="-1" style="flex:1;width:auto" ${calOff?"":"disabled"}>つぎの つき</button></div>
     <div class="cal">${["にち","げつ","か","すい","もく","きん","ど"].map(w=>`<span class="wd">${w}</span>`).join("")}${cells}</div></section>
   <section class="panel"><h2>きょう できたこと</h2>${ids.length?`<ul class="unl">${ids.map(id=>`<li class="got"><span>${ACT[id].e} ${ACT[id].t}</span><span>${ups(ACT[id])}</span></li>`).join("")}</ul>`:`<p class="muted">まだ きろくが ないよ。</p>`}</section>
   ${stampPanel()}`;
@@ -810,7 +841,7 @@ function render(){
   $("#view").innerHTML=({home:viewHome,rec:viewRec,gear:viewGear,battle:viewBattle,cal:viewCal})[tab](g);
   document.querySelectorAll(".tabrow button").forEach(b=>{if(b.dataset.tab===tab)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current");});
 }
-function go(t){if(t==="rec"&&tab!=="rec"){recSlot=null;recMore=false;} tab=t;render();window.scrollTo(0,0);}
+function go(t){if(t==="rec"&&tab!=="rec"){recSlot=null;recMore=false;} if(t==="cal"&&tab!=="cal")calOff=0; tab=t;render();window.scrollTo(0,0);}
 
 /* ---------- overlays ---------- */
 const ov=$("#ov");
@@ -847,7 +878,7 @@ function saveRecord(){
 
 function openSettings(){
   const L=look(), g=calc(), sw=(k,i,bg,name,on)=>`<button type="button" class="sw" data-look="${k}:${i}" aria-pressed="${on}" aria-label="${name}" title="${name}" style="background:${bg}"></button>`;
-  sheet(`<h2>せってい</h2>
+  sheet(`<h2>せってい</h2>${navigator.standalone===false?`<p class="muted kp" style="margin:0">おうちの ひとへ: ホーム画面の アイコンから ひらくと、データが きえにくく なります。</p>`:""}
     <label class="field"><span class="label">ヒーローの なまえ</span><input id="nameIn" maxlength="12" value="${esc(st.name)}" placeholder="なまえ"></label>
     <div class="looks"><span class="label">みためを かえる</span>
       <div style="max-width:150px;margin:0 auto;width:100%;background:#12302a;border-radius:16px;padding:6px;position:sticky;top:-18px;z-index:1">${heroSVG(g.lv)}</div>
@@ -882,7 +913,8 @@ function openAdult(msg){
     ${pts?`<ul class="snaps">${pts}</ul>`:`<p class="muted">まだ控えはありません。</p>`}
     <h3>ぜんぶ消す</h3><p>記録・コイン・そうびをすべて消して、最初からにします (名前と見た目は残ります)。消す直前のデータは「自動の控え」に残ります。</p>
     <button class="ghost" type="button" id="resetAll">ぜんぶ けして さいしょから</button>
-    <p class="muted">バージョン ${BUILD} ・ ${alone?"ホーム画面のアプリ":"ブラウザー"}で開いています ・ データ ${kb}KB</p></div>
+    ${navigator.standalone===false?`<p><b>いまは Safari のタブで開いています。</b>ホーム画面のアイコンから開くと、データが消えにくくなります。タブとアイコンでは記録が別々になるので、ふだんはアイコンから開いてください。</p>`:""}
+    <p class="muted">バージョン ${BUILD} ・ ${alone?"ホーム画面のアプリ":"ブラウザー"}で開いています ・ データの保護 ${keepOK?"あり":keepOK===false?"なし (書き出しで守ってください)":"確認できません"} ・ データ ${kb}KB</p></div>
     <button class="primary" type="button" data-close="">とじる</button>`);
 }
 function confirmData(d,from){bkPending=d; const i=dataInfo(d);
@@ -950,9 +982,17 @@ function clockSVG(h,half){const ha=(h%12+(half?.5:0))*30, ma=half?180:0, pt=(deg
   let ticks=""; for(let i=1;i<=12;i++)ticks+=`<text x="${pt(i*30,37).split(" ")[0]}" y="${(+pt(i*30,37).split(" ")[1]+4).toFixed(1)}" text-anchor="middle" font-size="11" font-weight="800" fill="currentColor">${i}</text>`;
   return `<svg class="clock" viewBox="0 0 100 100" role="img" aria-label="とけい"><circle cx="50" cy="50" r="47" fill="var(--chip)" stroke="currentColor" stroke-width="3"/>${ticks}<path d="M50 50L${pt(ha,22)}" stroke="currentColor" stroke-width="5" stroke-linecap="round"/><path d="M50 50L${pt(ma,31)}" stroke="var(--kick)" stroke-width="3" stroke-linecap="round"/><circle cx="50" cy="50" r="3" fill="currentColor"/></svg>`;}
 // One question: what is shown, what is asked, the three answers (the first is the right one) and whether the answers are words.
+// A question missed on an earlier day comes back now and then: remembering after a gap, with the answer shown after a slip, helps young children (Fazio & Marsh 2019).
 function question(lv){
+  const due=missQ().filter(m=>m.d<today());
+  if(due.length&&Math.random()<.5){const m=pick(due), Q=question0(m.k,lv,m.p); Q.k=m.k; Q.again=1; return Q;}
   const sk=skillOf("brain"), kinds=["kana","kana","count","clock","seq","head"]; if(lv>=5||sk>=4)kinds.push("add","add"); if(lv>=12||sk>=7)kinds.push("sub");
   const k=pick(kinds), Q=question0(k,lv); Q.k=k; return Q;}
+// Missed questions wait here with the day they were missed: {k, p, d}. Kana keep their own list (st.miss).
+const MISSQ_MAX=12;
+function missQ(){if(!Array.isArray(st.missQ))st.missQ=[]; st.missQ=st.missQ.filter(m=>m&&typeof m==="object"&&typeof m.k==="string"&&m.k!=="kana"&&m.p&&typeof m.p==="object"&&typeof m.d==="string"); return st.missQ;}
+function noteMiss(Q,right){if(!Q.p||Q.k==="kana")return; const L=missQ(), key=JSON.stringify(Q.p), i=L.findIndex(m=>m.k===Q.k&&JSON.stringify(m.p)===key);
+  if(right){if(i>=0)L.splice(i,1);} else if(i>=0)L[i].d=today(); else{L.push({k:Q.k,p:Q.p,d:today()}); while(L.length>MISSQ_MAX)L.shift();}}
 // What to try at home after a slip in each kind of question.
 function realFor(Q){const k=Q.k;
   if(k==="kana")return `「${HIRA[Q.kana]}」の つく ものを おうちで さがそう`;
@@ -963,42 +1003,52 @@ function realFor(Q){const k=Q.k;
   if(k==="add")return "おかしや おもちゃで たしざんを して みよう";
   return "おかしや おもちゃで ひきざんを して みよう";}
 function addReal(t){const q=st.real.q; if(!t||q.includes(t))return; q.push(t); while(q.length>5)q.shift();}
-function question0(k,lv){
+const COUNT_E=["🍎","⭐","⚽","🐟","🍙"];
+const dots=(n,gone)=>`<span class="dots" aria-hidden="true">${"●".repeat(n)}${gone?`<s>${"●".repeat(gone)}</s>`:""}</span>`;
+// Every kind says why the answer is right (shown after a slip): apps that explain their feedback did better than praise alone (Outhwaite et al. 2023).
+// p: the numbers of a question asked before (a missed one coming back); without it new numbers are drawn.
+function question0(k,lv,p){
+  p=p&&typeof p==="object"?p:{}; const num=(v,a,b,d)=>Number.isInteger(v)&&v>=a&&v<=b?v:d;
   if(k==="kana"){const toKata=Math.random()<.5, from=toKata?HIRA:KATA, to=toKata?KATA:HIRA, weak=Object.keys(st.miss).filter(x=>+x<HIRA.length), i=weak.length&&Math.random()<.5?+pick(weak):rint(0,HIRA.length-1); // letters that were missed come back more often
     return {kana:i,note:`「${HIRA[i]}」と「${KATA[i]}」は おなじ よみかた`,show:`<div class="glyph">${from[i]}</div>`,ask:"おなじ よみかたは どれ?",opts:[to[i]].concat(shuffle([...Array(HIRA.length).keys()].filter(x=>x!==i)).slice(0,2).map(x=>to[x]))};}
-  if(k==="count"){const n=rint(lv>=5?4:1,lv>=5?12:8);
-    return {show:`<div class="items">${pick(["🍎","⭐","⚽","🐟","🍙"]).repeat(n)}</div>`,ask:"いくつ ある?",opts:[n].concat(near(n,1,15))};}
-  if(k==="clock"){const h=rint(1,12), half=lv>=12&&Math.random()<.5, nm=x=>x+"じ"+(half?"はん":"");
-    return {show:clockSVG(h,half),ask:"なんじ かな?",txt:1,opts:[nm(h)].concat(shuffle([1,2,3,4,5,6,7,8,9,10,11,12].filter(x=>x!==h)).slice(0,2).map(nm))};}
-  if(k==="seq"){const x=rint(1,lv>=5?16:6), hole=rint(0,3), ans=x+hole;
-    return {show:`<div class="sum">${[0,1,2,3].map(j=>j===hole?"□":x+j).join(" ")}</div>`,ask:"□ に はいる かずは?",opts:[ans].concat(near(ans,0,20))};}
-  if(k==="head"){const w=pick(WORDS), c=w[1][0];
-    return {always:1,note:`「${w[1]}」の さいしょの おとは「${c}」`,show:`<div class="glyph">${w[0]}</div>`,ask:"さいしょの おとは どれ?",opts:[c].concat(shuffle(HIRA.split("").filter(x=>x!==c)).slice(0,2))};}
-  if(k==="add"){const top=lv>=12?20:10, x=rint(1,top-1), y=rint(1,top-x);
-    return {show:`<div class="sum">${x} + ${y}</div>`,ask:"こたえは どれ?",opts:[x+y].concat(near(x+y,0,20))};}
-  const x=rint(2,10), y=rint(1,x-1);
-  return {show:`<div class="sum">${x} − ${y}</div>`,ask:"こたえは どれ?",opts:[x-y].concat(near(x-y,0,10))};
+  if(k==="count"){const n=num(p.n,1,15,rint(lv>=5?4:1,lv>=5?12:8)), e=COUNT_E.includes(p.e)?p.e:pick(COUNT_E);
+    return {p:{n,e},note:`ゆびで さして かぞえよう。${[...Array(n)].map((_,i)=>i+1).join(" ")}。ぜんぶで ${n}こ`,show:`<div class="items">${e.repeat(n)}</div>`,ask:"いくつ ある?",opts:[n].concat(near(n,1,15))};}
+  if(k==="clock"){const h=num(p.h,1,12,rint(1,12)), half=Number.isInteger(p.h)?!!p.half:lv>=12&&Math.random()<.5, nm=x=>x+"じ"+(half?"はん":"");
+    return {p:{h,half:half?1:0},note:half?`みじかい はりが ${h}と ${h%12+1}の あいだ、ながい はりが 6 だから ${h}じはん`:`みじかい はりが ${h}、ながい はりが 12 だから ${h}じ`,show:clockSVG(h,half),ask:"なんじ かな?",txt:1,opts:[nm(h)].concat(shuffle([1,2,3,4,5,6,7,8,9,10,11,12].filter(x=>x!==h)).slice(0,2).map(nm))};}
+  if(k==="seq"){const x=num(p.x,1,16,rint(1,lv>=5?16:6)), hole=num(p.hole,0,3,rint(0,3)), ans=x+hole;
+    return {p:{x,hole},note:`${[0,1,2,3].map(j=>x+j).join("、")}。1つずつ ふえるから □は ${ans}`,show:`<div class="sum">${[0,1,2,3].map(j=>j===hole?"□":x+j).join(" ")}</div>`,ask:"□ に はいる かずは?",opts:[ans].concat(near(ans,0,20))};}
+  if(k==="head"){const wi=num(p.w,0,WORDS.length-1,rint(0,WORDS.length-1)), w=WORDS[wi], c=w[1][0];
+    return {p:{w:wi},always:1,note:`「${w[1]}」の さいしょの おとは「${c}」`,show:`<div class="glyph">${w[0]}</div>`,ask:"さいしょの おとは どれ?",opts:[c].concat(shuffle(HIRA.split("").filter(x=>x!==c)).slice(0,2))};}
+  if(k==="add"){const top=lv>=12?20:10, x=num(p.x,1,19,rint(1,top-1)), y=num(p.y,1,19,rint(1,Math.max(1,top-x))), a=x+y;
+    return {p:{x,y},note:a<=10?`${dots(x)} と ${dots(y)} を あわせると ${a}`:`${x} から ${y} かい かぞえて すすむと ${a}`,show:`<div class="sum">${x} + ${y}</div>`,ask:"こたえは どれ?",opts:[a].concat(near(a,0,20))};}
+  const x=num(p.x,2,10,rint(2,10)), y=num(p.y,1,x-1,rint(1,x-1));
+  return {p:{x,y},note:`${dots(x-y,y)} ${x}こ から ${y}こ とると、のこりは ${x-y}こ`,show:`<div class="sum">${x} − ${y}</div>`,ask:"こたえは どれ?",opts:[x-y].concat(near(x-y,0,10))};
 }
 async function gameQuiz(A,lv){
   let ok=0;
   for(let q=0;q<3;q++){
     const Q=question(lv), opts=shuffle(Q.opts.map((t,i)=>({t,ok:i===0})));
-    A.innerHTML=`<p class="muted">あたまクイズ ${q+1} / 3</p>${Q.show}<p><b>${Q.ask}</b></p><div class="choices${Q.txt?" txt":""}">${opts.map((o,i)=>`<button type="button" data-o="${i}">${o.t}</button>`).join("")}</div>`;
+    A.innerHTML=`<p class="muted">あたまクイズ ${q+1} / 3${Q.again?" ・ もういちど ちょうせん!":""}</p>${Q.show}<p><b>${Q.ask}</b></p><div class="choices${Q.txt?" txt":""}">${opts.map((o,i)=>`<button type="button" data-o="${i}">${o.t}</button>`).join("")}</div>`;
     const hit=await new Promise(res=>{A.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>res(b));});
-    const right=opts[+hit.dataset.o].ok; if(right)ok++; else{addReal(realFor(Q)); save();}
-    if(Q.kana!==undefined){const c=st.miss[Q.kana]||0; if(right){if(c>1)st.miss[Q.kana]=c-1;else delete st.miss[Q.kana];}else st.miss[Q.kana]=Math.min(3,c+1); save();}
+    const right=opts[+hit.dataset.o].ok; if(right)ok++; else addReal(realFor(Q));
+    if(Q.kana!==undefined){const c=st.miss[Q.kana]||0; if(right){if(c>1)st.miss[Q.kana]=c-1;else delete st.miss[Q.kana];}else st.miss[Q.kana]=Math.min(3,c+1);}
+    noteMiss(Q,right); save();
     if(Q.note&&(!right||Q.always))A.insertAdjacentHTML("beforeend",`<p><b>${Q.note}</b></p>`);
     A.querySelectorAll("[data-o]").forEach(b=>{b.disabled=true;if(opts[+b.dataset.o].ok)b.classList.add("ok");else if(b===hit)b.classList.add("ng");});
-    await wait(right&&!Q.always?700:right?1500:2200);
+    // after a slip the child (or a grown-up) reads why, and goes on when ready
+    if(!right){A.insertAdjacentHTML("beforeend",`<button class="primary" type="button" id="qok">わかった!</button>`); await new Promise(res=>{A.querySelector("#qok").onclick=()=>res(); setTimeout(res,30000);});}
+    else await wait(Q.always?1500:700);
   }
   return ok/3;
 }
 // Each mini game keeps its own skill (0-10): a strong round makes the next one a little harder, a weak one a little easier.
 const skillOf=k=>{const v=st.skill[k]; return Number.isInteger(v)?v:clamp(Math.floor(calc().lv/4),0,4);};
 function skillAfter(k,score){const v=skillOf(k); st.skill[k]=clamp(v+(score>=.85?1:score<.5?-1:0),0,10);}
+// Each pad has a shape as well as a colour, so the game works for children who mix up colours (about 5% of boys).
+const PADS=[["まる",'<circle cx="20" cy="20" r="14"/>'],["さんかく",'<path d="M20 5 36 34H4Z"/>'],["しかく",'<rect x="6" y="6" width="28" height="28" rx="3"/>'],["ほし",'<path d="M20 3l5 10.6 11.6 1.5-8.5 8 2.2 11.5L20 29l-10.3 5.6 2.2-11.5-8.5-8L15 13.6Z"/>']];
 async function gameMemory(A,lv){
   const len=3+Math.floor(skillOf("heart")/3), cols=["var(--brain)","var(--leg)","var(--arm)","var(--body)"], seq=[]; for(let i=0;i<len;i++)seq.push(rint(0,3));
-  A.innerHTML=`<p id="mt"><b>ひかる じゅんばんを おぼえてね</b></p><div class="pads">${cols.map((c,i)=>`<button type="button" class="pad" data-p="${i}" style="background:${c}" aria-label="${["むらさき","あお","オレンジ","みどり"][i]}" disabled></button>`).join("")}</div>`;
+  A.innerHTML=`<p id="mt"><b>ひかる じゅんばんを おぼえてね</b></p><div class="pads">${cols.map((c,i)=>`<button type="button" class="pad" data-p="${i}" style="background:${c}" aria-label="${["むらさき","あお","オレンジ","みどり"][i]}の ${PADS[i][0]}" disabled><svg viewBox="0 0 40 40" aria-hidden="true">${PADS[i][1]}</svg></button>`).join("")}</div>`;
   const pads=[...A.querySelectorAll(".pad")]; await wait(900);
   for(const i of seq){pads[i].classList.add("lit"); await wait(620); pads[i].classList.remove("lit"); await wait(260);}
   A.querySelector("#mt").innerHTML="<b>おなじ じゅんばんで タップ!</b>"; pads.forEach(b=>b.disabled=false);
@@ -1053,7 +1103,7 @@ function sfx(kind){ if(st.mute)return; try{AC=AC||new (window.AudioContext||wind
   let t=AC.currentTime; N.forEach(n=>{const o=AC.createOscillator(), g=AC.createGain(); o.type=n[2]; o.frequency.value=n[0]; g.gain.setValueAtTime(.12,t); g.gain.exponentialRampToValueAtTime(.001,t+n[1]); o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t+n[1]); t+=n[1];});}catch(e){} }
 const again=(el,c)=>{if(!el)return; el.classList.remove(c); void el.offsetWidth; el.classList.add(c);};
 async function battle(boss){
-  boss=boss===true; const g=calc(), free=boss&&st.bossTry!==today(); if(fighting||(boss&&(!isWeekend()||st.bossWon===weekKey()))||(!free&&g.tickets<1))return; fighting=true; if(!free)st.used=(st.used||0)+1; if(boss)st.bossTry=today(); save();
+  boss=boss===true; const g=calc(), free=boss&&st.bossTry!==today(); if(fighting||(boss&&(!isWeekend()||st.bossWon===weekKey()))||(!free&&g.tickets<1))return; fighting=true; if(!free)st.used=(st.used||0)+1; if(boss)st.bossTry=today(); st.fight={d:today(),t:free?0:1,b:boss?1:0}; save();
   const n=boss?st.stage:tgt(), prac=!boss&&n<st.stage, f=boss?bossOf():foeOf(n), mul=boss?bossMul():1; let hp=f.hp;
   sheet(`<div class="foe" style="text-align:left"><div class="bhero" id="bhero" aria-hidden="true">${heroSVG(g.lv)}</div><div class="em" id="fem" aria-hidden="true">${f.e}</div><div style="flex:1;min-width:0"><b>${f.n}</b><div class="hp"><i id="fhp" style="width:100%"></i></div><div class="muted" id="fhpt">たいりょく ${hp} / ${f.hp}</div></div><button class="sndb" id="sndb" type="button" aria-label="おと">${st.mute?"🔇":"🔊"}</button></div><div class="arena" id="arena"></div>`);
   $("#sndb").onclick=e=>{st.mute=!st.mute; save(); e.currentTarget.textContent=st.mute?"🔇":"🔊";}; sfx("go");
@@ -1073,7 +1123,7 @@ async function battle(boss){
   if(win&&boss){st.bossWon=weekKey(); st.bossN=(st.bossN||0)+1; st.xt=(st.xt||0)+BOSS_TIX; st.bonus=(st.bonus||0)+BOSS_XP;}
   else if(boss){}
   else if(win&&prac){st.train=(st.train||0)+1; st.bonus=(st.bonus||0)+PRAC_XP;}
-  else if(win){st.stage++; st.bonus=(st.bonus||0)+XP_WIN; if(lucky)st.used=Math.max(0,(st.used||0)-1);} save(); const after=calc(), bd=earnBadges(); fighting=false; render();
+  else if(win){st.stage++; st.bonus=(st.bonus||0)+XP_WIN; if(lucky)st.used=Math.max(0,(st.used||0)-1);} delete st.fight; save(); const after=calc(), bd=earnBadges(); fighting=false; render();
   A.innerHTML=win?`<div class="glyph">🏆</div><div class="big">${f.n}を たおした!</div>${bd}${after.lv>before.lv?`<div class="lvup">レベルアップ! Lv.${after.lv}</div>`:""}<div><b>${coinSVG} +${prize}コイン</b> <span class="muted">(いま ${after.coins}コイン)</span></div>${prac?`<div class="lvup" style="font-size:1.1rem">しゅぎょうパワー +1! <span style="font-size:.85rem">(いま +${st.train})</span></div>`:""}${boss?`<div class="lvup" style="font-size:1.1rem">${TICKET} チケット ${BOSS_TIX}まい ゲット!</div>`:""}${lucky?`<div class="lvup" style="font-size:1.1rem">ラッキー! ${TICKET} チケットが もどってきた!</div>`:""}<div class="row" style="justify-content:center"><button class="ghost" type="button" data-close="gear">そうびを かう</button></div><button class="primary" type="button" data-close="battle">やったー!</button>`
     :`<div class="glyph">${f.e}</div><div class="big">あと ${hp}! にげられた…</div><div><b>${coinSVG} +${prize}コイン</b></div><p class="muted">${boss?"きろくを ふやすと ボスへの こうげきが つよくなるよ。もういちど ちょうせん しよう!":`きろくして つよくなって、もういちど ちょうせん しよう! ${WK[f.w][2]}を そだてると よく きくよ。`}</p><button class="primary" type="button" data-close="battle">つぎは かつ!</button>`;
 }
@@ -1102,6 +1152,7 @@ document.addEventListener("change",e=>{if(e.target&&e.target.id==="bkFile"){impo
 document.addEventListener("click",e=>{
   const t=e.target.closest("button"); if(!t)return;
   if(fighting)return;
+  if(t.dataset.cal){calOff=Math.max(0,Math.min(calMax(),calOff+(+t.dataset.cal||0))); render(); return;}
   if(t.dataset.tab)return go(t.dataset.tab);
   if(t.dataset.go)return go(t.dataset.go);
   if(t.dataset.act){const id=t.dataset.act; if(picked.has(id))picked.delete(id);else picked.add(id); const y=window.scrollY; render(); window.scrollTo(0,y); return;}
@@ -1118,7 +1169,8 @@ document.addEventListener("click",e=>{
   if(t.id==="peaceOpen")return openPeace(1);
   if(t.dataset.pk){const [st1,ix]=t.dataset.pk.split(":").map(Number); pk[st1]=ix; return openPeace(st1+1);}
   if(t.id==="peaceAdult")return openStamp("","peace");
-  if(t.id==="talkDone"){st.talk[today()]=1; save(); const bd=earnBadges(), y=window.scrollY; render(); window.scrollTo(0,y); if(bd)sheet(`${bd}<button class="primary" type="button" data-close="">やったー!</button>`); return;}
+  if(t.id==="talkDone"){const k=t.dataset.day||today(); if(k!==today()&&k!==ydayKey())return; st.talk[k]=1; save(); const bd=earnBadges(), y=window.scrollY; render(); window.scrollTo(0,y);
+    if(k!==today())sheet(`<div class="big">おはなし できたね!</div><p class="muted" style="margin:0">こころ +1</p>${bd}<button class="primary" type="button" data-close="">やったー!</button>`); else if(bd)sheet(`${bd}<button class="primary" type="button" data-close="">やったー!</button>`); return;}
   if(t.dataset.coop!=null){const c=coopNow(), i=+t.dataset.coop; if(c.id!=null||!c.opts.includes(i))return; c.id=i; save(); const y=window.scrollY; render(); window.scrollTo(0,y); return;}
   if(t.id==="coopDone"){const c=coopNow(); if(c.id==null||c.done)return; c.done=true; st.coopN=(st.coopN||0)+1; save(); const bd=earnBadges(); render();
     return sheet(`<div class="glyph">${COOP[c.id][0]}</div><div class="big">ふたりで できた!</div><p>きょうりょく できたね。こころ +2 からだ +1</p>${bd}<button class="primary" type="button" data-close="">やったー!</button>`);}
@@ -1126,14 +1178,19 @@ document.addEventListener("click",e=>{
   if(t.dataset.drills!==undefined)return openDrills();
   if(t.dataset.dn){const inp=$("#drillIn"); if(!inp)return; inp.value=String(Math.max(0,Math.min(DRILL_MAX,(numIn(inp.value)||0)+(+t.dataset.dn||0)))); return;}
   if(t.id==="drillGo")return drillGo(t);
+  if(t.dataset.dhow){const [id,i]=t.dataset.dhow.split(":"); if(!HOW[id]||!HOW[id][+i])return; if(!st.dhow||typeof st.dhow!=="object")st.dhow={};
+    const same=howNow(id)===+i; if(same)delete st.dhow[id]; else st.dhow[id]={d:today(),i:+i}; save();
+    t.closest(".hows").querySelectorAll("[data-dhow]").forEach(b=>b.setAttribute("aria-pressed",String(!same&&b===t))); return;}
+  if(t.dataset.dself){const [id,v]=t.dataset.dself.split(":"), L=dlog(id), e=L[L.length-1], box=$("#selfchk"); if(e&&e[0]===today()&&e.length>=3){e[3]=+v?1:0; save();}
+    if(box)box.innerHTML=`<p class="kp" style="margin:0"><b style="color:var(--good)">${+v?"やったね! めあてを まもって れんしゅう できたね。":"めあてを きめて れんしゅう したのが すごい! つぎも やって みよう。"}</b></p>`; return;}
   if(t.dataset.drillsave){const id=t.dataset.drillsave, d=DRILLS.find(x=>x.id===id), v=numIn(($("#drillIn")||{}).value); if(!d)return; if(v==null)return openDrill(id,"なんかい できたか いれてね");
-    const b0=pbOf(id), had=dlog(id).length, u0=pbDayMap()[id]||0; dlog(id).push([today(),v]); save(); const up=(pbDayMap()[id]||0)>u0, bd=earnBadges(); render();
+    const b0=pbOf(id), had=dlog(id).length, u0=pbDayMap()[id]||0; const hi=howNow(id); dlog(id).push(hi==null?[today(),v]:[today(),v,hi]); save(); const up=(pbDayMap()[id]||0)>u0, bd=earnBadges(); render();
     if(v>b0){sfx("win"); return sheet(`<div class="glyph" aria-hidden="true">🏆</div><div class="big">${had?(b0?"じこベスト こうしん!":"はじめて できた!"):"はじめての きろく!"}</div>
       <div class="pbnew"><span class="kp">${d.e} ${d.n}</span><b>${v}<small> ${d.u}</small></b>${b0?`<span class="muted">まえの じこベスト: ${b0}${d.u}</span>`:""}</div>
       ${up?`<div class="lvup" style="font-size:1.1rem">${gainTxt(d)}</div>`:`<p class="muted kp" style="margin:0">パワー アップは 1しゅもく 1にち 1かい。きょうの ぶんは もう もらったよ</p>`}${bd}
       <p class="kp" style="margin:0">${b0?"まえの じぶんより うまく なったね!":"つぎは これを こえよう!"}</p>
-      <div class="row" style="justify-content:center"><button class="ghost" type="button" data-drill="${id}">もういちど</button><button class="primary" type="button" data-close="" style="flex:1;width:auto">やったー!</button></div>`);}
-    return openDrill(id,v===b0?`じこベストと おなじ! あと 1${d.u}で こうしん!`:`きろく したよ! あと ${b0-v+1}${d.u}で じこベスト!`,bd);}
+      ${selfChk(id,hi)}<div class="row" style="justify-content:center"><button class="ghost" type="button" data-drill="${id}">もういちど</button><button class="primary" type="button" data-close="" style="flex:1;width:auto">やったー!</button></div>`);}
+    return openDrill(id,v===b0?`じこベストと おなじ! あと 1${d.u}で こうしん!`:`きろく したよ! あと ${b0-v+1}${d.u}で じこベスト!`,(bd||"")+selfChk(id,hi));}
   if(t.dataset.drillundo){const id=t.dataset.drillundo, L=dlog(id); if(!L.length)return; if(!t.dataset.sure){t.dataset.sure="1"; t.textContent="もういちど おすと けします"; return;} L.pop(); save(); render(); return openDrill(id,"さいごの きろくを けしました");}
   if(t.id==="realDone"){const k=today(), n=+st.real.done[k]||0; if(n>=REAL_MAX)return; const txt=realNow(); if(st.real.q[0]===txt)st.real.q.shift(); st.real.done[k]=n+1; save(); const bd=earnBadges(); render();
     return sheet(`<div class="glyph">🏡</div><div class="big">やって みたね!</div><p>${esc(txt)}</p><p>ほんものを つかうと よく わかるね。あたま +2</p>${bd}<button class="primary" type="button" data-close="">やったー!</button>`);}
@@ -1181,6 +1238,13 @@ document.addEventListener("click",e=>{
       return openAdult("ぜんぶ消しました。まちがえたときは、下の「自動の控え」から戻せます。");}
   }
 });
+// A battle cut short (the app was closed or reloaded mid-fight) gives its ticket back, or a boss's free try.
+if(st.fight&&typeof st.fight==="object"){if(st.fight.t)st.used=Math.max(0,(st.used||0)-1); else if(st.fight.b&&st.bossTry===st.fight.d)delete st.bossTry; delete st.fight; save();}
+// Ask the browser to keep this app's data (WebKit grants it by itself, mainly to Home Screen apps, with no prompt). Only asked when opened as an installed app,
+// so no browser shows a prompt. The answer shows in the grown-up menu; the JSON file stays the main safety net.
+let keepOK=null;
+try{const S=navigator.storage, inst=matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
+  if(S&&S.persisted)S.persisted().then(p=>p||!inst||!S.persist?p:S.persist()).then(p=>{keepOK=!!p;},()=>{});}catch(e){}
 render();
 {const t=today(), ks=Object.keys(st.days).filter(k=>k<t&&(st.days[k]||[]).some(id=>ACT[id])).sort(), last=ks[ks.length-1];
   if(last&&!(st.days[t]||[]).length&&st.hello!==t&&(new Date(t+"T12:00:00")-new Date(last+"T12:00:00"))/864e5>=3){st.hello=t; save();
